@@ -282,7 +282,7 @@ Error: This constant has type string but an expression was expected of type
 
 **compare** isimli fonksiyonumuz yine bir fonksiyon alıp diğer iki argümanı da hesaba katarak bir **if** koşulu işleterek sonuç döndürmekte. **compare** fonksiyonundaki parametrelerin generic **'a** türü olarak yorumlandığa dikkat edelim. Sonraki adımlarda **str_len** ve **is_pass** isimli iki farklı fonksiyon daha tanımlanıyor. İlki, **String** modülünden length fonksiyonunu kullanarak bir değer döndürdüğü için **string** veri türü ile çalışacağı kesin. Diğer fonksiyon ise sayısal bir karşılaştırma kullanıyor ve buna göre de **int** değerler çalışacağı anlaşılıyor. **compare** fonksiyonuna bu iki fonksiyonu parametre olarak verebiliriz ama devam eden argümanların da uygun tipler olması beklenir. Yani **str_len** kullanıyorsak diğer iki argümanın da **string** türünden olması gerekiyor.
 
-### Tuple, List veri türleri
+### Tuple, List ve Options veri türleri
 
 İlk olarak **tuple** veri türü ile ilgili basit bir örnek yapalım.
 
@@ -385,3 +385,54 @@ val first_or : 'a -> 'a list -> 'a = <fun>
 ```
 
 ![ocaml_04.png](./images/ocaml_04.png)
+
+Şimdi bir sayı listesindeki elemanların toplamını hesaplayan hem pattern matching içeren hem de recursive olan bir fonksiyon yazalım. Eh, bir döngü ile listeyi dolaşmak vardı ama **Real World OCaml** a göre, öz yinelemeli fonksiyonlar, fonksiyonel dillerin gerçekten önemli bir parçası. Doğrusu bundan güzel bir sınav sorusu olurmuş, *"Herhangi bir sayı listesindeki elemanların toplamını bulacak bir fonksiyon yazın. Döngü kullanmak yasak, recursive fonksiyonellik şart"* :D
+
+```text
+# let rec sum_of list =
+        match list with
+        | [] -> 0
+        | head :: tail -> head + sum_of tail
+  ;;
+val sum_of : int list -> int = <fun>
+# sum_of [1;4;4;2;6;7];;
+- : int = 24
+# let numbers = [0;2;4;9;-4;-5];;
+val numbers : int list = [0; 2; 4; 9; -4; -5]
+# sum_of numbers;;
+- : int = 6
+```
+
+Bunu büyük ihtimalle unutacağım ve bakmadan yazamayacağım ama birkaç önemli noktayı not olarak düşmek isterim. **sum_of** fonksiyonunun kendisini referans ettiğini belirttiğimiz bir yer var, **rec** anahtar kelimesi. Diğer fonksiyon tanımlarından farklı olarak bunu kullanarak ilgili fonksiyonun recursive olduğunu belirttik. Boş liste veya dolu liste gelmesi ihtimallerine karşı bir **pattern match** kullanımı söz konusu. Eğer boş bir liste gelirse toplamın sıfır döneceğini belirtmek aynı zamanda bu fonksiyonu **integer** listelerle çalışacak bir türe dönüştürüyor. İkinci **match** kısmında **head** ve **tail** kısımlarını ele alıyoruz ve fonksiyonu tekrar çağırarak sayıları birbirlerine ekliyoruz. Yani ilk sayıdan başlarsak 1 + sum_of [4;4;2;6;7] gibi bir şey ortaya çıkıyor. İkinci match kırılımı için **tümevarımsal(inductive)** yaklaşımın benimsendiğini vurgulayalım.
+
+```text
+= 1 + sum_of [4;4;2;6;7]
+= 1 + (4 + sum_of [4;2;6;7])
+= 1 + (4 + (4 + sum_of [2;6;7]))
+= 1 + (4 + (4 + (2 + sum_of [6;7])))
+= 1 + (4 + (4 + (2 + (6 + sum_of [7]))))
+= 1 + (4 + (4 + (2 + (6 + (7 + sum_of [])))))
+= 1 + (4 + (4 + (2 + (6 + (7 + 0)))))
+= 1 + (4 + (4 + (2 + (6 + 7))))
+= 1 + (4 + (4 + (2 + 13)))
+= 1 + (4 + (4 + 15))
+= 1 + (4 + 19)
+= 1 + 23
+= 24
+```
+
+Piuvv! :D Parantezleri karıştırmış olabilirim. Kitapta 1;2;3 listesini toplamıştı.
+
+Bugünkü terapide son olarak **Options** veri yapısına bakıyorum. Bir değer vardır veya yoktur sorusuna cevap veren bir veri yapısı. Şahsen **rust** dilinde Options türü çok işe yarıyor. Buradan esinlenildiğini düşünüyorum elbette. Aşağıdaki kod parçasında en basit kullanım şekli yer alıyor.
+
+```text
+# let div x y =
+        if y = 0 then None else Some (x/y);;
+val div : int -> int -> int option = <fun>
+# div 10 0;;
+- : int option = None
+# div 10 2;;
+- : int option = Some 5
+```
+
+Eğer y sıfır ise None dönüyoruz ve değilse bölme işlemini gerçekleştiriyoruz. Dikkat edileceği üzere yorumlayıcı fonksiyonun dönüş türünü **int option** olarak belirledi. **None** ve **Some**, rastgele isimlendirmeler değil birer **constructor** olarak ifade edilemkte.
