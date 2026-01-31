@@ -1,5 +1,6 @@
 (* 
     Bu bir hello world uygulaması ve burası da bir yorum satırı.
+    Bazı dillerdeki gibi tek satırlık yorumlar için // kullanımı söz konusu değil.
     Bu kodu doğrudan çalıştırmak için komut satırından;
     
     ocaml hello-world.ml

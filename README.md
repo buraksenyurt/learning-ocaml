@@ -35,7 +35,7 @@ ocaml
 
 ![hello_world](./images/hello_world.png)
 
-## Interaktif Mod Örnekleri
+## Giriş Seviyesi
 
 Aşağıdaki kod örnekleri için komut satırından `ocaml` komutu çalıştırılarak ilerlenebilir. `ocaml` aracı ile çalışırken kullanılabilecek komutlar için aşağıdaki komut kullanılabilir.
 
@@ -241,4 +241,147 @@ val check_point : int -> bool = <fun>
 
 ![ocaml_03.png](./images/ocaml_03.png)
 
-> TO BE CONTINUED
+### Fonksiyonlarda Generic Parametre Kullanımı
+
+OCaml tür tahmini yapma konusundaki hünerini **generic** türler için de gösterir.
+
+```text
+# let identity value = value;;
+val identity : 'a -> 'a = <fun>
+# identity 1001;;
+- : int = 1001
+# identity "PRD-0001";;
+- : string = "PRD-0001"
+# let swap (left,right) = (right,left);;
+val swap : 'a * 'b -> 'b * 'a = <fun>
+# swap (4,"four");;
+- : string * int = ("four", 4)
+```
+
+**identity** ve **swap** isimli fonksiyonlar tnaımlandıktan sonra yorumlayıcının verdiği çıktılara dikkat edelim. *(Açıkçası Rust'ı öğrenmeye başladığımda hem kavramsal olarak hem de sentaks olarak zorlandığım 'a - lifetime annotations kavramı geldi aklıma)* Her neyse, **'a** ve **'b** şeklinde yazılan ifadeler generic türler. Generic kavramına aşina olmayanlar için *a ve b yerine herhangi bir tür gelebilir ve bunun için her bir türe özel olacak şekilde bu fonksiyonunun farklı versiyonlarını yazmanıza gerek yoktur* diyelim. Şimdi biraz daha kafar karıştırabilecek bir örnek.
+
+```text
+# let compare f arg_1 arg_2 =
+        if f arg_1 then arg_1 else arg_2;;
+val compare : ('a -> bool) -> 'a -> 'a -> 'a = <fun>
+# let str_len string = String.length string > 8;;
+val str_len : string -> bool = <fun>
+# compare str_len "Some..." "Something happens";;
+- : string = "Something happens"
+# let is_pass score = score > 70;;
+val is_pass : int -> bool = <fun>
+# compare is_pass 68 50;;
+- : int = 50
+# compare is_pass "Black" "And White";;
+Line 1, characters 16-23:
+1 | compare is_pass "Black" "And White";;
+                    ^^^^^^^
+Error: This constant has type string but an expression was expected of type
+         int
+```
+
+**compare** isimli fonksiyonumuz yine bir fonksiyon alıp diğer iki argümanı da hesaba katarak bir **if** koşulu işleterek sonuç döndürmekte. **compare** fonksiyonundaki parametrelerin generic **'a** türü olarak yorumlandığa dikkat edelim. Sonraki adımlarda **str_len** ve **is_pass** isimli iki farklı fonksiyon daha tanımlanıyor. İlki, **String** modülünden length fonksiyonunu kullanarak bir değer döndürdüğü için **string** veri türü ile çalışacağı kesin. Diğer fonksiyon ise sayısal bir karşılaştırma kullanıyor ve buna göre de **int** değerler çalışacağı anlaşılıyor. **compare** fonksiyonuna bu iki fonksiyonu parametre olarak verebiliriz ama devam eden argümanların da uygun tipler olması beklenir. Yani **str_len** kullanıyorsak diğer iki argümanın da **string** türünden olması gerekiyor.
+
+### Tuple, List veri türleri
+
+İlk olarak **tuple** veri türü ile ilgili basit bir örnek yapalım.
+
+```text
+# let config = ("He-Man, Gölgelerin gücü adına",1920,1080,true);;
+val config : string * int * int * bool =
+  ("He-Man, Gölgelerin gücü adına", 1920, 1080, true)
+# let (title,width,height,is_active) = config;;
+val title : string = "He-Man, Gölgelerin gücü adına"
+val width : int = 1920
+val height : int = 1080
+val is_active : bool = true
+# let move (x,y) speed =
+        (x + speed , y + speed);;
+val move : int * int -> int -> int * int = <fun>
+# move (10,15) 1;;
+- : int * int = (11, 16)
+# let (new_x,new_y) = move (11,16) 5;;
+val new_x : int = 16
+val new_y : int = 21
+```
+
+**config** isimli değişken bir tuple veri yapısını işaret ediyor. Tuple veri yapısı farklı türden değerler içerebilen zengin bir model. İstersek tanımladığımız config isimli tuple içeriğini **let** ile başka değişkenlere çıkartabiliriz *(export)* Burada **pattern matching** özelliği olduğunu da görebiliriz. **move** isimli fonksiyon da dikkate değer. İki parametre alıyor ancak x ve y koordinatlarını ifade eden ilk parametre tuple olarak tanımlandı. Ayrıca fonksiyondan geriye yine bir **tuple** döndürmekteyiz.
+
+> Kitapta tuple veri türü tanımında neden **\*** şeklinde bir tanım kullanıldığı da vurgulanıyor. Yani bir tuple tanımlandığında yorumlayıcı bunu okurken *string \* int \* int \* bool* gibi bir ifade kullanıyor. Türlerin toplam kümesini işaret eden bir kartezyen çarpımı söz konusu olduğundan çarpım sembolü kullanılıyor diyebiliriz. Kıssadan hisse, belki de bugün kullandığım Rust, C# , Zig gibi dillerden önce belki de işe OCaml ile başlamak gerekiyordu...
+
+Eğer aynı türnden verilerden oluşan bir listeye ihtiyacımız varsa, pekala **List** veri yapısını kullanabiliriz :D
+
+```text
+# let colors = ["Red" ; "Green" ; "Blue"];;
+val colors : string list = ["Red"; "Green"; "Blue"]
+# let numbers = [1;2;3;4;5];;
+val numbers : int list = [1; 2; 3; 4; 5]
+# let points = [0.40;0.25;0.55;0.45];;
+val points : float list = [0.4; 0.25; 0.55; 0.45]
+# let illegal = ["One";"Two";3;"Four"];;
+Line 1, characters 27-28:
+1 | let illegal = ["One";"Two";3;"Four"];;
+                               ^
+Error: The constant 3 has type int but an expression was expected of type
+         string
+# let colors = ["Red" ; "Green" ; "Blue"];;
+val colors : string list = ["Red"; "Green"; "Blue"]
+# List.length colors;;
+- : int = 3
+# "Black" :: "White" :: colors;;
+- : string list = ["Black"; "White"; "Red"; "Green"; "Blue"]
+# colors;;
+- : string list = ["Red"; "Green"; "Blue"]
+# let extended = "Black" :: "White" :: colors;;
+val extended : string list = ["Black"; "White"; "Red"; "Green"; "Blue"]
+# extended;;
+- : string list = ["Black"; "White"; "Red"; "Green"; "Blue"]
+# let another_list = [1,2,3,4,5,6];;
+val another_list : (int * int * int * int * int * int) list =
+  [(1, 2, 3, 4, 5, 6)]
+# let origin = 0,0;;
+val origin : int * int = (0, 0)
+# "R","G","B";;
+- : string * string * string = ("R", "G", "B")
+# let left_side = [1;2;3];;
+val left_side : int list = [1; 2; 3]
+# let right_side = [4;5;6;7;8];;
+val right_side : int list = [4; 5; 6; 7; 8]
+# let combine = left_side @ right_side;;
+val combine : int list = [1; 2; 3; 4; 5; 6; 7; 8]
+```
+
+**colors**, **numbers** ve **points** kendi veri türlerinde elemanlar taşıyan birer liste. **illegal** isimli liste ise farklı türden elemanlardan oluşan bir liste yapısı oluşturmak istediğimizde alacağımız hatayı gösteriyor. OCaml'ın **List** modülünde bazı yardımcı fonksiyonlar var. Örnekte listenin uzunluğunu bulmak için **List.length** fonksiyonu kullanıldı. Ayrıca liste başına eleman eklemek için **::** operatörü *(constructor operator)* kullanılmakta. Dikkat edelim, orijinal liste değişmiyor. İlaveler sonrası yeni bir liste oluşuyor. Çalışırken yaptığım hatalardan birisi de liste elemanlarını tanımlarken arada virgül kullanmaktı. Bunu yapınca bir liste yerine tek elemanlı bir tuple listesi oluştu. Dolayısıyla ; ile , kullanımına dikkat etmek gerekiyor. Hatta bir tuple tanımlanırken parantez kullanmasak da, virgül ile ayrılmış değerler bir tuple olarak algılanıyor. **@**, yani add operatörünü kullanarak listeleri birleştirmek de mümkün.
+
+Peki bir liste veri yapısından *pattern matchin* kullanabilir miyiz? Basit bir örnek üstünden ele alalım.
+
+```text
+# let first_or_default values =
+        match values with
+        | first :: the_rest -> first
+        | [] -> 0;;
+val first_or_default : int list -> int = <fun>
+# first_or_default [];;
+- : int = 0
+# first_or_default [12;0;23;9;14];;
+- : int = 12
+```
+
+Burada tanımladığımız **first_or_default** isimli fonksiyon **int** türünden bir listenin ilk elemanını döndürüyor ancak burada pattern match ile uyguladığımız bir koşul var. Boş bir liste verilirse varsayılan olarak 0 değerini, aksine dolu bir liste gelirse ki bunu **first :: the_rest** ifadesi ile eşleştiriyoruz *(ilk eleman ve kalanlar anlamında düşünebiliriz)* bu durumda listenin ilk elemanını dönüyor. Yorumlayıcının boş bir liste söz konusu ise 0 döndürülmesinden yola çıkarak fonksiyonun integer bir liste ile çalışacağına kanaat getirdiğine dikkat edelim. Dolayısıyla bu fonksiyonu aşağıdaki gibi yazarsak generic bir versiyon da çıkarmış oluruz.
+
+```text
+# let first_or default values =
+        match values with
+        | first :: the_rest -> first
+        | [] -> default;;
+val first_or : 'a -> 'a list -> 'a = <fun>
+# first_or "" [];;
+- : string = ""
+# first_or 1 [];;
+- : int = 1
+# first_or 0 [12;2;6;9];;
+- : int = 12
+#
+```
+
+![ocaml_04.png](./images/ocaml_04.png)
