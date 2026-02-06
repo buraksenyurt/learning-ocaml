@@ -436,3 +436,89 @@ val div : int -> int -> int option = <fun>
 ```
 
 Eğer y sıfır ise None dönüyoruz ve değilse bölme işlemini gerçekleştiriyoruz. Dikkat edileceği üzere yorumlayıcı fonksiyonun dönüş türünü **int option** olarak belirledi. **None** ve **Some**, rastgele isimlendirmeler değil birer **constructor** olarak ifade edilemkte.
+
+### Record Veri Yapısı ve Variant Tipler
+
+Kendi veri yapılarımızı tasarlarken kullanabileceğimiz enstrümanlardan birisi **record**. Örneğin;
+
+```text
+❯  ocaml
+OCaml version 5.4.0
+Enter #help;; for help.
+
+# type address = {host:string; port:int; route:string};;
+type address = { host : string; port : int; route : string; }
+# let cust_get ={host = "localhost"; port = 5001; route = "api/v1/customer/get"};;
+val cust_get : address =
+  {host = "localhost"; port = 5001; route = "api/v1/customer/get"}
+# type service = {name : string; is_active : bool; kind : string; path : address};;
+type service = {
+  name : string;
+  is_active : bool;
+  kind : string;
+  path : address;
+}
+# let customer_service = {name = "Get customers"; is_active = true; kind = "REST"; path = cust_get};;
+val customer_service : service =
+  {name = "Get customers"; is_active = true; kind = "REST";
+   path = {host = "localhost"; port = 5001; route = "api/v1/customer/get"}}
+```
+
+Burada kod parçasında iki **record** türü tanımlandı. address ve service şeklinde. Dikkat edileceği üzere service **record** yapısındaki path alanı address veri yapısı türünden. Şimdi birde **variant** tanımlamayı deneyelim. Bu tür ile birden fazla nesneyi *(object)* tek bir tip altında birleştirme mümkün oluyor. Örnek kod ile anlamaya çalışalım.
+
+```text
+type location = { x : float; y : float }
+type button = { title: string; position: location }
+type label = { title: string; position: location }
+type drop_down = { items: string list; position: location; is_enabled: bool }
+
+type component =
+  | Button of button
+  | Label of label
+  | DropDown of drop_down
+;;
+```
+
+Bu kod parçasında button, label, drop_down gibi farklı türdeki nesneleri tek bir component türünde birleştirdik. Bu sayede component türünden bir değişken tanımladığımızda bu değişken button, label veya drop_down türlerinden herhangi birini işaret edebilir. Aralarda pipi olduğuna dikkat etmemiz gerekiyor ve hatta | sonrası gelen isimlendirmede büyük harfle başlama zorunluluğu var, aksi halde **syntax error** hatası alınıyor. drop_down isimli record türünde bir **string list** kullanılıyor. Dolayısıyla birden fazla string öğe barındırabilecek. Kitaptaki örnekten de esinlenerek bu **variant** türünü bir fonksiyon da kullanabiliriz.
+
+```text
+let get_item_count (c : component) : int =
+  match c with
+  | Button _ -> 0
+  | Label _ -> 0
+  | DropDown d -> List.length d.items
+;;
+
+let left_menu = DropDown {
+  items = ["Save"; "Load"; "Exit"];
+  position = origin;
+  is_enabled = true
+};;
+
+get_item_count left_menu;;
+```
+
+Bu fonksiyon component türünden bir parametre alıyor ve bu parametrenin hangi türde olduğunu **pattern matching** ile kontrol ediyor. Eğer button veya label ise 0 döndürüyor, ancak drop_down ise içindeki items listesinin uzunluğunu döndürüyor.
+
+![ocaml_05.png](./images/ocaml_05.png)
+
+Farklı bir fonksiyon daha yazalım. Örneğin bileşen detaylarını gösteren bir versiyon. Aynen aşağıdaki kod parçasında olduğu gibi.
+
+```text
+let show_component_details (c : component) : unit =
+  match c with
+  | Button b -> 
+      Printf.printf "Button: %s\n" b.title
+  | Label l -> 
+      Printf.printf "Label: %s\n" l.title
+  | DropDown d ->
+      Printf.printf "DropDown containing:\n";
+      List.iter (fun item -> Printf.printf " - %s\n" item) d.items
+;;
+
+show_component_details left_menu;;
+```
+
+Fonksiyonumuz parametre olarak **component** isimli **variant** türünden bir nesne alıyor. Bu nesnenin hangi türde olduğunu **pattern matching** ile kontrol ediyoruz. Eğer button veya label ise başlık bilgisini yazdırıyoruz. Ancak drop_down ise içindeki items listesini dolaşıp her bir öğeyi yazdırıyoruz. List.iter fonksiyonu, verilen bir fonksiyonu listenin her bir elemanına uygulamak için kullanılmakta.
+
+![ocaml_06.png](./images/ocaml_06.png)
