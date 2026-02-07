@@ -650,3 +650,82 @@ increment tick_counter;;
 
 Printf.printf "Current count: %d\n" tick_counter.count;;
 ```
+
+### Refs
+
+Tekil bir mutable değişken oluşturmak için **ref** enstrümanı da kullanılabilir. **ref** esasında standart kütüphanede tanımlanmış bir tip ve hatta bir **record** türü. İçinde **contents** isimli bir alan içeriyor. Hatta stdlib.ml dosyasına bakarsak aşağıdaki gibi tanımlandığını görürüz.
+
+![ocaml_07.png](./images/ocaml_07.png)
+
+Dikkat edileceği üzere **!** ve **:=** şeklinde tanımlanmış fonksiyonlar da dikkatinizi çekmiştir. **!** operatörü bir ref'in içindeki değere erişmek için kullanılırken, **:=** operatörü ise bir ref'in içindeki değeri değiştirmek için kullanılır. Yine **incr** ve **decr** fonksiyonları yardımıyla değer artırma ve azaltma işlemleri de yapılabiliyor. **OCaml** komut satırından bir deneme yapabiliriz.
+
+![ocaml_08.png](./images/ocaml_08.png)
+
+Bu arada istersek **ref** türünü kendimiz de dizayn edebiliriz. Hatta kitap bunu gayet güzel bir şekilde örnekliyor. Bir deneyelim.
+
+```ocaml
+(*
+  İstersek buradaki ref record yapısını kendimiz de yapabiliriz.
+  Burada polimorfik bir record yapısı tanımlayarak herhangi bir türdeki değeri mutable olarak tutabiliriz.
+
+  'a ifadesi, OCaml'da polimorfik tür parametresini temsil eder. 
+  Bu, mutable_ref türünün herhangi bir türdeki değeri tutabileceği anlamına gelir. 
+  x ile başlatılan mutable_ref fonksiyonu, verilen değeri mutable_ref türünde bir record olarak döndürür.
+*)
+type 'a mutable_ref = {
+  mutable value: 'a;
+};;
+let mutable_ref x = { value = x };;
+let get r = r.value;;
+let set r x = r.value <- x;;
+let incr r = r.value <- r.value + 1;;
+let decr r = r.value <- r.value - 1;;
+
+(* Deneyelim bakalım *)
+let my_counter = mutable_ref 0;;
+Printf.printf "My Counter: %d\n" (get my_counter);;
+incr my_counter;;
+Printf.printf "My Counter: %d\n" (get my_counter);;
+set my_counter 10;;
+Printf.printf "My Counter: %d\n" (get my_counter);;
+decr my_counter;;
+Printf.printf "My Counter: %d\n" (get my_counter);;
+```
+
+**ref** türü iterasyonlarda değiştirilebilir *(mutable)* state tutarken de kullanışlı olabilir. Örneğin bir listedeki elemanların ortalamasını hesaplamak için bir fonksiyon geliştirelim. Aşağıdaki gibi bir kod düşünülebilir.
+
+```ocaml
+let avrage lst =
+  let sum = ref 0 in
+  let count = ref 0 in
+  List.iter (fun x -> sum := !sum + x; count := !count + 1) lst;
+  if !count = 0 then None else Some (!sum / !count)
+
+let numbers = [1; 2; 3; 4; 5; 10;];;
+Printf.printf "Average: %d\n" (match avrage numbers with Some avg -> avg | None -> 0);;
+```
+
+average isimli fonksiyon içerisinde yer alan **sum** ve **count** değişkenleri **mutable** olarak tanımlanmıştır ve **List.iter** fonksiyonu kullanılarak listenin her bir elemanı üzerinde işlem yaparken bu değişkenlerin değerleri güncellenmektedir. Tabii iter fonksiyonuna verilen anonim fonksiyon içerisinde **!** operatörünü kullanarak ref'lerin içindeki değerlere erişiyoruz ve **:=** operatörünü kullanarak bu değerleri güncelliyoruz. Birde **in** operatörü ile karşılaştık tabii ki. Bu operatör sum ve count değişkenlerinin bulundukları fonksiyon bloğunda geçerli olduğunu belirtmek için kullanılmakta. Yani **scope** belirleme amacıyla kullanılır. **in** kullanımının farkını anlamak için OCaml komut satırına dönüyorum.
+
+```text
+# let value = 12;;
+val value : int = 12
+# let point = 90 in
+  point + 10;;
+- : int = 100
+# value;;
+- : int = 12
+# point;;
+Line 1, characters 0-5:
+1 | point;;
+    ^^^^^
+Error: Unbound value point
+```
+
+![ocaml_09.png](./images/ocaml_09.png)
+
+value isimli değişken global scope'ta tanımlanmış ve bu nedenle herhangi bir yerden erişilebilir durumda. Ancak point isimli değişken **in** operatörünün kullanıldığı fonksiyon bloğu içerisinde tanımlanmış ve bu nedenle sadece o blok içerisinde geçerli. Dolayısıyla point değişkenine global scope'tan erişmeye çalıştığımızda **Unbound value** hatası alıyoruz.
+
+### Döngüsüz Olmaz Tabii *(for, while loops)*
+
+> EKLENECEK
