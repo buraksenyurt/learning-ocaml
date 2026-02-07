@@ -37,7 +37,7 @@ ocaml
 
 ## Giriş Seviyesi
 
-Aşağıdaki kod örnekleri için komut satırından `ocaml` komutu çalıştırılarak ilerlenebilir. `ocaml` aracı ile çalışırken kullanılabilecek komutlar için aşağıdaki komut kullanılabilir.
+Aşağıdaki kod örnekleri için komut satırından `ocaml` komutu çalıştırılarak ilerlenebilir. `ocaml` aracı ile çalışırken kullanılabilecek komutlar için aşağıdaki komut kullanılabilir. Ayrıca `utop` aracı ile de çalışabilir. Bu ikisi özellikle yazılan kodun anında çalıştırılması ve sonuçların görülmesi açısından faydalı araçlar. `utop` aracı daha gelişmiş özelliklere sahip bir toplevel aracı olarak düşünülebilir ancak bir noktadan sonra **ml** uzantılı dosyalar üzerinden çalışmaya döndüğümü de belirtmek isterim.
 
 ```text
 # #help;;
@@ -441,32 +441,23 @@ Eğer y sıfır ise None dönüyoruz ve değilse bölme işlemini gerçekleştir
 
 Kendi veri yapılarımızı tasarlarken kullanabileceğimiz enstrümanlardan birisi **record**. Örneğin;
 
-```text
-❯  ocaml
-OCaml version 5.4.0
-Enter #help;; for help.
-
-# type address = {host:string; port:int; route:string};;
+```ocaml
+type address = {host:string; port:int; route:string};;
 type address = { host : string; port : int; route : string; }
-# let cust_get ={host = "localhost"; port = 5001; route = "api/v1/customer/get"};;
-val cust_get : address =
-  {host = "localhost"; port = 5001; route = "api/v1/customer/get"}
-# type service = {name : string; is_active : bool; kind : string; path : address};;
+let cust_get ={host = "localhost"; port = 5001; route = "api/v1/customer/get"};;
+type service = {name : string; is_active : bool; kind : string; path : address};;
 type service = {
   name : string;
   is_active : bool;
   kind : string;
   path : address;
 }
-# let customer_service = {name = "Get customers"; is_active = true; kind = "REST"; path = cust_get};;
-val customer_service : service =
-  {name = "Get customers"; is_active = true; kind = "REST";
-   path = {host = "localhost"; port = 5001; route = "api/v1/customer/get"}}
+let customer_service = {name = "Get customers"; is_active = true; kind = "REST"; path = cust_get};;
 ```
 
 Burada kod parçasında iki **record** türü tanımlandı. address ve service şeklinde. Dikkat edileceği üzere service **record** yapısındaki path alanı address veri yapısı türünden. Şimdi birde **variant** tanımlamayı deneyelim. Bu tür ile birden fazla nesneyi *(object)* tek bir tip altında birleştirme mümkün oluyor. Örnek kod ile anlamaya çalışalım.
 
-```text
+```ocaml
 type location = { x : float; y : float }
 type button = { title: string; position: location }
 type label = { title: string; position: location }
@@ -481,7 +472,7 @@ type component =
 
 Bu kod parçasında button, label, drop_down gibi farklı türdeki nesneleri tek bir component türünde birleştirdik. Bu sayede component türünden bir değişken tanımladığımızda bu değişken button, label veya drop_down türlerinden herhangi birini işaret edebilir. Aralarda pipi olduğuna dikkat etmemiz gerekiyor ve hatta | sonrası gelen isimlendirmede büyük harfle başlama zorunluluğu var, aksi halde **syntax error** hatası alınıyor. drop_down isimli record türünde bir **string list** kullanılıyor. Dolayısıyla birden fazla string öğe barındırabilecek. Kitaptaki örnekten de esinlenerek bu **variant** türünü bir fonksiyon da kullanabiliriz.
 
-```text
+```ocaml
 let get_item_count (c : component) : int =
   match c with
   | Button _ -> 0
@@ -504,7 +495,7 @@ Bu fonksiyon component türünden bir parametre alıyor ve bu parametrenin hangi
 
 Farklı bir fonksiyon daha yazalım. Örneğin bileşen detaylarını gösteren bir versiyon. Aynen aşağıdaki kod parçasında olduğu gibi.
 
-```text
+```ocaml
 let show_component_details (c : component) : unit =
   match c with
   | Button b -> 
@@ -522,3 +513,140 @@ show_component_details left_menu;;
 Fonksiyonumuz parametre olarak **component** isimli **variant** türünden bir nesne alıyor. Bu nesnenin hangi türde olduğunu **pattern matching** ile kontrol ediyoruz. Eğer button veya label ise başlık bilgisini yazdırıyoruz. Ancak drop_down ise içindeki items listesini dolaşıp her bir öğeyi yazdırıyoruz. List.iter fonksiyonu, verilen bir fonksiyonu listenin her bir elemanına uygulamak için kullanılmakta.
 
 ![ocaml_06.png](./images/ocaml_06.png)
+
+### Mutable Olma Hali
+
+> Varsayılan olarak immutable ama gerekirse mutable. Rust'ın açık bir şekilde benimsediği bir yaklaşım. Varsayılan olarak immutable olmak aslında bir şeylerin yanlışlıkla değiştirilmesini engellemek açısından anlamlı. Diğer yandan imperative yaklaşımın ele alındığı sayaçlar ve state machine gibi kodlar yazmanın önü de açık.
+
+OCaml'ın **safkan bir fonksiyonel dil** olduğu belirtiliyor. Yani, kodun çalışmasının bir parçası olarak değişkenlerin değerlerini değiştirmek normalde mümkün değil. Program state'i, **immutable** veri yapılarıyla temsil ediliyor. Buna karşın **imperative** programlama paradigmasını da destekliyor. Bir başka deyişle **mutable** veri yapıları da mevcuttur. **Array** veri yapısı bunlardan birisi. Bunun haricinde **record** türünün kendisi **immutable** olsa dahi üyeleri **mutable** olarak tanımlanabilir. Şimdi yine beni zorlayacak yazım stilleriyle bir **array** tanımlayalıp kullanalım. Hatta sonrasında birde **mutable** üyeler içeren bir **record** yazalım.
+
+```ocaml
+(* float sayılardan oluşan bir array tanımı*)
+let points = [| 45.50; 30.25; 60.75; 48.90; 80.; 0.; |];;
+
+(* array operatörlerine erişim *)
+Printf.printf "First point: %.2f\n" points.(0);;
+Printf.printf "Second point: %.2f\n" points.(1);;
+
+(* Bir array elementini değiştirmek istersek şöyle yapabiliriz *)
+points.(0) <- 51.00;;
+Printf.printf "Updated first point to: %.2f\n" points.(0);;
+
+(* Array'in tamamını görüntülemek için *)
+points;;
+
+(* 
+Belki bir döngü yardımıyla array elemanlarını görütülemek isteyebiriz
+Hatta döngü içinde pattern match kullanıp dersten geçti, kaldı vs diyebiliriz
+*)
+for i = 0 to Array.length points - 1 do
+  match points.(i) with
+  | p when p >= 50.0 -> Printf.printf "Student %d passed with %.2f\n" (i + 1) p
+  | p -> Printf.printf "Student %d failed with %.2f\n" (i + 1) p
+done;;
+```
+
+Bu örnekte **points** isimli bir array tanımladık. Array elemanlarına erişmek için **.(index)** operatörünü kullandık. Bir array elemanını değiştirmek için ise **<-** operatörünü kullandık. Sonrasında array'in tamamını görüntüledik ve bir döngü yardımıyla her bir elemanı kontrol ederek geçip kalma durumunu yazdırdık. Öyleyse birde **mutable** üyeler içeren bir **record** tanımlayalım.
+
+Burada dikkat edilmesi gereken noktalardan birisi de **<-** operatörünün **unit ()** döndürmesidir. Bu, yapılan atama işleminin bir hesaplama *(calculation)* olmadığını aksiyon *(action)* olduğu belirtir. Yani, points.(0) <- 51.00 ifadesi bir değer döndürmez, sadece **points array**'inin ilk elemanını 51.00 olarak günceller.
+
+```ocaml
+(* 
+  Varsayılan olarak immutable olan record üyeleri mutable yapılabilir.
+  Şöyle anlamlı bir örnek düşünelim. Bir oyuncunun adı genellikle oyun sırasında değiştirilmez
+  ancak canı, bulunduğu konu gibi bilgiler anlık olarak değişebilir.
+*)
+
+type player = {
+  name: string;
+  mutable health: int;
+  mutable position: (int * int);
+};;
+
+let she_ra = { name = "She-Ra"; health = 100; position = (0, 0) };;
+
+(* Bir fonksiyon ile de örneğin oyuncu hasar aldığında health bilgisini güncelleyebiliriz *)
+let take_damage player amount = 
+  player.health <- player.health - amount;
+  Printf.printf "%s took %d damage and now has %d health.\n" player.name amount player.health
+;;
+
+take_damage she_ra 30;;
+
+(* Oyuncunun pozisyonunu güncellemek için de benzer şekilde bir fonksiyon yazabiliriz *)
+let move_player player new_position =
+  player.position <- new_position;
+  Printf.printf "%s moved to position (%d, %d).\n" player.name (fst new_position) (snd new_position)
+;;
+
+move_player she_ra (5, 10);;
+```
+
+Şimdi burada durup OCaml dilinin bu varsayılan immutable felsefesini düşünmek lazım. Normalde yukarıdaki gibi bir senaryo varsayılan olarak aşağıdaki gibi ifade edilir.
+
+```ocaml
+(* 
+  OCaml'ın immutable felsefesini anlamak için bu örneği varsayılan durumda ele alalım
+  Aşağıda görüldüğü gibi normal bir record tanımı yaptık.
+*)
+type player = {
+  name: string;
+  health: int;
+  position: (int * int);
+};;
+
+let she_ra = { name = "She-Ra"; health = 100; position = (0, 0) };;
+
+(* take_damage fonksiyonu artık player record'ünün health üyesini değiştiremez.
+  Bu yüzden yeni bir player record'ü oluşturarak güncellenmiş bilgileri içeren bir record döndürmemiz gerekir.
+  Tabii bu durumda var olan player record' unun bir kopyasını oluşturmuş oluruz.
+
+  Örnekte update_player oluşturulurken health bilgisi güncelleniyor,
+  burada with keyword kullandığımıza dikkat edelim. in ise yeni record'ün oluşturulacağı scope'u belirtiyor.
+*)
+let take_damage player amount = 
+  let updated_player = { player with health = player.health - amount } in
+  Printf.printf "%s took %d damage and now has %d health.\n" player.name amount updated_player.health;
+  updated_player
+;;
+
+let she_ra = take_damage she_ra 8;;
+
+(* 
+  Bir fonksiyon tanımlamadan değer değiştirmek istersek bu durumda aşağıdaki gibi ilerleyebiliriz. 
+  Söz gelimi pozisyonu değiştrelim.
+*)
+Printf.printf "%s is currently at position (%d, %d).\n" she_ra.name (fst she_ra.position) (snd she_ra.position);;
+let she_ra = { she_ra with position = (25, 50) };;
+
+Printf.printf "%s moved to position (%d, %d).\n" she_ra.name (fst she_ra.position) (snd she_ra.position);;
+```
+
+Burada **fst** ve **snd** ifadeleri aslında birer fonksiyon. Bir tuple'ın ilk ve ikinci elemanına erişmek için kullanılırlar. Yani, fst new_position ifadesi new_position adlı tuple'ın ilk elemanını döndürürken, snd new_position ifadesi ikinci elemanını döndürmektedir. Yukarıdaki kod parçasında gerekli açıklamalar yer alıyor. Belki de hangisini ne zaman seçmek gerekir üzerine düşünmek lazım. Ne zaman **immutable** yerine **mutable** tercih edelim ya da tam tersi?
+
+- Varsayılan olarak **immutable** olmak, **concurrency** ve karmaşık logic içeren kodlarda hataların önüne geçmek açısından avantajlı olabilir. Değişkenlerin değerlerinin beklenmedik şekilde değişmesini engeller. Söz gelimi buradaki player'ın immutable olan versiyonunu bir fonksiyona geçireceksek, onun fonksiyon içinde değişmeyeceğinden emin olabiliriz.
+- Mutable veri yapıları ise veriyi kopyalamadan değiştirme imkanı sağlar ve bazı durumda örneğin state değiştirmek veya gerçek zamanlı güncellemeler yapmak istediğimizde daha performanslı olabilir. Ancak mutable veri yapıları kullanırken dikkatli olmak gerekir, çünkü yanlışlıkla veriyi değiştirmek veya beklenmedik yan etkiler oluşturmak mümkündür. Bu konuda sanıyorum en sık verilen örnek sayaç mekanizması. **OCaml** ile basit bir **counter** tasarlayalım.
+
+```ocaml
+(*
+  Bir sayaç gerçek zamanlı güncellemeyi gerektirir. Bu nedenle immutable olarak kullanmak,
+  sürekli yeni bir kopya oluşturmaya neden olabilir ve bu da performans açısından iyi değildir.
+  Dolayısıyla OCaml gibi varsayılan olarak immutability felsefesini benimsemiş diller için,
+  sayaç mekanizması güzel bir mutable olma örneğidir.
+*)
+type counter = {
+  mutable count: int;
+};;
+
+let tick_counter = { count = 0 };;
+
+let increment (crt: counter) =
+  crt.count <- crt.count + 1
+;;
+
+increment tick_counter;;
+increment tick_counter;;
+increment tick_counter;;
+
+Printf.printf "Current count: %d\n" tick_counter.count;;
+```
