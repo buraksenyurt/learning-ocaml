@@ -2,7 +2,20 @@
 
 OCaml programlama dili ile ilgili maceralarımın yer aldığı kod deposudur.
 
-## OCaml ile İlgili Merak Ettiğim Sorular
+-[Giriş](#learning-ocaml)
+ -[Merak Ettiklerim](#merak-ettiklerim)
+  -[Kurulumlar](#kurulumlar)
+  -[Giriş Seviyesi](#giriş-seviyesi)
+   -[Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler](#basit-aritmetik-işlemler-değişken-atamaları-ve-isimlendirmeler)
+   -[let'in Gücü ve Fonksiyon Tanımlamaları](#letin-gücü-ve-fonksiyon-tanımlamaları)
+   -[Yine de Float.0 ile Çalışmak Gerekirse](#yine-de-float0-ile-çalışmak-gerekirse)
+   -[Zihin Yakan Bir Fonksiyon Kullanımı](#zihin-yakan-bir-fonksiyon-kullanımı)
+   -[Fonksiyonlarda Generic Parametre Kullanımı](#fonksiyonlarda-generic-parametre-kullanımı)
+   -[Tuple, List ve Options veri türleri](#tuple-list-ve-options-veri-türleri)
+   -[Record Veri Yapısı ve Variant Tipler](#record-veri-yapısı-ve-variant-tipler)
+   -[Döngüsüz Olmaz Tabii *(for, while loops)*](#döngüsüz-olmaz-tabii-for-while-loops)
+
+## Merak Ettiklerim
 
 **OCaml ismi nerden geliyor?:**
 **Geliştiricileri kim?:**
@@ -728,4 +741,117 @@ value isimli değişken global scope'ta tanımlanmış ve bu nedenle herhangi bi
 
 ### Döngüsüz Olmaz Tabii *(for, while loops)*
 
-> EKLENECEK
+En basit örneklerle başlayalım. Bir sayaç fonksiyonunu hem **for** hem de **while** döngüsü kullanarak yazalım.
+
+```ocaml
+let count_for n =
+  for i = 1 to n do
+    Printf.printf "%d," i
+  done;
+  Printf.printf "\n"
+;;
+
+let count_while n =
+  let i = ref 1 in
+  while !i <= n do
+    Printf.printf "%d," !i;
+    i := !i + 1
+  done;
+  Printf.printf "\n"
+;;
+
+count_for 5;;
+count_while 10;;
+```
+
+Şimdi örneklerimizi biraz daha eğlenceli hale getirelim. Örneğin, tamsayılardan oluşan bir listeyi **Random** modülünden de yararlanarak belli aralıktaki rastgele sayılarla dolduralım.
+
+```ocaml
+let generate_random_list n =
+  Random.self_init ();
+  let numbers = ref [] in
+  for i = 1 to n do
+    let random_number = Random.int 100 in
+    numbers := random_number :: !numbers
+  done;
+  !numbers
+
+let random_numbers = generate_random_list 10;;
+
+Printf.printf "Random numbers: %s\n" (String.concat "; " (List.map string_of_int random_numbers));;
+```
+
+**generate_random_list** fonksiyonu n değerine göre bir liste döndürmekte. Bu listenin elemanları 0 ile 99 arasındaki rastgele sayılarla dolduruluyor. Örnekten **Random** isimli bir modül kullanıyoruz. Dikkat edilmesi gereken noktalardan birisi **self_init()** çağrısı. Bunu yapmadığımız takdirde her seferinde aynı rastgele sayıların üretildiğini görürüz. Üretilen rastgele sayılar **::** operatörü yardımıyla numbers isimli listeye ekleniyor. Sonrasında **!numbers** ifadesiyle de oluşturulan liste döndürülüyor. Kodun son satırında ise bu listeyi ekrana bastırmak için **String.concat** ve **List.map** fonksiyonlarından yararlanıyoruz. **List.map** fonksiyonu, verilen bir fonksiyonu listenin her bir elemanına uygulayarak yeni bir liste oluşturur. Bu örnekte, **string_of_int** fonksiyonunu kullanarak her bir tamsayıyı string'e dönüştürüyoruz. Ardından **String.concat** fonksiyonu ile bu string'leri "; " ile birleştirerek tek bir string elde ediyoruz ve bunu ekrana yazdırıyoruz. Aynı fonksiyonu birde **while** döngüsü kullanarak yazalım.
+
+```ocaml
+let generate_random_list_while n =
+  Random.self_init ();
+  let numbers = ref [] in
+  let i = ref 1 in
+  while !i <= n do
+    let random_number = Random.int 100 in
+    numbers := random_number :: !numbers;
+    i := !i + 1
+  done;
+  !numbers
+
+let random_numbers_while = generate_random_list_while 10;;
+
+Printf.printf "Random numbers (while): %s\n" (String.concat "; " (List.map string_of_int random_numbers_while));;
+```
+
+Bu fonksiyon da aynı şekilde n değerine göre bir liste döndürmekte ancak burada **while** döngüsü kullanılmıştır. Döngü içerisinde i değişkeni 1'den başlayarak n'ye kadar artırılır ve her iterasyonda rastgele bir sayı üretilerek numbers listesine eklenir. Her iki fonksiyonun çalışma zamanına ait bir çıktıyı da ekleyelim.
+
+![ocaml_10.png](./images/ocaml_10.png)
+
+Örneklerimize devam edelim. Parametre olarak gelen **Array** içindeki sayıların ortalamasını bulup döndüren bir fonksiyonu hem **for** hem de **while** döngüsü kullanarak yazalım.
+
+```ocaml
+let average arr = 
+  let sum = ref 0 in
+  for i = 0 to Array.length arr - 1 do
+    sum := !sum + arr.(i)
+  done;
+  float_of_int !sum /. float_of_int (Array.length arr)
+
+let arr = generate_random_list 10 |> Array.of_list;;
+Printf.printf "Average: %f\n" (average arr);;
+```
+
+**average** isimli fonksiyon, **arr** isimli bir parametre almakta. Tabii bunun bir **Array** olduğunu varsayıyoruz. **sum** isimli değişkeni **mutable** olarak tanımladık zira bir toplam değerine ihtiyacımız var. Sonrasında bir **for** döngüsü yardımıyla dizi elemanlarının arka arkaya topluyoruz. **!** operatörü ile sum'un içindeki değere erişiyoruz ve **:=** operatörünü kullanarak bu değeri güncelliyoruz. Döngü tamamlandıktan sonra toplam değeri dizi uzunluğuna bölerek ortalamayı hesaplıyoruz. Dikkat edelim, bölme işlemi sırasında tam sayı bölmesi yapmamak için hem toplamı hem de dizi uzunluğunu **float_of_int** fonksiyonu ile float türüne dönüştürüyoruz. Sonrasında bu fonksiyonu kullanarak bir dizi oluşturup ortalamasını ekrana yazdırıyoruz.
+
+Peki bu fonksiyona alakasız bir veri türü gönderirsek. Örneğin metinsel bir ifade gönderelim.
+
+```ocaml
+let himm = "Bu örneklerde for ve while döngülerini kullanarak listeler ve diziler üzerinde işlemler yaptık.";;
+let avg = average himm;;
+```
+
+Bu durumda aşağıdaki gibi bir hata alırız.
+
+![ocaml_11.png](./images/ocaml_11.png)
+
+Sıradaki fonksiyonumuz iki boyutlu bir matris üretiyor. Herbir elemanı 0 veya 1 olabilen bir matris. Basit bir oyun sahasının iki boyutlu görünümünde duvar veya yol kararını vermeyi kolaylaştırabilecek çok basit bir örnek.
+
+```ocaml
+let generate_matrix row_count col_count =
+  Random.self_init ();
+  let matrix = Array.make_matrix row_count col_count 0 in
+  for i = 0 to row_count - 1 do
+    for j = 0 to col_count - 1 do
+      matrix.(i).(j) <- Random.int 2
+    done;
+  done;
+  matrix
+
+let matrix = generate_matrix 5 8;;
+Printf.printf "Generated Matrix:\n";
+Array.iter (fun row ->
+  Array.iter (fun value -> Printf.printf "%d " value) row;
+  Printf.printf "\n"
+) matrix;;
+```
+
+Burada yardımcı birkaç fonksiyon da kullandık. Örneğin iki boyutlu bir matris dizisini oluşturmak için **make_matrix** fonksiyonuna başvurduk. İki boyutlu dizinin elemanlarını satır sütun bazında dolaşmak içinse klasik iç içe **for** döngüsü kullandık. Doğrudan dizinin elemanların atama işlemi yapılacağından **<-** operatörü ile 0 ile 1 şeklinde üretilen rastgele sayıları atadır. **Random.int** fonksiyonuna 2 değerini verdiğimizde sadece 0 veya 1 değerleri üretilebilir. Fonksiyon çıktısı olan matrisi ekrana yazdırmak için yine içiçe for döngüsü kullanabiliriz ama **fonksiyonel** bir yaklaşımla ilerlemek de oldukça şık. Nitekim **Array** modülünde yer alan **iter** fonksiyonu ile dizinin her bir elemanına uygulanacak bir fonksiyon çalıştırabiliriz. Dolayısıyla dış iterasyon, row'u parametre olarak alan ve dolayısıyla kolonları dolaşmayı sağlayacan anonim bir fonksiyon kullanıyor. İç iterasyon ise value'yu parametre olarak alan ve bu değeri ekrana yazdıran bir anonim fonksiyon. Her satırın sonunda ise yeni bir satır başlatmak için **Printf.printf "\n"** ifadesi yer almakta. Aşağıda çalışma zamanına ait örnek bir görüntü yer alıyor.
+
+![ocaml_12.png](./images/ocaml_12.png)
