@@ -14,6 +14,7 @@ OCaml programlama dili ile ilgili maceralarımın yer aldığı kod deposudur.
    -[Tuple, List ve Options veri türleri](#tuple-list-ve-options-veri-türleri)
    -[Record Veri Yapısı ve Variant Tipler](#record-veri-yapısı-ve-variant-tipler)
    -[Döngüsüz Olmaz Tabii *(for, while loops)*](#döngüsüz-olmaz-tabii-for-while-loops)
+   -[Derleyerek Çalıştırmak](#derleyerek-çalıştırmak)
 
 ## Merak Ettiklerim
 
@@ -855,3 +856,50 @@ Array.iter (fun row ->
 Burada yardımcı birkaç fonksiyon da kullandık. Örneğin iki boyutlu bir matris dizisini oluşturmak için **make_matrix** fonksiyonuna başvurduk. İki boyutlu dizinin elemanlarını satır sütun bazında dolaşmak içinse klasik iç içe **for** döngüsü kullandık. Doğrudan dizinin elemanların atama işlemi yapılacağından **<-** operatörü ile 0 ile 1 şeklinde üretilen rastgele sayıları atadır. **Random.int** fonksiyonuna 2 değerini verdiğimizde sadece 0 veya 1 değerleri üretilebilir. Fonksiyon çıktısı olan matrisi ekrana yazdırmak için yine içiçe for döngüsü kullanabiliriz ama **fonksiyonel** bir yaklaşımla ilerlemek de oldukça şık. Nitekim **Array** modülünde yer alan **iter** fonksiyonu ile dizinin her bir elemanına uygulanacak bir fonksiyon çalıştırabiliriz. Dolayısıyla dış iterasyon, row'u parametre olarak alan ve dolayısıyla kolonları dolaşmayı sağlayacan anonim bir fonksiyon kullanıyor. İç iterasyon ise value'yu parametre olarak alan ve bu değeri ekrana yazdıran bir anonim fonksiyon. Her satırın sonunda ise yeni bir satır başlatmak için **Printf.printf "\n"** ifadesi yer almakta. Aşağıda çalışma zamanına ait örnek bir görüntü yer alıyor.
 
 ![ocaml_12.png](./images/ocaml_12.png)
+
+### Derleyerek Çalıştırmak
+
+**Real World OCaml** kitabı bir sonraki bölüme geçmeden önce **A Complete Program** başlığında basit bir program örneği anlatıyor. Bu örnekte **ocaml** kodunun derlenerek çalıştırılması söz konusu. Derleme işlemi için **dune** *(Gezegen olan değil :D)* aracını kullanıyor. Burada temel amaç tek başına çalıştırılabilir *(standlone)* bir program oluşturmak. Öncelikle kodlarımızı oluşturalım. Bu amaçla **standalone** isimli bir klasör oluşturdum ve içerisine **main.ml** isimli bir dosya ekledim. Kolaya kaçarak daha önceden ele aldığımız bir fonksiyonu değerlendirebiliriz. Rastgele sayılalardan oluşan 10 elemanlı bir liste oluşturuyoruz.
+
+```ocaml
+let generate_random_list n =
+  Random.self_init ();
+  let numbers = ref [] in
+  for _ = 1 to n do
+    let random_number = Random.int 100 in
+    numbers := random_number :: !numbers
+  done;
+  !numbers
+
+let () = 
+  let random_numbers = generate_random_list 10 in
+  Printf.printf "Random numbers: %s\n" (String.concat "; " (List.map string_of_int random_numbers))
+```
+
+Tabii program kodunda dikkat etmemiz gereken şeyler de var. Öncelikle artık **;;** operaötrünü kullanmadığımıza dikkat edelim. Diğer yandan bir de **let () =** ifadesi var. Bunu programın giriş noktası olarak düşünebiliriz. Yani, program çalıştığında ilk olarak bu kısım çalışacaktır.
+
+Derleme işleminden önce bu klasörde oluşturmamız gereken iki dosya daha var; **dune** ve **dune-project**. İkisinin de uzantısı yoktur ve derlenecek programla ilgili bir takım konfigürasyon bilgilerini içerirler *(Tahmin edileceği üzere)*. **dune** içeriğini şöyle oluşturabiliriz.
+
+```dune
+(executable
+ (name rand_10))
+```
+
+Kod dosyasının adı **rand_10.ml** olduğu için name kısmına da rand_10 yazdık. **dune-project** dosyasının içeriği ise oldukça basit.
+
+```dune-project
+(lang dune 3.0)
+```
+
+Bu dosya ile dune aracının hangi sürümünün kullanılacağını belirtiyoruz. Bu adımlardan sonra kodu derleyip çalıştırabiliriz. Normalde sadece **dune build** komutu yeterli olur ancak derleme sırasındaki detayları da görmek istersek **verbose** argümanını kullanabiliriz. Programı çalıştırmak için yine **dune** aracından yararlanıyoruz.
+
+```bash
+# Derleme işlemi ve detaylar
+dune build --display=verbose
+# Programın çalıştırılması
+dune exec ./rand_10.exe
+```
+
+ve işte çalışma zamanı çıktılarımız.
+
+![ocaml_13.png](./images/ocaml_13.png)
