@@ -1,7 +1,9 @@
 (*
   Örneğimizde çok basit bir yorumlayıcı(Interpretter) yazmaya çalışıyoruz.
   Klasik örnek olarak dört işlemi ele alabiliriz.
+*)
 
+(*
   expression dört işlemli bir ifade ağacını tanımlanıyor. 
   Recursive olarak tanımlanmış bir veri yapısı olduğundan bir ifadenin bir alt ifadesi de başka bir ifade olabilir.
   Böylece sonsuz sayıda işlemi içeren karmaşık ifadeler oluşturulabilir.
@@ -47,6 +49,67 @@ let rec eval expr =
         eval e1 / denominator
 
 (*
+  3 + 4 * (2 - 1) ifadesini, expression veri yapısı ile belirttiğimiz AST'te dönüştürmek için
+  bir Lexical Analysis ve Parsing adımlarına gerek var. Öncelikle metinsel ifade parçlarını birer token
+  olarak ele almamız lazım.
+
+  Yani sayılar bir token, +, -, *, /, (, ) gibi semboller de ayrı token'lar olarak tanımlanmalı.
+  Bu veri yapsını aşağıdaki gibi bir tip olarak tanımlayabiliriz.
+*)
+type token =
+  |TNumber of int
+  |TPlus
+  |TMinus
+  |TStar
+  |TSlash
+  |TLParen
+  |TRParen
+
+(*
+  Tokenizer fonksiyonu str ile gelen String veri türünü alır ve bir token listesine dönüştürür.
+  Örneğin "3 + 4 * (2 - 1)" ifadesi
+  [TNumber 3; TPlus; TNumber 4; TStar; TLParen; TNumber 2; TMinus; TNumber 1; TRParen]
+  şeklinde bir token listesine dönüştürülür.
+*)
+let tokenizer str =
+  let length = String.length str in
+  (* Yine recursive bir fonksiyonumuz var.
+      pos parametresi şu anda hangi karakterin işlendiğini gösterir.
+      acc ise şu ana kadar bulunan token'ların bir listesidir.
+      aux isimli fonksiyonu herbir karakteri tek tek kontrol ederek token'ları oluşturur ve acc listesine ekler.
+  *)
+  let rec aux pos acc =
+    if pos >=length then List.rev acc (* Eğer tüm karakterler işlendi ise, token listesini ters çevirip döndürür. *)
+    else match str.[pos] with
+      | ' ' | '\t'| '\n' -> aux (pos + 1) acc (* Eğer boşluk, tab veya yeni satır karakteri ise, atla ve devam et *)
+      | '+' -> aux (pos + 1) (TPlus :: acc)
+      | '-' -> aux (pos + 1) (TMinus :: acc)
+      | '*' -> aux (pos + 1) (TStar :: acc)
+      | '/' -> aux (pos + 1) (TSlash :: acc)
+      | '(' -> aux (pos + 1) (TLParen :: acc)
+      | ')' -> aux (pos + 1) (TRParen :: acc)
+      | '0'..'9' -> 
+        (*
+          Tabi sayısal bir ifade ile karşılaştıysak tüm basamaklarını okumak gerekiyor.
+          Örneğin "123" ifadesi tek bir token olarak ele alınmalı, üç ayrı token olarak değil.
+          Bu yüzden sayısal karakterler okundukça bir sonraki karakterin sayı olup olmadığını kontrol eden 
+          bir başka recursive fonksiyon söz konusu.
+        *)
+          let rec read_number digit = 
+            if digit<length && str.[digit] >= '0' && str.[digit] <= '9' then
+              read_number (digit + 1)
+            else
+              digit
+            in
+          let end_pos = read_number pos in
+          let number_str = String.sub str pos (end_pos - pos) in
+          let number = int_of_string number_str in
+          aux end_pos (TNumber number :: acc)
+      | c -> failwith (Printf.sprintf "Unexpected character: '%c'" c)
+  in
+  aux 0 []
+
+(*
   Ana program kodumuz da burada başlıyor.
 *)
 let () =
@@ -66,3 +129,23 @@ let () =
   (* let expr5 = Div (Value 8, Value 0) in*)
   (* Aşağıdaki ifade sıfıra bölme hatası verir *)
   (* Printf.printf "8 / 0 = %d\n" (eval expr5) *)
+
+  (*
+    Pek tabi kullanıcılar AST formatında değil aşağıdaki gibi metinsel ifadeler girer.
+  *)
+  let input = "3 + 4 * (2 - 1)" in
+  Printf.printf "Input: %s\n" input;
+  
+  (* Tokenları alıyoruz*)
+  let tokens = tokenizer input in
+  
+  Printf.printf "Tokens: ";
+  List.iter (function 
+    | TNumber n -> Printf.printf "TNumber(%d) " n
+    | TPlus -> Printf.printf "TPlus "
+    | TMinus -> Printf.printf "TMinus "
+    | TStar -> Printf.printf "TStar "
+    | TSlash -> Printf.printf "TSlash "
+    | TLParen -> Printf.printf "TLParen "
+    | TRParen -> Printf.printf "TRParen ") tokens;
+  Printf.printf "\n"
