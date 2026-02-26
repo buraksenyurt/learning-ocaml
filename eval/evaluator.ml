@@ -109,12 +109,68 @@ let tokenizer str =
   in
   aux 0 []
 
+
+(*
+  Parser fonksiyonu, token listesini expression veri yapısına dönüştürmek için kullanılmakta.
+  Çok kullanılan bir örnek. Bu süreçte matematiksel işlem önceliklerini de dikkate almak gerekiyor.
+  Örneğin, "3 + 4 * (2 - 1)" ifadesinde çarpma işlemi toplama işleminden önce gelmeli.
+  Bunun için recursive descent parsing tekniği kullanılmakta. Burada grammer'in her bir kuralı için
+  ayrı bir fonksiyon tanımlanır. Örneğin expression, term, factor gibi.
+  Bir expression kuralı, term kuralını çağırabilir ve term kuralı da factor kuralını çağırabilir.
+  Demek ki interpreter'ın grammer kurallarını tanımlaması ve 
+  bu kurallara göre token listesini expression veri yapısına dönüştürmesi gerekiyor.
+*)
+
+let rec parser tokens =
+  (* İlk olarak term kuralını çağırıyoruz. Ki term kuralı öncelikli olarak çarpma ve bölme işlemlerini ele almakta. *)
+  let (left_node, rest) = parse_term tokens in
+  parse_expr_tail left_node rest
+
+(* parse_factor sayı ve parantez gibi faktörleri ele alıyor. Bunu #1 seviye olarak düşünelim *)
+and parse_factor tokens =
+  match tokens with
+  | TNumber n :: rest -> (Value n, rest)
+  | TLParen :: rest ->
+      let (expr_node, rest_after_expr) = parser rest in
+      (match rest_after_expr with
+       | TRParen :: final_rest -> (expr_node, final_rest)
+       | _ -> failwith "Syntax error: ')' missing!")
+  | _ -> failwith "Syntax error: Unexpected character or missing number!"
+
+(* parse_term_tail çarpma ve bölme işlemlerini ele alıyor. Bunu #2 seviye olarak düşünelim *)
+and parse_term tokens =
+  let (left_node, rest) = parse_factor tokens in
+  parse_term_tail left_node rest
+
+and parse_term_tail left_node tokens =
+  match tokens with
+  | TStar :: rest ->
+      let (right_node, rest_after_right) = parse_factor rest in
+      parse_term_tail (Mul (left_node, right_node)) rest_after_right
+  | TSlash :: rest ->
+      let (right_node, rest_after_right) = parse_factor rest in
+      parse_term_tail (Div (left_node, right_node)) rest_after_right
+  | _ -> (left_node, tokens)
+
+(* parse_expr_tail toplama ve çıkarma işlemlerini ele alıyor. Bunu #3 seviye olarak düşünelim *)
+and parse_expr_tail left_node tokens =
+  match tokens with
+  | TPlus :: rest ->
+      let (right_node, rest_after_right) = parse_term rest in
+      parse_expr_tail (Add (left_node, right_node)) rest_after_right
+  | TMinus :: rest ->
+      let (right_node, rest_after_right) = parse_term rest in
+      parse_expr_tail (Sub (left_node, right_node)) rest_after_right
+  | _ -> (left_node, tokens)
+
+
+
 (*
   Ana program kodumuz da burada başlıyor.
 *)
 let () =
   (* Birkaç örnek ifade oluşturup eval ile değerlendirelim *)
-  let expr1 = Add (Value 4, Value 5) in
+  (* let expr1 = Add (Value 4, Value 5) in
   let expr2 = Sub (Value 10, Value 3) in
   let expr3 = Mul (Value 2, Value 6) in
   let expr4 = Div (Value 8, Value 2) in
@@ -124,7 +180,7 @@ let () =
   Printf.printf "10 - 3 = %d\n" (eval expr2);
   Printf.printf "2 * 6 = %d\n" (eval expr3);
   Printf.printf "8 / 2 = %d\n" (eval expr4);
-  Printf.printf "3 * 4 + (10 - 2) = %d\n" (eval expr5);
+  Printf.printf "3 * 4 + (10 - 2) = %d\n" (eval expr5); *)
 
   (* let expr5 = Div (Value 8, Value 0) in*)
   (* Aşağıdaki ifade sıfıra bölme hatası verir *)
@@ -133,13 +189,13 @@ let () =
   (*
     Pek tabi kullanıcılar AST formatında değil aşağıdaki gibi metinsel ifadeler girer.
   *)
-  let input = "3 + 4 * (2 - 1)" in
+  let input = "(3 + 4) * 8 - 6 / 2" in
   Printf.printf "Input: %s\n" input;
   
   (* Tokenları alıyoruz*)
   let tokens = tokenizer input in
   
-  Printf.printf "Tokens: ";
+  (* Printf.printf "Tokens: ";
   List.iter (function 
     | TNumber n -> Printf.printf "TNumber(%d) " n
     | TPlus -> Printf.printf "TPlus "
@@ -148,4 +204,9 @@ let () =
     | TSlash -> Printf.printf "TSlash "
     | TLParen -> Printf.printf "TLParen "
     | TRParen -> Printf.printf "TRParen ") tokens;
-  Printf.printf "\n"
+  Printf.printf "\n" *)
+
+let (ast,_) = parser tokens in
+
+let result = eval ast in
+Printf.printf "Result: %d\n" result
