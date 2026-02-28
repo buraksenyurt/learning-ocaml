@@ -164,49 +164,55 @@ and parse_expr_tail left_node tokens =
   | _ -> (left_node, tokens)
 
 
+(*
+    repl fonksiyonu bildiğimiz Read-Eval-Print Loop (REPL) döngüsünü sağlar.
+    Böylece komut satırından sürekli hesaplama için girdi alınabilir.
+    Fonksiyon recursive olarak tanımlanmıştır.
+
+*)
+let rec repl() =
+  print_string "Calculator> ";
+  flush stdout;
+
+  try
+  (* Hesaplama sırasında olası hatalar olabilir.
+    Örneğin sıfıra bölme veya sözdizimi hatası gibi- diyelim ki eksik parantez var veya geçersiz bir karakter.
+    Böyle bir durumda programın çökmesi yerine try-with bloğu içinde 
+    hatayı yakalayarak kullanıcıya bir hata mesajı göstermek ve
+    REPL döngüsüne devam ettirmek daha anlamlı olacaktır.
+  *)
+    let input = read_line () in
+    if input = "exit" || input = "quit" then
+      print_endline "Goodbye!"
+    else if input = "cls" || input = "clear" then
+      (* 
+        Windows için cls, Unix tabanlı sistemler için clear komutu kullanılabilir. 
+        Programın hangi işletim sisteminde çalıştığını kontrol etmek için
+        Sys kütüphanesindeki os_type fonksiyonunu kullandık.
+        Sys modülü için -> https://ocaml.org/manual/5.4/api/Sys.html      
+      *)
+      if Sys.os_type = "Win32" || Sys.os_type="Cygwin" then
+         let _ = Sys.command "cls" in repl()
+      else
+        let _ = Sys.command "clear" in repl()
+    else if input = "" then
+      repl() (* Boş giriş yapıldığında tekrar prompt göstermesi için *)
+    else
+      let tokens = tokenizer input in
+      let (ast, _) = parser tokens in
+      let result = eval ast in
+      Printf.printf "Result: %d\n" result;
+      repl()
+  with 
+  (* Tüm hata mesajlarını kapsar*)
+  | Failure msg -> Printf.printf "Error: %s\n" msg; repl()
+
+
 
 (*
-  Ana program kodumuz da burada başlıyor.
+  Ana program kkodu repl fonksiyonunu çağırarak 
+  kullanıcıdan girdi almaya başlar.
 *)
-let () =
-  (* Birkaç örnek ifade oluşturup eval ile değerlendirelim *)
-  (* let expr1 = Add (Value 4, Value 5) in
-  let expr2 = Sub (Value 10, Value 3) in
-  let expr3 = Mul (Value 2, Value 6) in
-  let expr4 = Div (Value 8, Value 2) in
-  let expr5 = Add (Mul (Value 3, Value 4), Sub (Value 10, Value 2)) in
-
-  Printf.printf "4 + 5 = %d\n" (eval expr1);
-  Printf.printf "10 - 3 = %d\n" (eval expr2);
-  Printf.printf "2 * 6 = %d\n" (eval expr3);
-  Printf.printf "8 / 2 = %d\n" (eval expr4);
-  Printf.printf "3 * 4 + (10 - 2) = %d\n" (eval expr5); *)
-
-  (* let expr5 = Div (Value 8, Value 0) in*)
-  (* Aşağıdaki ifade sıfıra bölme hatası verir *)
-  (* Printf.printf "8 / 0 = %d\n" (eval expr5) *)
-
-  (*
-    Pek tabi kullanıcılar AST formatında değil aşağıdaki gibi metinsel ifadeler girer.
-  *)
-  let input = "(3 + 4) * 8 - 6 / 2" in
-  Printf.printf "Input: %s\n" input;
-  
-  (* Tokenları alıyoruz*)
-  let tokens = tokenizer input in
-  
-  (* Printf.printf "Tokens: ";
-  List.iter (function 
-    | TNumber n -> Printf.printf "TNumber(%d) " n
-    | TPlus -> Printf.printf "TPlus "
-    | TMinus -> Printf.printf "TMinus "
-    | TStar -> Printf.printf "TStar "
-    | TSlash -> Printf.printf "TSlash "
-    | TLParen -> Printf.printf "TLParen "
-    | TRParen -> Printf.printf "TRParen ") tokens;
-  Printf.printf "\n" *)
-
-let (ast,_) = parser tokens in
-
-let result = eval ast in
-Printf.printf "Result: %d\n" result
+let () = 
+  print_endline "Welcome to the simple OCaml calculator! Type 'exit' or 'quit' to leave.";
+  repl()
