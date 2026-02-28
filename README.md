@@ -985,3 +985,11 @@ dune runtest
 ```
 
 ![Testing](./images/ocaml_15.png)
+
+Burada dikkate değer bir durum da var. Dune, **Incremental Build** ve **caching** mekanizmaları sayesinde sadece değişen dosyaları derleyerek testleri çalıştırır. Dolayısıyla kod tabanında değişiklik olmadığında testler tekrardan çalıştırılmaz. Yani kodun aynı olması testlerin de aynı kalacağı anlamaına gelir ki bu durumda kaynakları boşa israf etmenin de bir alemi yoktur. Burada **dune** kod dosyalarının imzalarını takip ederek bir karara varır. Ancak yinede testler koşmaya zorlayabiliriz. Bunun için **--force** argümanını kullanabiliriz.
+
+```bash
+dune runtest --force
+# veya
+dune runtest -f
+```
