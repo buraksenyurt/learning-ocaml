@@ -172,40 +172,4 @@ let parse token_list =
       in
       { table_name; is_get_all = true; condition }
   | _ -> failwith "Syntax error: Expected 'table=...' followed by 'get all' and optional 'where' clause!"
-
-let print_token = function 
-  | TTable -> Printf.printf "TABLE "
-  | TGet -> Printf.printf "GET "
-  | TAll -> Printf.printf "ALL "
-  | TWhere -> Printf.printf "WHERE "
-  | TAssign -> Printf.printf "ASSIGN "
-  | TString s -> Printf.printf "STRING(%s) " s
-  | TInt n -> Printf.printf "INT(%d) " n
-  | TEq -> Printf.printf "EQ "
-  | TNeq -> Printf.printf "NEQ "
-  | TEOF -> Printf.printf "EOF "
-  | TIdentifier id-> Printf.printf "IDENTIFIER(%s) " id
-
-let print_query qry =
-  Printf.printf "Query: table_name=%s, is_get_all=%b, condition=%s\n" 
-    qry.table_name 
-    qry.is_get_all 
-    (match qry.condition with
-     | Some cond -> 
-        Printf.sprintf "{ column=%s; op=%s; target=%s }" 
-          cond.column 
-          (match cond.op with Eq -> "Eq" | Neq -> "Neq") 
-          (match cond.target with VInt n -> Printf.sprintf "VInt(%d)" n | VString s -> Printf.sprintf "VString(%s)" s)
-     | None -> "None")
-
-let () =
-  (* print_endline "Welcome to the You ain't gonna needed query language! Type 'exit' or 'quit' to leave."; *)
-  let sql = "table='Products' get all where 'CategoryId' == 1;" in
-  Printf.printf "Input: %s\n" sql;
-  let tokens = tokenize sql in
-  Printf.printf "Tokens: ";
-  List.iter print_token tokens;
-  print_endline "";
-
-  let query = parse tokens in
-  print_query query
+  

@@ -1,2 +1,8 @@
-(executable
- (name oql))
+(library
+ (name oql)
+ (modules oql))
+
+(test
+ (name test_oql)
+ (modules test_oql)
+ (libraries oql alcotest))
