@@ -2,6 +2,25 @@
   Oql modülündeki fonksiyonlara ait birim testlerini içeren modül.
 *)
 
+let pp_value fmt v =
+  match v with
+  | Db.VString s -> Format.fprintf fmt "VString(%s)" s
+  | Db.VInt n    -> Format.fprintf fmt "VInt(%d)" n
+
+let value = Alcotest.testable pp_value ( = )
+
+let mock_db : Db.database = [
+  ("Products", [
+    [("Id", Db.VInt 1); ("Name", Db.VString "Laptop"); ("CategoryId", Db.VInt 1)];
+    [("Id", Db.VInt 2); ("Name", Db.VString "Phone"); ("CategoryId", Db.VInt 1)];
+    [("Id", Db.VInt 3); ("Name", Db.VString "Table"); ("CategoryId", Db.VInt 2)];
+  ]);
+  ("Categories", [
+    [("Id", Db.VInt 1); ("Name", Db.VString "Electronics")];
+    [("Id", Db.VInt 2); ("Name", Db.VString "Furniture")];
+  ]);
+]
+
 let pp_token fmt t =
   match t with
   | Oql.TTable        -> Format.fprintf fmt "TTable"
@@ -139,6 +158,17 @@ let test_is_digit_true () =
 let test_is_digit_letter_false () =
   Alcotest.(check bool) "letter is not a digit" false (Oql.is_digit 'a')
 
+let test_evaluator () =
+  let sql = "table='Products' get all where 'CategoryId' == 1;" in
+  let tokens = Oql.tokenize sql in
+  let query = Oql.parse tokens in
+  let results = Oql.execute query mock_db in
+  let expected = [
+    [("Id", Db.VInt 1); ("Name", Db.VString "Laptop"); ("CategoryId", Db.VInt 1)];
+    [("Id", Db.VInt 2); ("Name", Db.VString "Phone"); ("CategoryId", Db.VInt 1)];
+  ] in
+  Alcotest.(check (list (list (pair string value)))) "evaluator returns correct rows" expected results
+
 let tokenizer_tests = [
   Alcotest.test_case "empty string"                    `Quick test_empty_string;
   Alcotest.test_case "whitespace only"                 `Quick test_whitespace_only;
@@ -164,6 +194,10 @@ let tokenizer_tests = [
   Alcotest.test_case "mixed tokens"                    `Quick test_mixed_tokens;
 ]
 
+let evaluator_tests = [
+  Alcotest.test_case "evaluator returns correct rows" `Quick test_evaluator;
+]
+
 let helper_tests = [
   Alcotest.test_case "is_letter lowercase"             `Quick test_is_letter_lowercase;
   Alcotest.test_case "is_letter uppercase"             `Quick test_is_letter_uppercase;
@@ -176,4 +210,5 @@ let () =
   Alcotest.run "OQL Tests"
     [ ("Tokenizer", tokenizer_tests)
     ; ("Helpers", helper_tests)
+    ; ("Evaluator", evaluator_tests)
     ]

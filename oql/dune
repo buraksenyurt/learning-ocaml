@@ -1,6 +1,7 @@
 (library
  (name oql)
- (modules oql))
+ (wrapped false)
+ (modules oql db))
 
 (test
  (name test_oql)

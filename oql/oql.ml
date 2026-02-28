@@ -19,25 +19,17 @@
 type operator =
   | Eq
   | Neq
-[@@warning "-37"] (* Şimdilik unused-constructor warnings uyarısını build aşamasında geçersiz kılmak için eklendi *)
-
-(* Tablo adı gibi metinse ve kategori numarası gibi tam sayıları karşılıyor. 
-Şimdilik sadece string ve int türlerini destekliyor. *)
-type value = 
-  | VString of string
-  | VInt of int
-[@@warning "-37"] (* Şimdilik unused-constructor warnings uyarısını build aşamasında geçersiz kılmak için eklendi *)
 
 (*
   condition yapısı, bir sütun adı, bir operatör ve bir hedef değer içerir.
   Örneğin 'CategoryId' == 1 ifadesi aşağıdaki gibi temsil edilir;
 
-  { column = "CategoryId"; op = Eq; target = VInt 1 }
+  { column = "CategoryId"; op = Eq; target = Db.VInt 1 }
 *)
 type condition = {
   column: string;
   op:operator;
-  target: value;
+  target: Db.value;
 }
 
 (*
@@ -46,7 +38,7 @@ type condition = {
 {
   table_name = "Products";
   is_get_all = true;
-  condition = Some { column = "CategoryId"; op = Eq; target = VInt 1 }
+  condition = Some { column = "CategoryId"; op = Eq; target = Db.VInt 1 }
 }
 *)
 type query = {
@@ -54,7 +46,6 @@ type query = {
   is_get_all: bool;
   condition: condition option; (* Opsiyonel bir condition tanımı. Zira where ifadesi her zaman gerekli olmayabilir.*)
 }
-[@@warning "-34"] (*Şimdilik build aşamasında unused-type-declaration uyarısını geçersiz kılmak için.*)
 
 (*
   Tabii bu ifadeyi kelime kelime parçalayarak anlamlandırmak lazım. Tipik olarak bir Lexer (Tokenizer) ihtiyacımız var
@@ -164,12 +155,34 @@ let parse token_list =
       let condition = 
         match rest with
         | TWhere :: TString column :: TEq :: TInt n :: TEOF :: [] ->
-            Some { column; op = Eq; target = VInt n }
+            Some { column; op = Eq; target = Db.VInt n }
         | TWhere :: TString column :: TNeq :: TInt n :: TEOF :: [] ->
-            Some { column; op = Neq; target = VInt n }
+            Some { column; op = Neq; target = Db.VInt n }
         | TEOF :: [] -> None
         | _ -> failwith "Syntax error in WHERE clause!"
       in
       { table_name; is_get_all = true; condition }
   | _ -> failwith "Syntax error: Expected 'table=...' followed by 'get all' and optional 'where' clause!"
-  
+
+let check_condition (r:Db.row) (cond:condition) : bool =
+  match List.assoc_opt cond.column r with
+  | Some (Db.VInt v) ->
+      (match cond.op with
+      | Eq -> v = (match cond.target with Db.VInt t -> t | _ -> failwith "Type mismatch in condition")
+      | Neq -> v <> (match cond.target with Db.VInt t -> t | _ -> failwith "Type mismatch in condition"))
+  | Some (Db.VString s) ->
+      (match cond.op with
+      | Eq -> s = (match cond.target with Db.VString t -> t | _ -> failwith "Type mismatch in condition")
+      | Neq -> s <> (match cond.target with Db.VString t -> t | _ -> failwith "Type mismatch in condition"))
+  | None -> false
+
+let execute (q:query) (db:Db.database) : Db.row list =
+  match List.assoc_opt q.table_name db with
+  | Some rows ->
+      let filtered_rows = 
+        match q.condition with
+        | Some cond -> List.filter (fun r -> check_condition r cond) rows
+        | None -> rows
+      in
+      if q.is_get_all then filtered_rows else []
+  | None -> failwith (Printf.sprintf "Table '%s' not found in database!" q.table_name)
