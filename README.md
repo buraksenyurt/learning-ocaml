@@ -15,6 +15,7 @@ OCaml programlama dili ile ilgili maceralarımın yer aldığı kod deposudur.
    -[Record Veri Yapısı ve Variant Tipler](#record-veri-yapısı-ve-variant-tipler)
    -[Döngüsüz Olmaz Tabii *(for, while loops)*](#döngüsüz-olmaz-tabii-for-while-loops)
    -[Derleyerek Çalıştırmak](#derleyerek-çalıştırmak)
+   -[Alcotest ile Birim Test Yazmak](#alcotest-ile-birim-test-yazmak)
 
 ## Merak Ettiklerim
 
@@ -903,3 +904,84 @@ dune exec ./rand_10.exe
 ve işte çalışma zamanı çıktılarımız.
 
 ![ocaml_13.png](./images/ocaml_13.png)
+
+### Alcotest ile Birim Test Yazmak
+
+**OCaml** kodlarını test etmek için birkaç yöntem var. Bunlardan birisi () ile oluşturulan program giriş noktasında klasik terminal çıktıları ile ilerlmek. Ancak birim test *(unit test)* yazmak elbetteki daha profesyonel bir yaklaşım ama daha da önemlisi bir standart. Bu amaçla **dune** ile entegre çalışabilen **Alcotest** isimli bir kütüphane bulunuyor. Öncelikle bu aracı **opam** ile sisteme yüklemek gerekiyor.
+
+```bash
+opam install alcotest
+```
+
+![Alcotest install](./images/ocaml_14.png)
+
+Evet yanlış görmüyorsunuz, terminalde sevimli bir deve emojisi var :D
+
+Genel yaklaşım **library** haline getirilmiş kod dosyaları için **test** kelimesi ile başlayan **ocaml** dosyaları oluşturmak. Örneğin testing isimli bir klasör içerisinde **math.ml** isimli bir modül oluşturduğumuzu, bu modülü bir kütüphane olarak tasarlayıp birim testlerini yazmak istediğimizi düşünelim. Örnek olarak math modülünde aşağıdaki iki basit fonksiyona yer verebiliriz.
+
+```ocaml
+(* Faktöriyel hesaplama fonksiyonu *)
+let rec factorial n =
+  if n < 0 then failwith "Negative input not allowed for factorial"
+  else if n = 0 then 1
+  else n * factorial (n - 1)
+
+(* Üs alma fonksiyonu *)
+let rec power base exp =
+  if exp < 0 then failwith "Negative exponent not allowed"
+  else if exp = 0 then 1
+  else base * power base (exp - 1)
+```
+
+Öncelikle bu kütüphanenin bir **library** olarak ele alınması lazım ve ayrıca test dosyalarının da bu kütüphaneyi kullanabilmesi için yapılandırılması gerekiyor. Bu nedenle **dune** dosyasının içeriğini aşağıdaki gibi hazırlamalıyız. Burada math modülünü bir kütüphane olarak tanımlıyoruz. **modules** ile başlayan kısımlar kütüphaneye dahil edilecek modülleri de belirtmekte. Ayrıca **Alcotest** kütüphanesini test kısmında kullanmak üzere **libraries** kısmında bildiriyoruz.
+
+```dune
+(library
+ (name math)
+ (modules math))
+
+(test
+ (name test_math)
+ (modules test_math)
+ (libraries math alcotest))
+```
+
+Şimdi de birim testleri içeren **test_math.ml** dosyasını oluşturalım. Burada olası tüm durumları test etmekte yarar var elbette ki ancak ben örnek olması açısında birkaç tanesine yer verdim.
+
+```ocaml
+let test_factorial () =
+  let value = 5 in
+  let expected = 120 in
+  let result = Math.factorial value in
+  Alcotest.(check int) "factorial of 5" expected result
+
+let test_power () =
+  let base = 2 in
+  let exp = 3 in
+  let expected = 8 in
+  let result = Math.power base exp in
+  Alcotest.(check int) "power of 2^3" expected result
+
+let test_factorial_negative () =
+  let value = -1 in
+  Alcotest.check_raises "factorial of negative number" (Failure "Negative input not allowed for factorial")
+    (fun () -> ignore (Math.factorial value))
+
+let () =
+  let open Alcotest in
+  run "Math Tests" [
+    "Math Tests", [
+       test_case "factorial of 5" `Quick test_factorial;
+       test_case "power of 2^3" `Quick test_power;
+       test_case "factorial of negative number" `Quick test_factorial_negative;   
+    ];
+  ];
+```
+
+Testleri çalıştırmak için tek yapmamız gereken aşağıdaki terminal komutunu işletmek.
+
+```bash
+dune runtest
+```
+
+![Testing](./images/ocaml_15.png)
