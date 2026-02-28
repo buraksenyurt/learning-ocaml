@@ -147,6 +147,32 @@ let tokenize str =
   in
   aux 0 []
 
+  (*
+    Token listesini alıp query veri yapısına dönüştüren parser fonksiyonumuz.
+    Örneğin [TTable; TAssign; TString "Products"; TGet; TAll; TWhere; TString "CategoryId"; TEq; TInt 1; TEOF] 
+    token listesi aşağıdaki query yapısına dönüştürülebilmeli.
+    {
+      table_name = "Products";
+      is_get_all = true;
+      condition = Some { column = "CategoryId"; op = Eq; target = VInt 1 }
+    }
+  *)
+
+let parse token_list = 
+  match token_list with
+  | TTable :: TAssign :: TString table_name :: TGet :: TAll :: rest ->
+      let condition = 
+        match rest with
+        | TWhere :: TString column :: TEq :: TInt n :: TEOF :: [] ->
+            Some { column; op = Eq; target = VInt n }
+        | TWhere :: TString column :: TNeq :: TInt n :: TEOF :: [] ->
+            Some { column; op = Neq; target = VInt n }
+        | TEOF :: [] -> None
+        | _ -> failwith "Syntax error in WHERE clause!"
+      in
+      { table_name; is_get_all = true; condition }
+  | _ -> failwith "Syntax error: Expected 'table=...' followed by 'get all' and optional 'where' clause!"
+
 let print_token = function 
   | TTable -> Printf.printf "TABLE "
   | TGet -> Printf.printf "GET "
@@ -160,8 +186,20 @@ let print_token = function
   | TEOF -> Printf.printf "EOF "
   | TIdentifier id-> Printf.printf "IDENTIFIER(%s) " id
 
+let print_query qry =
+  Printf.printf "Query: table_name=%s, is_get_all=%b, condition=%s\n" 
+    qry.table_name 
+    qry.is_get_all 
+    (match qry.condition with
+     | Some cond -> 
+        Printf.sprintf "{ column=%s; op=%s; target=%s }" 
+          cond.column 
+          (match cond.op with Eq -> "Eq" | Neq -> "Neq") 
+          (match cond.target with VInt n -> Printf.sprintf "VInt(%d)" n | VString s -> Printf.sprintf "VString(%s)" s)
+     | None -> "None")
+
 let () =
-  print_endline "Welcome to the You ain't gonna needed query language! Type 'exit' or 'quit' to leave.";
+  (* print_endline "Welcome to the You ain't gonna needed query language! Type 'exit' or 'quit' to leave."; *)
   let sql = "table='Products' get all where 'CategoryId' == 1;" in
   Printf.printf "Input: %s\n" sql;
   let tokens = tokenize sql in
@@ -169,4 +207,5 @@ let () =
   List.iter print_token tokens;
   print_endline "";
 
-
+  let query = parse tokens in
+  print_query query
