@@ -2,29 +2,29 @@
 
 OCaml programlama dili ile ilgili maceralarımın yer aldığı kod deposudur.
 
--[Giriş](#learning-ocaml)
- -[Merak Ettiklerim](#merak-ettiklerim)
-  -[Kurulumlar](#kurulumlar)
-  -[Giriş Seviyesi](#giriş-seviyesi)
-   -[Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler](#basit-aritmetik-işlemler-değişken-atamaları-ve-isimlendirmeler)
-   -[let'in Gücü ve Fonksiyon Tanımlamaları](#letin-gücü-ve-fonksiyon-tanımlamaları)
-   -[Yine de Float.0 ile Çalışmak Gerekirse](#yine-de-float0-ile-çalışmak-gerekirse)
-   -[Zihin Yakan Bir Fonksiyon Kullanımı](#zihin-yakan-bir-fonksiyon-kullanımı)
-   -[Fonksiyonlarda Generic Parametre Kullanımı](#fonksiyonlarda-generic-parametre-kullanımı)
-   -[Tuple, List ve Options veri türleri](#tuple-list-ve-options-veri-türleri)
-   -[Record Veri Yapısı ve Variant Tipler](#record-veri-yapısı-ve-variant-tipler)
-   -[Döngüsüz Olmaz Tabii *(for, while loops)*](#döngüsüz-olmaz-tabii-for-while-loops)
-   -[Derleyerek Çalıştırmak](#derleyerek-çalıştırmak)
-   -[Alcotest ile Birim Test Yazmak](#alcotest-ile-birim-test-yazmak)
+- [Giriş](#learning-ocaml)
+    - [Merak Ettiklerim](#merak-ettiklerim)
+    - [Kurulumlar](#kurulumlar)
+    - [Giriş Seviyesi](#giriş-seviyesi)
+        - [Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler](#basit-aritmetik-işlemler-değişken-atamaları-ve-isimlendirmeler)
+        - [let'in Gücü ve Fonksiyon Tanımlamaları](#letin-gücü-ve-fonksiyon-tanımlamaları)
+        - [Yine de Float.0 ile Çalışmak Gerekirse](#yine-de-float0-ile-çalışmak-gerekirse)
+        - [Zihin Yakan Bir Fonksiyon Kullanımı](#zihin-yakan-bir-fonksiyon-kullanımı)
+        - [Fonksiyonlarda Generic Parametre Kullanımı](#fonksiyonlarda-generic-parametre-kullanımı)
+        - [Tuple, List ve Options veri türleri](#tuple-list-ve-options-veri-türleri)
+        - [Record Veri Yapısı ve Variant Tipler](#record-veri-yapısı-ve-variant-tipler)
+        - [Döngüsüz Olmaz Tabii *(for, while loops)*](#döngüsüz-olmaz-tabii-for-while-loops)
+        - [Derleyerek Çalıştırmak](#derleyerek-çalıştırmak)
+        - [Alcotest ile Birim Test Yazmak](#alcotest-ile-birim-test-yazmak)
 
 ## Merak Ettiklerim
 
-**OCaml ismi nerden geliyor?:** OCaml, "Objective Caml" ifadesinin kısaltması. Caml *( Categorical Abstract Machine Language)* diline nesne yönelimli programlama özelliklerinin eklenmiş bir versiyonu olarak düşünebiliriz ve evet logosunda deve var elbetteki :D
-**Geliştiricileri kim?:** INRIA *(Institut National de Recherche en Informatique et en Automatique - Ulusal Bilgisayar Bilimi ve Otomasyon Araştırma Enstitüsü)* 'da Xavier Leroy, Jérôme Vouillon, Damien Doligez, ve Didier Rémy tarafından geliştirilmiş. Fransızlar tarafında geliştirildiği için söz dizimine yer yer fransız kaldığım da olmadı değil :D
-**İlk versiyonu ne zaman çıktı?:** Kaynaklara göre ilk sürüm **1996** yılında piyasaya sürülmüş. Dokümanı yazdığım an itibariyle de son sürümü 2025-10-09 tarihinde yayınlanmış olan **5.4.0** versiyonu. Son sürümde immutable diziler, labelled tuple türleri, atomik record alanları gibi yeni özellikler eklenmiş.
-**Dilin kullanım amacı:** Genel amaçlı bir programlama dili olduğunu düşünebiliriz zira nesne yönelimli olma hali ve fonksiyonel dil özellikleri ile birlikte pragmatik yaklaşımları içeriyor. Genelleştirilmiş Garbage Collection, birinci sınıf fonksiyonlar *(First Citizen Functions)*, statik tür sistemi *(Static Type System)*, immutable programlama taktikleri, tip çıkarımı *(Type Inference)*, cebirsel veri türleri *(Algebraic Data Types)*, pattern matching ve daha birçok özelliği destekleyen bir dil.
-**Hangi dillerden esinlenmiş:** Sahip olduğu özellikler de düşünüldüğünde Caml başta olmak üzere, C, Pascal, Modula-3 ve Standard ML dillerinden esinlenildiği belirtiliyor.
-**Hangi dillere esin kaynağı olmuş:** Bir tanesi *[Rust](https://rust-lang.org/)* ki bende uğraştığım için biliyorum. Wikipedia kayıtlarına göre OCaml'dan etkilenen diğer diller arasında [Rocq](https://rocq-prover.org/), [F#](https://fsharp.org/), [Scala](https://www.scala-lang.org/), [Gleam](https://gleam.run/) gibi popüler diller de var.
+- **OCaml ismi nerden geliyor?:** OCaml, "Objective Caml" ifadesinin kısaltması. Caml *( Categorical Abstract Machine Language)* diline nesne yönelimli programlama özelliklerinin eklenmiş bir versiyonu olarak düşünebiliriz ve evet logosunda deve var elbetteki :D
+- **Geliştiricileri kim?:** INRIA *(Institut National de Recherche en Informatique et en Automatique - Ulusal Bilgisayar Bilimi ve Otomasyon Araştırma Enstitüsü)* 'da Xavier Leroy, Jérôme Vouillon, Damien Doligez, ve Didier Rémy tarafından geliştirilmiş. Fransızlar tarafında geliştirildiği için söz dizimine yer yer fransız kaldığım da olmadı değil :D
+- **İlk versiyonu ne zaman çıktı?:** Kaynaklara göre ilk sürüm **1996** yılında piyasaya sürülmüş. Dokümanı yazdığım an itibariyle de son sürümü 2025-10-09 tarihinde yayınlanmış olan **5.4.0** versiyonu. Son sürümde immutable diziler, labelled tuple türleri, atomik record alanları gibi yeni özellikler eklenmiş.
+- **Dilin kullanım amacı:** Genel amaçlı bir programlama dili olduğunu düşünebiliriz zira nesne yönelimli olma hali ve fonksiyonel dil özellikleri ile birlikte pragmatik yaklaşımları içeriyor. Genelleştirilmiş Garbage Collection, birinci sınıf fonksiyonlar *(First Citizen Functions)*, statik tür sistemi *(Static Type System)*, immutable programlama taktikleri, tip çıkarımı *(Type Inference)*, cebirsel veri türleri *(Algebraic Data Types)*, pattern matching ve daha birçok özelliği destekleyen bir dil.
+- **Hangi dillerden esinlenmiş:** Sahip olduğu özellikler de düşünüldüğünde Caml başta olmak üzere, C, Pascal, Modula-3 ve Standard ML dillerinden esinlenildiği belirtiliyor.
+- **Hangi dillere esin kaynağı olmuş:** Bir tanesi *[Rust](https://rust-lang.org/)* ki bende uğraştığım için biliyorum. Wikipedia kayıtlarına göre OCaml'dan etkilenen diğer diller arasında [Rocq](https://rocq-prover.org/), [F#](https://fsharp.org/), [Scala](https://www.scala-lang.org/), [Gleam](https://gleam.run/) gibi popüler diller de var.
 **OCaml ile kendi programlama dilini yazabilir miyim?:**
 **Kaynak olarak hangi kitabı tavsiye ederim?:** [Real World OCaml, Functional Programming for the Masses, Anıl Madhavapeddy, Yaron Minsky, Cambridge University Press](https://dev.realworldocaml.org/index.html)
 
