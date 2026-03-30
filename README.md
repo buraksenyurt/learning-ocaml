@@ -26,7 +26,7 @@ OCaml programlama dili ile ilgili maceralarımın yer aldığı kod deposudur.
 - **Hangi dillerden esinlenmiş:** Sahip olduğu özellikler de düşünüldüğünde **Caml** başta olmak üzere, **C**, **Pascal**, **Modula-3** ve **Standard ML** dillerinden esinlenildiği belirtiliyor.
 - **Hangi dillere esin kaynağı olmuş:** Bir tanesi *[Rust](https://rust-lang.org/)* ki bende uğraştığım için biliyorum. Wikipedia kayıtlarına göre OCaml'dan etkilenen diğer diller arasında [Rocq](https://rocq-prover.org/), [F#](https://fsharp.org/), [Scala](https://www.scala-lang.org/), [Gleam](https://gleam.run/) gibi popüler diller de var.
 - **OCaml ile kendi programlama dilini yazabilir miyim?:** Teorik olarak evet, **OCaml** güçlü bir dil ve kendi dilinizi yazmak için gerekli araçları sağlayabilir.
-- **Hangi kaynaklardan öğrenebilirim?:** [Real World OCaml, Functional Programming for the Masses, Anıl Madhavapeddy, Yaron Minsky, Cambridge University Press](https://dev.realworldocaml.org/index.html) Bunun yanında Cornell Üniversitesinden Michael Ryan Clarkson'ın 2021 yılında yayınladığı [OCaml Programming: Correct + Efficient + Beautiful](https://youtube.com/playlist?list=PLre5AT9JnKShBOPeuiD9b-I4XROIJhkIU&si=fqYdWGlXmQwy8c_b) kursunu da tavsiye ederim. Ben 25 yıl kadar geç başlıyorum bazı şeylere doğrudur :D Ayrıca bu yayına ait güzel bir [kitap](https://cs3110.github.io/textbook/cover.html) da var.
+- **Hangi kaynaklardan öğrenebilirim?:** [Real World OCaml, Functional Programming for the Masses, Anıl Madhavapeddy, Yaron Minsky, Cambridge University Press](https://dev.realworldocaml.org/index.html) Bunun yanında **Cornell** Üniversitesinden **Michael Ryan Clarkson**'ın 2021 yılında yayınladığı [OCaml Programming: Correct + Efficient + Beautiful](https://youtube.com/playlist?list=PLre5AT9JnKShBOPeuiD9b-I4XROIJhkIU&si=fqYdWGlXmQwy8c_b) kursunu da tavsiye ederim. Ben 25 yıl kadar geç başlıyorum bazı şeylere doğrudur :D Ayrıca bu yayına ait güzel bir [kitap](https://cs3110.github.io/textbook/cover.html) da var.
 
 ## Kurulumlar
 
@@ -104,11 +104,23 @@ Eğer her şey yolunda giderse ubuntu ortamında **utop** ile doğrudan **ocaml*
 
 ## Giriş Seviyesi
 
-Aşağıdaki kod örnekleri için komut satırından `ocaml` komutu çalıştırılarak ilerlenebilir. `ocaml` aracı ile çalışırken kullanılabilecek komutlar için aşağıdaki komut kullanılabilir. Ayrıca `utop` aracı ile de çalışabilir. Bu ikisi özellikle yazılan kodun anında çalıştırılması ve sonuçların görülmesi açısından faydalı araçlar. `utop` aracı daha gelişmiş özelliklere sahip bir toplevel aracı olarak düşünülebilir ancak bir noktadan sonra **ml** uzantılı dosyalar üzerinden çalışmaya döndüğümü de belirtmek isterim.
+Aşağıdaki kod örnekleri için komut satırından **ocaml** komutu çalıştırılarak ilerlenebilir. **ocaml** aracı ile çalışırken kullanılabilecek komutlar için aşağıdaki komut kullanılabilir. Ayrıca **utop** aracı ile de çalışabilir. Bu ikisi özellikle yazılan kodun anında çalıştırılması ve sonuçların görülmesi açısından faydalı araçlar. **utop** aracı daha gelişmiş özelliklere sahip bir **toplevel** aracı olarak düşünülebilir ancak bir noktadan sonra **ml** uzantılı dosyalar üzerinden çalışmaya döndüğümü de belirtmek isterim.
 
-```text
-# #help;;
+### Bazı Yararlı Utop Komutları
+
+- **#help;;** : Utop'ta kullanılabilecek komutları gösterir.
+- **CTRL + L** : Ekranı temizler. Bir noktadan sonra terminal ekranı çok kirlenirse silmek için ;)
+- **#quit;;** : Utop oturumunu sonlandırır.
+- **#show {module_name};;** : Belirtilen modülün içeriğini gösterir. Örneğin **#show List;;** komutu ile List modülünün içeriği görülebilir.
+- **#use "filename.ml";;** : Belirtilen dosyayı yükler ve içindeki kodu çalıştırır. Dosya uzantısı .ml olmalıdır. Örneğin aşağıdaki içeriğe sahip bir **ml** dosyamız olduğunu düşünelim. *(Clarkson'un öğretisine bağlı kalarak WSL ortamında 3110 isimli bir klasör oluşturup içine bu dosyayı koydum)*
+
+```ocaml
+let x : int = 3110;;
+print_int x;;
+print_string "Hello, world!\n";;
 ```
+
+![Use Command with Utop](./images/ocaml_17.png)
 
 ### Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler
 
@@ -164,6 +176,8 @@ Line 1, characters 11-16:
 Error: Syntax error
 ```
 
+![Variables](./images/ocaml_18.png)
+
 - **;;** ile toplevel'a *(bu ne demek?)* ilgili satırı bir ifade olarak ele alması gerektiğini, yani hemen çalıştırmasını belirtmek için kullanılıyor. *(Evaluate Expression)*
 - İki **float** değeri toplamak için **+.** operatörü kullanılmalı. Ayrıca **float** ve **int** toplanacak küsürat olmasa bile . ile sayının **float** olarak ele alınacağı ifade edilmeli.
 - İfade çalıştırıldığında sadece sonuç değil tür bilgisi de dönülüyor.
@@ -198,6 +212,8 @@ Error: The constant 1.2 has type float but an expression was expected of type
 # total 128 (8 * 1024);;
 - : int = 8320
 ```
+
+![Power of let](./images/ocaml_19.png)
 
 Burada **total** isimli iki parametre alan ve varsayılan olaran **int** türünde değerleri toplayan bir fonksiyon tanımladık. Fonksiyon çağrılırken parametreler arasında parantez kullanımı önemli. Aksi halde eksi işareti operatör olarak algılanıyor. Ayrıca doğru türlerde işlem yapmak lazım.
 
@@ -238,11 +254,13 @@ Error: The constant 3.14 has type float
 - : float = 1.5
 ```
 
+![Float Division](./images/ocaml_20.png)
+
 > div fonksiyonunun yorumlanma şekli dikkat çekmiştir. int -> int -> float. Düşününce int,int->float gibi bir şey yazar diye bekliyor insan.
 
 Yukarıdaki örnekte, div isimli fonksiyonu tanımlamaya çalışıyorum. Fonksiyondan beklenti **int** türünden gelen iki sayıyı bölmek ama bunları **float** türünden ele almasını sağlamak. İlk denemede kitaptaki fonksiyon adını unuttum ve **of_int** yerine **from_int** yazdım. **Rust** günlüklerim geldi aklıma, yorumlayıcı *acaba şunu mu demek istedin* derken. Fonksiyonları düzelttikten sonra **/** operatörü ile **/.** arasındaki farka tosladım. **float** türler arasında bir bölme işlemi söz konusu olacağı için **/.** operatörünün kullanılması gerekiyor. Bölme operatörünün tipe özel versiyonlandığını ifade edebiliriz. Ayrıca **Float** bir Ocaml modülü.
 
-Burada rahatsız edici nokta belki de **Float.of_int** kullanımı olabilir ama bunu kolaylaştırmak için OCaml ekosisteminde yazılmış bir başka [modül](https://ocaml.janestreet.com/ocaml-core/v0.13/doc/base/Base/Float/O/) var. Bu modüldeki amaçlardan birisi **float** değerler ile çalışırken +., /. operatörleri yerine +, / ile de çalışabilmek ve bunu **float-safe** modda yapabilmek. Ben şu an için standart kütüphane ile devam etmek istiyorum. Ekosistemdeki diğer modüllere sonradan odaklanırım. Standart kütühane aynı fonksiyonu aşağıdaki gibi yazmamıza da izin veriyor.
+Burada rahatsız edici nokta belki de **Float.of_int** kullanımı olabilir ama bunu kolaylaştırmak için **OCaml** ekosisteminde yazılmış bir başka [modül](https://ocaml.janestreet.com/ocaml-core/v0.13/doc/base/Base/Float/O/) var. Bu modüldeki amaçlardan birisi **float** değerler ile çalışırken +., /. operatörleri yerine +, / ile de çalışabilmek ve bunu **float-safe** modda yapabilmek. Ben şu an için standart kütüphane ile devam etmek istiyorum. Ekosistemdeki diğer modüllere sonradan odaklanırım. Standart kütühane aynı fonksiyonu aşağıdaki gibi yazmamıza da izin veriyor.
 
 ```text
 # let div x y =
@@ -253,11 +271,19 @@ val div : int -> int -> float = <fun>
 - : float = 0.2
 ```
 
+![Float of int](./images/ocaml_21.png)
+
 #### Yine de Float.0 ile Çalışmak Gerekirse
 
-Bir noktada Float.O ile çalışmak gerekirse şöyle ilerlemek gerekiyor. Öncelikle komut satırından **utop** başlatılır. Ardından, toplevel, Base modülünü destekleyecek şekilde başlatılır. Bu işlemin ardından ilgili fonksiyon yazılabilir. Aşağıdaki ekran görüntüsünü geleceğe not olarak bırakayım.
+Bir noktada **Float.O** ile çalışmak gerekirse şöyle ilerlemek gerekiyor. Öncelikle komut satırından **utop** başlatılır. Ardından, **toplevel**, **Base** modülünü destekleyecek şekilde başlatılır. Bu işlemin ardından ilgili fonksiyon yazılabilir. Aşağıdaki ekran görüntüsünü geleceğe not olarak bırakayım.
+
+> Burada dikkat edilmesi gereken bir nokta da **Float.O** ifadesindeki O'nun büyük harf O olduğudur. 0 (sıfır) değil :D
 
 ![ocaml_01.png](./images/ocaml_01.png)
+
+Gelecekten geldim :D **WSL - Ubuntu** tarafından da bir bakalım.
+
+![ocaml_22.png](./images/ocaml_22.png)
 
 ### Zihin Yakan Bir Fonksiyon Kullanımı
 
