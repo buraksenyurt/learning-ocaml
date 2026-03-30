@@ -3,19 +3,19 @@
 OCaml programlama dili ile ilgili maceralarımın yer aldığı kod deposudur.
 
 - [Giriş](#learning-ocaml)
-    - [Merak Ettiklerim](#merak-ettiklerim)
-    - [Kurulumlar](#kurulumlar)
-    - [Giriş Seviyesi](#giriş-seviyesi)
-        - [Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler](#basit-aritmetik-işlemler-değişken-atamaları-ve-isimlendirmeler)
-        - [let'in Gücü ve Fonksiyon Tanımlamaları](#letin-gücü-ve-fonksiyon-tanımlamaları)
-        - [Yine de Float.0 ile Çalışmak Gerekirse](#yine-de-float0-ile-çalışmak-gerekirse)
-        - [Zihin Yakan Bir Fonksiyon Kullanımı](#zihin-yakan-bir-fonksiyon-kullanımı)
-        - [Fonksiyonlarda Generic Parametre Kullanımı](#fonksiyonlarda-generic-parametre-kullanımı)
-        - [Tuple, List ve Options veri türleri](#tuple-list-ve-options-veri-türleri)
-        - [Record Veri Yapısı ve Variant Tipler](#record-veri-yapısı-ve-variant-tipler)
-        - [Döngüsüz Olmaz Tabii *(for, while loops)*](#döngüsüz-olmaz-tabii-for-while-loops)
-        - [Derleyerek Çalıştırmak](#derleyerek-çalıştırmak)
-        - [Alcotest ile Birim Test Yazmak](#alcotest-ile-birim-test-yazmak)
+  - [Merak Ettiklerim](#merak-ettiklerim)
+  - [Kurulumlar](#kurulumlar)
+  - [Giriş Seviyesi](#giriş-seviyesi)
+    - [Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler](#basit-aritmetik-işlemler-değişken-atamaları-ve-isimlendirmeler)
+    - [let'in Gücü ve Fonksiyon Tanımlamaları](#letin-gücü-ve-fonksiyon-tanımlamaları)
+    - [Yine de Float.0 ile Çalışmak Gerekirse](#yine-de-float0-ile-çalışmak-gerekirse)
+    - [Zihin Yakan Bir Fonksiyon Kullanımı](#zihin-yakan-bir-fonksiyon-kullanımı)
+    - [Fonksiyonlarda Generic Parametre Kullanımı](#fonksiyonlarda-generic-parametre-kullanımı)
+    - [Tuple, List ve Options veri türleri](#tuple-list-ve-options-veri-türleri)
+    - [Record Veri Yapısı ve Variant Tipler](#record-veri-yapısı-ve-variant-tipler)
+    - [Döngüsüz Olmaz Tabii *(for, while loops)*](#döngüsüz-olmaz-tabii-for-while-loops)
+    - [Derleyerek Çalıştırmak](#derleyerek-çalıştırmak)
+    - [Alcotest ile Birim Test Yazmak](#alcotest-ile-birim-test-yazmak)
 
 ## Merak Ettiklerim
 
@@ -23,14 +23,18 @@ OCaml programlama dili ile ilgili maceralarımın yer aldığı kod deposudur.
 - **Geliştiricileri kim?:** INRIA *(Institut National de Recherche en Informatique et en Automatique - Ulusal Bilgisayar Bilimi ve Otomasyon Araştırma Enstitüsü)* 'da Xavier Leroy, Jérôme Vouillon, Damien Doligez, ve Didier Rémy tarafından geliştirilmiş. Fransızlar tarafında geliştirildiği için söz dizimine yer yer fransız kaldığım da olmadı değil :D
 - **İlk versiyonu ne zaman çıktı?:** Kaynaklara göre ilk sürüm **1996** yılında piyasaya sürülmüş. Dokümanı yazdığım an itibariyle de son sürümü 2025-10-09 tarihinde yayınlanmış olan **5.4.0** versiyonu. Son sürümde immutable diziler, labelled tuple türleri, atomik record alanları gibi yeni özellikler eklenmiş.
 - **Dilin kullanım amacı:** Genel amaçlı bir programlama dili olduğunu düşünebiliriz zira nesne yönelimli olma hali ve fonksiyonel dil özellikleri ile birlikte pragmatik yaklaşımları içeriyor. Genelleştirilmiş Garbage Collection, birinci sınıf fonksiyonlar *(First Citizen Functions)*, statik tür sistemi *(Static Type System)*, immutable programlama taktikleri, tip çıkarımı *(Type Inference)*, cebirsel veri türleri *(Algebraic Data Types)*, pattern matching ve daha birçok özelliği destekleyen bir dil.
-- **Hangi dillerden esinlenmiş:** Sahip olduğu özellikler de düşünüldüğünde Caml başta olmak üzere, C, Pascal, Modula-3 ve Standard ML dillerinden esinlenildiği belirtiliyor.
+- **Hangi dillerden esinlenmiş:** Sahip olduğu özellikler de düşünüldüğünde **Caml** başta olmak üzere, **C**, **Pascal**, **Modula-3** ve **Standard ML** dillerinden esinlenildiği belirtiliyor.
 - **Hangi dillere esin kaynağı olmuş:** Bir tanesi *[Rust](https://rust-lang.org/)* ki bende uğraştığım için biliyorum. Wikipedia kayıtlarına göre OCaml'dan etkilenen diğer diller arasında [Rocq](https://rocq-prover.org/), [F#](https://fsharp.org/), [Scala](https://www.scala-lang.org/), [Gleam](https://gleam.run/) gibi popüler diller de var.
-**OCaml ile kendi programlama dilini yazabilir miyim?:**
-**Kaynak olarak hangi kitabı tavsiye ederim?:** [Real World OCaml, Functional Programming for the Masses, Anıl Madhavapeddy, Yaron Minsky, Cambridge University Press](https://dev.realworldocaml.org/index.html)
+- **OCaml ile kendi programlama dilini yazabilir miyim?:** Teorik olarak evet, **OCaml** güçlü bir dil ve kendi dilinizi yazmak için gerekli araçları sağlayabilir.
+- **Hangi kaynaklardan öğrenebilirim?:** [Real World OCaml, Functional Programming for the Masses, Anıl Madhavapeddy, Yaron Minsky, Cambridge University Press](https://dev.realworldocaml.org/index.html) Bunun yanında Cornell Üniversitesinden Michael Ryan Clarkson'ın 2021 yılında yayınladığı [OCaml Programming: Correct + Efficient + Beautiful](https://youtube.com/playlist?list=PLre5AT9JnKShBOPeuiD9b-I4XROIJhkIU&si=fqYdWGlXmQwy8c_b) kursunu da tavsiye ederim. Ben 25 yıl kadar geç başlıyorum bazı şeylere doğrudur :D Ayrıca bu yayına ait güzel bir [kitap](https://cs3110.github.io/textbook/cover.html) da var.
 
 ## Kurulumlar
 
-İlk olarak resmi [OCaml web sitesinden](https://ocaml.org/docs/installing-ocaml) gerekli kurulumları yaptım. Ayrıca VS Code editörüne OCaml eklentisini yükledim. Ancak komut satırından ocaml ile kod çalıştırmakta sorun yaşadım. Bunun kalıcı çözümü içinse aşağıdaki komutu işlettim.
+İlk olarak resmi [OCaml web sitesinden](https://ocaml.org/docs/installing-ocaml) gerekli kurulumları yapmak lazım. Ayrıca **VS Code** editörüne **OCaml** eklentisini yüklemekte yarar var.
+
+### Windows 11 Tarafında Sorun
+
+Windows 11 işletim sisteminde gerekli kurulumları yapmış olmama rağmen komut satırından **ocaml** ile kod çalıştırmakta sorun yaşadım. Bunun kalıcı çözümü içinse aşağıdaki komutu işlettim.
 
 ```bash
 Add-Content $PROFILE "`n# Initialize opam environment`n(& opam env) -split '\r?\n' | ForEach-Object { Invoke-Expression `$_ }"
@@ -49,6 +53,54 @@ ocaml
 İşte ilk programın çıktısı,
 
 ![hello_world](./images/hello_world.png)
+
+### WSL Tarafında Ubuntu Üzerinden Çalışmak
+
+Nedense bu tip dilleri çalışmak için en uygun platform **Linux** ortamı. Ben tüm çalışmalardan sonra konu tekrarları için **WSL** üzerinden ilerlemeye karar verdim. Hali hazırda WSD üzerinde bir **Ubuntu** sürümüm yüklü. Ancak değilse de,
+
+```bash
+wsl --install -d Ubuntu
+# ile ubuntu'yu yükleyebiliriz.
+```
+
+Ocaml kurulmarı içinse aşağıdaki adımları takip etmek gerekiyor.
+
+```bash
+# Öncelikle apt paket yöneticisini güncelleyelim
+sudo apt update
+# Şimdi de apt software paketlerini güncelleyelim
+sudo apt upgrade -y
+# İşimize yarayacak bazı paketleri de yükleyelim
+sudo apt install -y zip unzip build-essential
+
+sudo apt install opam
+opam init --bare -a -y
+# Bir ihtimal opam'ın update edilmesine dair bir uyarı gelebilir. O vakit,
+opam update
+
+# Güncel bir OCaml sürümü ile çalışmak için aşağıdaki komutu kullanarak bir switch oluşturabiliriz
+opam switch create ocaml-5.3 ocaml-base-compiler.5.3.0
+# Terminalimizinn yeni switch'i tanıması için aşağıdaki komutu çalıştırmakta fayda var
+eval $(opam env)
+# switch listesini görmek için
+opam switch list
+
+# Şimdi opam için gerekli paketleri yükleyelim
+opam install -y utop odoc ounit2 qcheck bisect_ppx menhir ocaml-lsp-server ocamlformat
+
+# Şu noktada ocaml universal TopLevel aracı olan utop'u kullanarak interaktif bir şekilde OCaml kodu yazabiliriz
+utop
+```
+
+Eğer her şey yolunda giderse ubuntu ortamında **utop** ile doğrudan **ocaml** kodlamaya başlanabilir. Mesela,
+
+```ocaml
+# 3.1415;;
+- : float = 3.1415
+#exit;;
+```
+
+![WSL Hello World](./images/ocaml_16.png)
 
 ## Giriş Seviyesi
 
