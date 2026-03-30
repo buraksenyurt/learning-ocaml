@@ -97,7 +97,7 @@ Eğer her şey yolunda giderse ubuntu ortamında **utop** ile doğrudan **ocaml*
 ```ocaml
 # 3.1415;;
 - : float = 3.1415
-#exit;;
+# #quit;;
 ```
 
 ![WSL Hello World](./images/ocaml_16.png)
