@@ -104,7 +104,7 @@ Eğer her şey yolunda giderse ubuntu ortamında **utop** ile doğrudan **ocaml*
 
 ## Giriş Seviyesi
 
-Aşağıdaki kod örnekleri için komut satırından **ocaml** komutu çalıştırılarak ilerlenebilir. **ocaml** aracı ile çalışırken kullanılabilecek komutlar için aşağıdaki komut kullanılabilir. Ayrıca **utop** aracı ile de çalışabilir. Bu ikisi özellikle yazılan kodun anında çalıştırılması ve sonuçların görülmesi açısından faydalı araçlar. **utop** aracı daha gelişmiş özelliklere sahip bir **toplevel** aracı olarak düşünülebilir ancak bir noktadan sonra **ml** uzantılı dosyalar üzerinden çalışmaya döndüğümü de belirtmek isterim.
+Aşağıdaki kod örnekleri için komut satırından **ocaml** komutu çalıştırılarak ilerlenebilir. Ayrıca **utop** aracı ile de çalışabilir. Bu ikisi özellikle yazılan kodun anında çalıştırılması ve sonuçların görülmesi açısından faydalı araçlar. **utop** aracı daha gelişmiş özelliklere sahip bir **TopLevel** aracı olarak düşünülebilir ancak bir noktadan sonra **ml** uzantılı dosyalar üzerinden çalışmaya döndüğümü de belirtmek isterim. **TopLevel** bir nevi **REPL *(Read-Eval-Print Loop)*** aracıdır. Çok büyük çaplı olmayan kod parçalarını denemek için, özellikle dilin temel özelliklerini giriş seviyesinde öğrenirken oldukça kullanışlı bir araçtır.
 
 ### Bazı Yararlı Utop Komutları
 
@@ -287,7 +287,7 @@ Gelecekten geldim :D **WSL - Ubuntu** tarafından da bir bakalım.
 
 ### Zihin Yakan Bir Fonksiyon Kullanımı
 
-Şimdi, int türünden değer dönen bir fonksiyonu parametre olarak alan, ve diğer parametrede gelen int değer ile toplayan bir fonksiyon tanımlayalım.
+Şimdi, **int** türünden değer dönen bir fonksiyonu parametre olarak alan, ve diğer parametrede gelen **int** değer ile toplayan bir fonksiyon tanımlayalım.
 
 ```text
 # let more_add f x y = f * x + y;;
@@ -300,7 +300,9 @@ val square : int -> int = <fun>
 - : int = 17
 ```
 
-İlk olarak **more_add** fonksiyonuna bir bakalım. **f** in bir fonksiyonu işaret ettiğini nereden anladı? Yorumlama kısmına baktığımızda int -> int -> int -> int şeklinde bir tanım var. **\<fun\>** tabii ki bunun bir fonksiyon olduğunu ifade etmekte. f çıktısını x ile çarpıp y ile toplatıyoruz. Saçma bir fonksiyon ancak dinamiğini öğrenmek açısından kayda değer. Sonrasında **square** isimli bir fonksiyon tanımlıyoruz. Bu fonksiyon tek parametre alıyor ve karesini döndürüyor. Şimdi **more_add** fonksiyonunu çağırırken ilk parametre olarak **square 2** ifadesini veriyoruz. Bu ifade **4** değerini döndürecek ve bu değer **f** parametresine bağlanacak. Sonrasında ise 3 ve 5 değerleri sırasıyla x ve y parametrelerine bağlanacak. Yani fonksiyonun işleyişi şu şekilde olacak, 4 * 3 + 5 = 12 + 5 = 17. Ancak asıl zihin yakıcı örnek kitaptaki örnekten esinlenilerek geliyor;
+![ocaml_23.png](./images/ocaml_23.png)
+
+İlk olarak **more_add** fonksiyonuna bir bakalım. **f** harfinin bir fonksiyonu işaret ettiğini nereden anladı? Yorumlama kısmına baktığımızda **int -> int -> int -> int** şeklinde bir tanım var. `<fun\>` tabii ki bunun bir fonksiyon olduğunu ifade etmekte. f çıktısını x ile çarpıp y ile toplatıyoruz. Saçma bir fonksiyon ancak dinamiğini öğrenmek açısından kayda değer. Sonrasında **square** isimli bir fonksiyon tanımlıyoruz. Bu fonksiyon tek parametre alıyor ve karesini döndürüyor. Şimdi **more_add** fonksiyonunu çağırırken ilk parametre olarak **square 2** ifadesini veriyoruz. Bu ifade **4** değerini döndürecek ve bu değer **f** parametresine bağlanacak. Sonrasında ise 3 ve 5 değerleri sırasıyla x ve y parametrelerine bağlanacak. Yani fonksiyonun işleyişi şu şekilde olacak, 4 * 3 + 5 = 12 + 5 = 17. Ancak asıl zihin yakıcı örnek kitaptaki örnekten esinlenilerek geliyor;
 
 ```text
 # let condition f first_arg second_arg =
@@ -314,9 +316,9 @@ val check_point : int -> bool = <fun>
 - : int = 76
 ```
 
-**condition** isimli fonksiyonun kullandığı **f** parametresi bir fonksiyonu işaret etmekte ve bu fonksiyonun türü **int -> bool**. Yani bir **int** alıp **bool** döndüren bir fonksiyon. Peki yorumlayıcı buna nasıl karar verdi ya da bu tür tahminini *(type inference)* neye göre yaptı? Burada **if** koşuluna odaklanmakta fayda var. Nitekim **else** kısımlarında 0 değeri kullanılmakta ki bu bir **int** türü. Buna göre **then** kısımlarında da **int** türü döndüren ifadeler olmalı. Sonuç olarak **f** fonksiyonu **int -> bool** türünde bir fonksiyon olmalı.
+**condition** isimli fonksiyonun kullandığı **f** parametresi bir fonksiyonu işaret etmekte ve bu fonksiyonun türü **int -> bool**. Yani bir **int** alıp **bool** döndüren bir fonksiyon. Peki yorumlayıcı buna nasıl karar verdi ya da bu tür tahminini *(type inference)* neye göre yaptı? Bunu anlamak için **if** koşuluna odaklanmakta fayda var. Nitekim **else** kısımlarında 0 değeri kullanılmakta ki bu bir **int** türü. Buna göre **then** kısımlarında da **int** türü döndüren ifadeler olmalı. Sonuç olarak **f** fonksiyonu **int -> bool** türünde bir fonksiyon olmalı.
 
-![ocaml_02.png](./images/ocaml_02.png)
+![ocaml_24.png](./images/ocaml_24.png)
 
 **OCaml** uzmanlarına göre bu yazım stiline ve yorumlayıcının tip tahmini mekanizmasına alışmak zaman alabilir. Diğer yandan dilin çok güçlü bir yanını ispat eden bu yazım stiline alışamayanlar için *Annotations* yani tür açıklamaları ile fonksiyonları tanımlamak da mümkün. Aynı fonksiyonu aşağıdaki gibi de yazabiliriz.
 
@@ -332,11 +334,11 @@ val check_point : int -> bool = <fun>
 - : int = 76
 ```
 
-![ocaml_03.png](./images/ocaml_03.png)
+![ocaml_25.png](./images/ocaml_25.png)
 
 ### Fonksiyonlarda Generic Parametre Kullanımı
 
-OCaml tür tahmini yapma konusundaki hünerini **generic** türler için de gösterir.
+**OCaml** tür tahmini yapma konusundaki hünerini **generic** türler için de gösterir.
 
 ```text
 # let identity value = value;;
@@ -351,7 +353,9 @@ val swap : 'a * 'b -> 'b * 'a = <fun>
 - : string * int = ("four", 4)
 ```
 
-**identity** ve **swap** isimli fonksiyonlar tnaımlandıktan sonra yorumlayıcının verdiği çıktılara dikkat edelim. *(Açıkçası Rust'ı öğrenmeye başladığımda hem kavramsal olarak hem de sentaks olarak zorlandığım 'a - lifetime annotations kavramı geldi aklıma)* Her neyse, **'a** ve **'b** şeklinde yazılan ifadeler generic türler. Generic kavramına aşina olmayanlar için *a ve b yerine herhangi bir tür gelebilir ve bunun için her bir türe özel olacak şekilde bu fonksiyonunun farklı versiyonlarını yazmanıza gerek yoktur* diyelim. Şimdi biraz daha kafar karıştırabilecek bir örnek.
+![ocaml_26.png](./images/ocaml_26.png)
+
+**identity** ve **swap** isimli fonksiyonlar tnaımlandıktan sonra yorumlayıcının verdiği çıktılara dikkat edelim. *(Açıkçası Rust'ı öğrenmeye başladığımda hem kavramsal olarak hem de sentaks olarak zorlandığım 'a - lifetime annotations kavramı geldi aklıma)* Her neyse, **'a** ve **'b** şeklinde yazılan ifadeler generic türler. Generic kavramına aşina olmayanlar için *a ve b yerine herhangi bir tür gelebilir ve bunun için her bir türe özel olacak şekilde bu fonksiyonunun farklı versiyonlarını yazmanıza gerek yoktur* diyelim. Şimdi biraz daha kafa karıştırabilecek bir örnek.
 
 ```text
 # let compare f arg_1 arg_2 =
@@ -373,7 +377,9 @@ Error: This constant has type string but an expression was expected of type
          int
 ```
 
-**compare** isimli fonksiyonumuz yine bir fonksiyon alıp diğer iki argümanı da hesaba katarak bir **if** koşulu işleterek sonuç döndürmekte. **compare** fonksiyonundaki parametrelerin generic **'a** türü olarak yorumlandığa dikkat edelim. Sonraki adımlarda **str_len** ve **is_pass** isimli iki farklı fonksiyon daha tanımlanıyor. İlki, **String** modülünden length fonksiyonunu kullanarak bir değer döndürdüğü için **string** veri türü ile çalışacağı kesin. Diğer fonksiyon ise sayısal bir karşılaştırma kullanıyor ve buna göre de **int** değerler çalışacağı anlaşılıyor. **compare** fonksiyonuna bu iki fonksiyonu parametre olarak verebiliriz ama devam eden argümanların da uygun tipler olması beklenir. Yani **str_len** kullanıyorsak diğer iki argümanın da **string** türünden olması gerekiyor.
+![ocaml_27.png](./images/ocaml_27.png)
+
+**compare** isimli fonksiyonumuz bir fonksiyon alıp diğer iki argümanı da hesaba katarak bir **if** koşulu işletmekte. **compare** fonksiyonundaki parametrelerin generic **'a** türü olarak yorumlandığa dikkat edelim. Sonraki adımlarda **str_len** ve **is_pass** isimli iki farklı fonksiyon daha tanımlanıyor. İlki, **String** modülünden **length** fonksiyonunu kullanarak bir değer döndürdüğü için **string** veri türü ile çalışacağı aşikar. Diğer fonksiyon ise sayısal bir karşılaştırma kullanıyor ve buna göre de **int** değerlerle çalışacağı anlaşılıyor. **compare** fonksiyonuna bu iki fonksiyonu parametre olarak verebiliriz ama devam eden argümanların da uygun tipler olması beklenir. Yani **str_len** kullanıyorsak diğer iki argümanın da **string** türünden olması gerekiyor.
 
 ### Tuple, List ve Options veri türleri
 
@@ -388,8 +394,7 @@ val title : string = "He-Man, Gölgelerin gücü adına"
 val width : int = 1920
 val height : int = 1080
 val is_active : bool = true
-# let move (x,y) speed =
-        (x + speed , y + speed);;
+# let move (x,y) speed = (x + speed , y + speed);;
 val move : int * int -> int -> int * int = <fun>
 # move (10,15) 1;;
 - : int * int = (11, 16)
@@ -398,9 +403,11 @@ val new_x : int = 16
 val new_y : int = 21
 ```
 
-**config** isimli değişken bir tuple veri yapısını işaret ediyor. Tuple veri yapısı farklı türden değerler içerebilen zengin bir model. İstersek tanımladığımız config isimli tuple içeriğini **let** ile başka değişkenlere çıkartabiliriz *(export)* Burada **pattern matching** özelliği olduğunu da görebiliriz. **move** isimli fonksiyon da dikkate değer. İki parametre alıyor ancak x ve y koordinatlarını ifade eden ilk parametre tuple olarak tanımlandı. Ayrıca fonksiyondan geriye yine bir **tuple** döndürmekteyiz.
+![ocaml_28.png](./images/ocaml_28.png)
 
-> Kitapta tuple veri türü tanımında neden **\*** şeklinde bir tanım kullanıldığı da vurgulanıyor. Yani bir tuple tanımlandığında yorumlayıcı bunu okurken *string \* int \* int \* bool* gibi bir ifade kullanıyor. Türlerin toplam kümesini işaret eden bir kartezyen çarpımı söz konusu olduğundan çarpım sembolü kullanılıyor diyebiliriz. Kıssadan hisse, belki de bugün kullandığım Rust, C# , Zig gibi dillerden önce belki de işe OCaml ile başlamak gerekiyordu...
+**config** isimli değişken bir tuple veri yapısını işaret ediyor. **Tuple** veri yapısı farklı türden değerler içerebilen zengin bir model. İstersek tanımladığımız config isimli tuple içeriğini **let** ile başka değişkenlere çıkartabiliriz *(export)* Burada **pattern matching** özelliğinin olduğunu da görebiliriz. **move** isimli fonksiyon da dikkate değer. İki parametre alıyor ancak x ve y koordinatlarını ifade eden ilk parametreyi bir tuple olarak tanımlıyor. Ayrıca fonksiyondan geriye yine bir **tuple** döndürmekteyiz.
+
+> Kitapta tuple veri türü tanımında neden **`*`** şeklinde bir tanım kullanıldığı da vurgulanıyor. Yani bir tuple tanımlandığında yorumlayıcı bunu okurken *string \* int \* int \* bool* gibi bir ifade kullanıyor. Türlerin toplam kümesini işaret eden bir kartezyen çarpımı söz konusu olduğundan çarpım sembolü kullanılıyor diyebiliriz. Kıssadan hisse bugün kullandığım Rust, C# ve Zig gibi dillerden önce belki de işe OCaml ile başlamak gerekiyordu...
 
 Eğer aynı türnden verilerden oluşan bir listeye ihtiyacımız varsa, pekala **List** veri yapısını kullanabiliriz :D
 
@@ -417,8 +424,6 @@ Line 1, characters 27-28:
                                ^
 Error: The constant 3 has type int but an expression was expected of type
          string
-# let colors = ["Red" ; "Green" ; "Blue"];;
-val colors : string list = ["Red"; "Green"; "Blue"]
 # List.length colors;;
 - : int = 3
 # "Black" :: "White" :: colors;;
@@ -444,9 +449,11 @@ val right_side : int list = [4; 5; 6; 7; 8]
 val combine : int list = [1; 2; 3; 4; 5; 6; 7; 8]
 ```
 
-**colors**, **numbers** ve **points** kendi veri türlerinde elemanlar taşıyan birer liste. **illegal** isimli liste ise farklı türden elemanlardan oluşan bir liste yapısı oluşturmak istediğimizde alacağımız hatayı gösteriyor. OCaml'ın **List** modülünde bazı yardımcı fonksiyonlar var. Örnekte listenin uzunluğunu bulmak için **List.length** fonksiyonu kullanıldı. Ayrıca liste başına eleman eklemek için **::** operatörü *(constructor operator)* kullanılmakta. Dikkat edelim, orijinal liste değişmiyor. İlaveler sonrası yeni bir liste oluşuyor. Çalışırken yaptığım hatalardan birisi de liste elemanlarını tanımlarken arada virgül kullanmaktı. Bunu yapınca bir liste yerine tek elemanlı bir tuple listesi oluştu. Dolayısıyla ; ile , kullanımına dikkat etmek gerekiyor. Hatta bir tuple tanımlanırken parantez kullanmasak da, virgül ile ayrılmış değerler bir tuple olarak algılanıyor. **@**, yani add operatörünü kullanarak listeleri birleştirmek de mümkün.
+![ocaml_29.png](./images/ocaml_29.png)
 
-Peki bir liste veri yapısından *pattern matchin* kullanabilir miyiz? Basit bir örnek üstünden ele alalım.
+**colors**, **numbers** ve **points** kendi veri türlerinde elemanlar taşıyan birer liste. **illegal** isimli liste ise farklı türden elemanlardan oluşan bir liste yapısı oluşturmak istediğimizde alacağımız hatayı gösteriyor. OCaml'ın **List** modülünde bazı yardımcı fonksiyonlar da bulunuyor. Örnekte kodlarda listenin uzunluğunu bulmak için **List.length** fonksiyonu kullanıldı. Ayrıca liste başına eleman eklemek için **::** operatörü *(constructor operator)* kullanılmakta. Dikkat edelim, orijinal liste değişmiyor. İlaveler sonrası yeni bir liste oluşuyor. Çalışırken yaptığım hatalardan birisi de liste elemanlarını tanımlarken arada virgül kullanmaktı. Bunu yapınca bir liste yerine tek elemanlı bir tuple listesi oluştu. Dolayısıyla **;** ile *,* kullanımına dikkat etmek gerekiyor. Hatta bir **tuple** tanımlanırken parantez kullanmasak da, virgül ile ayrılmış değerler bir tuple olarak algılanıyor. **@**, yani add operatörünü kullanarak listeleri birleştirmek de mümkün.
+
+Peki bir liste veri yapısında *pattern matching* kullanabilir miyiz? Basit bir örnek üstünden ele alalım.
 
 ```text
 # let first_or_default values =
@@ -460,7 +467,9 @@ val first_or_default : int list -> int = <fun>
 - : int = 12
 ```
 
-Burada tanımladığımız **first_or_default** isimli fonksiyon **int** türünden bir listenin ilk elemanını döndürüyor ancak burada pattern match ile uyguladığımız bir koşul var. Boş bir liste verilirse varsayılan olarak 0 değerini, aksine dolu bir liste gelirse ki bunu **first :: the_rest** ifadesi ile eşleştiriyoruz *(ilk eleman ve kalanlar anlamında düşünebiliriz)* bu durumda listenin ilk elemanını dönüyor. Yorumlayıcının boş bir liste söz konusu ise 0 döndürülmesinden yola çıkarak fonksiyonun integer bir liste ile çalışacağına kanaat getirdiğine dikkat edelim. Dolayısıyla bu fonksiyonu aşağıdaki gibi yazarsak generic bir versiyon da çıkarmış oluruz.
+![ocaml_30.png](./images/ocaml_30.png)
+
+Burada tanımladığımız **first_or_default** isimli fonksiyon **int** türünden bir listenin ilk elemanını döndürüyor ancak **pattern matching** ile uyguladığımız bir koşul var. Boş bir liste verilirse varsayılan olarak 0 değerini, aksine dolu bir liste gelirse ki bunu **first :: the_rest** ifadesi ile eşleştiriyoruz *(ilk eleman ve kalanlar anlamında düşünebiliriz)*  listenin ilk elemanını dönüyor. Yorumlayıcının boş bir liste söz konusu ise 0 döndürülmesinden yola çıkarak fonksiyonun integer bir liste ile çalışacağına kanaat getirdiğine dikkat edelim. Dolayısıyla bu fonksiyonu aşağıdaki gibi yazarsak generic bir versiyon da çıkarmış oluruz.
 
 ```text
 # let first_or default values =
@@ -477,16 +486,15 @@ val first_or : 'a -> 'a list -> 'a = <fun>
 #
 ```
 
-![ocaml_04.png](./images/ocaml_04.png)
+![ocaml_31.png](./images/ocaml_31.png)
 
-Şimdi bir sayı listesindeki elemanların toplamını hesaplayan hem pattern matching içeren hem de recursive olan bir fonksiyon yazalım. Eh, bir döngü ile listeyi dolaşmak vardı ama **Real World OCaml** a göre, öz yinelemeli fonksiyonlar, fonksiyonel dillerin gerçekten önemli bir parçası. Doğrusu bundan güzel bir sınav sorusu olurmuş, *"Herhangi bir sayı listesindeki elemanların toplamını bulacak bir fonksiyon yazın. Döngü kullanmak yasak, recursive fonksiyonellik şart"* :D
+Şimdi bir sayı listesindeki elemanların toplamını hesaplayan hem **pattern matching** içeren hem de **recursive** olan bir fonksiyon yazalım. Eh, bir döngü ile listeyi dolaşmak vardı ama **Real World OCaml** kitabına göre öz yinelemeli fonksiyonlar, fonksiyonel dillerin gerçekten önemli bir parçası. Doğrusu bundan güzel bir sınav sorusu olurmuş, *"Herhangi bir sayı listesindeki elemanların toplamını bulacak bir fonksiyon yazın. Döngü kullanmak yasak, recursive fonksiyonellik şart"* :D
 
 ```text
 # let rec sum_of list =
         match list with
         | [] -> 0
-        | head :: tail -> head + sum_of tail
-  ;;
+        | head :: tail -> head + sum_of tail;;
 val sum_of : int list -> int = <fun>
 # sum_of [1;4;4;2;6;7];;
 - : int = 24
@@ -496,7 +504,9 @@ val numbers : int list = [0; 2; 4; 9; -4; -5]
 - : int = 6
 ```
 
-Bunu büyük ihtimalle unutacağım ve bakmadan yazamayacağım ama birkaç önemli noktayı not olarak düşmek isterim. **sum_of** fonksiyonunun kendisini referans ettiğini belirttiğimiz bir yer var, **rec** anahtar kelimesi. Diğer fonksiyon tanımlarından farklı olarak bunu kullanarak ilgili fonksiyonun recursive olduğunu belirttik. Boş liste veya dolu liste gelmesi ihtimallerine karşı bir **pattern match** kullanımı söz konusu. Eğer boş bir liste gelirse toplamın sıfır döneceğini belirtmek aynı zamanda bu fonksiyonu **integer** listelerle çalışacak bir türe dönüştürüyor. İkinci **match** kısmında **head** ve **tail** kısımlarını ele alıyoruz ve fonksiyonu tekrar çağırarak sayıları birbirlerine ekliyoruz. Yani ilk sayıdan başlarsak 1 + sum_of [4;4;2;6;7] gibi bir şey ortaya çıkıyor. İkinci match kırılımı için **tümevarımsal(inductive)** yaklaşımın benimsendiğini vurgulayalım.
+![ocaml_32.png](./images/ocaml_32.png)
+
+Bunu büyük ihtimalle unutacağım ve bakmadan yazamayacağım ama birkaç önemli noktayı kayıt altına almak isterim. **sum_of** fonksiyonunun kendisini referans ettiğini belirttiğimiz bir yer var, **rec** anahtar kelimesi. Bir fonksiyonun recursive olduğunu belirtiyor. Boş liste veya dolu liste gelmesi ihtimallerine karşı bir **pattern match** kullanımı da söz konusu. Eğer boş bir liste gelirse toplamın sıfır döneceğini belirtmek aynı zamanda bu fonksiyonu **integer** listelerle çalışacak bir türe de dönüştürüyor. İkinci **match** dalında **head** ve **tail** kısımlarını ele alıyoruz ve fonksiyonu tekrar çağırarak sayıları birbirlerine ekliyoruz. Yani ilk sayıdan başlarsak 1 + sum_of [4;4;2;6;7] gibi bir dizilim ortaya çıkıyor. İkinci match kırılımı için **tümevarımsal *(inductive)*** yaklaşımın benimsendiğini vurgulayalım. Bu fonksiyonun işleyişine ait aşağıda bir örnekleme yer alıyor.
 
 ```text
 = 1 + sum_of [4;4;2;6;7]
@@ -516,7 +526,7 @@ Bunu büyük ihtimalle unutacağım ve bakmadan yazamayacağım ama birkaç öne
 
 Piuvv! :D Parantezleri karıştırmış olabilirim. Kitapta 1;2;3 listesini toplamıştı.
 
-Bugünkü terapide son olarak **Options** veri yapısına bakıyorum. Bir değer vardır veya yoktur sorusuna cevap veren bir veri yapısı. Şahsen **rust** dilinde Options türü çok işe yarıyor. Buradan esinlenildiğini düşünüyorum elbette. Aşağıdaki kod parçasında en basit kullanım şekli yer alıyor.
+Bugünkü terapide son olarak **Options** veri yapısına bakıyorum. Bir değer vardır veya yoktur sorusuna cevap veren bir veri yapısı. Şahsen **rust** dilinde **Options** türü çok işe yarıyor *(Rust'ı geliştiren Graydon Hoare'un OCaml'den esinlendiği birçok yerde belirtiliyor)* Aşağıdaki kod parçasında en basit kullanım şekli yer alıyor.
 
 ```text
 # let div x y =
@@ -528,27 +538,29 @@ val div : int -> int -> int option = <fun>
 - : int option = Some 5
 ```
 
-Eğer y sıfır ise None dönüyoruz ve değilse bölme işlemini gerçekleştiriyoruz. Dikkat edileceği üzere yorumlayıcı fonksiyonun dönüş türünü **int option** olarak belirledi. **None** ve **Some**, rastgele isimlendirmeler değil birer **constructor** olarak ifade edilemkte.
+![ocaml_33.png](./images/ocaml_33.png)
+
+Eğer y sıfır ise **None** dönüyor, değilse bölme işlemi gerçekleştiriliyor. Dikkat edileceği üzere yorumlayıcı fonksiyonun dönüş türünü **int option** olarak belirledi. Bu son derece normal zira 7 değerinin 0 olup olmadığı kontrol ediliyor. Sıfırın varsayılan olarak **int** kabul edildiği düşünüldüğünde *int option* olarak yorumlanması son derece normal. Bu arada **None** ve **Some** ifadeleri rastgele isimlendirmeler değil birer **constructor** olarak kabul ediliyor.
 
 ### Record Veri Yapısı ve Variant Tipler
 
-Kendi veri yapılarımızı tasarlarken kullanabileceğimiz enstrümanlardan birisi **record**. Örneğin;
+Kendi veri yapılarımızı tasarlarken kullanabileceğimiz enstrümanlardan birisi **record** türü. Örneğin;
 
 ```ocaml
 type address = {host:string; port:int; route:string};;
-type address = { host : string; port : int; route : string; }
+
 let cust_get ={host = "localhost"; port = 5001; route = "api/v1/customer/get"};;
+
 type service = {name : string; is_active : bool; kind : string; path : address};;
-type service = {
-  name : string;
-  is_active : bool;
-  kind : string;
-  path : address;
-}
+
 let customer_service = {name = "Get customers"; is_active = true; kind = "REST"; path = cust_get};;
 ```
 
-Burada kod parçasında iki **record** türü tanımlandı. address ve service şeklinde. Dikkat edileceği üzere service **record** yapısındaki path alanı address veri yapısı türünden. Şimdi birde **variant** tanımlamayı deneyelim. Bu tür ile birden fazla nesneyi *(object)* tek bir tip altında birleştirme mümkün oluyor. Örnek kod ile anlamaya çalışalım.
+![ocaml_34.png](./images/ocaml_34.png)
+
+Yukarıdaki kod parçasında iki **record** türü yer alıyor, **address** ve **service**. Dikkat edileceği üzere service **record** yapısındaki path alanı address veri yapısı türünden. cust_get ve customer_service isimli değişkenler ise bu türlerden nesneleri işaret ediyor. Açıkça belirtmesekte eşitliği sağ tarafında yapılan atamalar otomatikman cust_get'in bir address türü olmasını sağlıyor. Benzer şekilde customer_service değişkeni de service türünden bir nesne olarak tanımlanıyor. **utop** ekran görüntüsünde olduğu gibi çıktılara mutlaka bakmak lazım. **type inference** mekanizmasının nasıl çalıştığını görmek açısından önemli.
+
+Şimdi birde **variant** tanımlamayı deneyelim. Bu tür ile birden fazla nesneyi *(object)* tek bir tip altında birleştirmek mümkün. Aşağıdaki örnek kod parçası ile anlamaya çalışalım.
 
 ```ocaml
 type location = { x : float; y : float }
@@ -563,7 +575,7 @@ type component =
 ;;
 ```
 
-Bu kod parçasında button, label, drop_down gibi farklı türdeki nesneleri tek bir component türünde birleştirdik. Bu sayede component türünden bir değişken tanımladığımızda bu değişken button, label veya drop_down türlerinden herhangi birini işaret edebilir. Aralarda pipi olduğuna dikkat etmemiz gerekiyor ve hatta | sonrası gelen isimlendirmede büyük harfle başlama zorunluluğu var, aksi halde **syntax error** hatası alınıyor. drop_down isimli record türünde bir **string list** kullanılıyor. Dolayısıyla birden fazla string öğe barındırabilecek. Kitaptaki örnekten de esinlenerek bu **variant** türünü bir fonksiyon da kullanabiliriz.
+Bu kod parçasında button, label, drop_down gibi farklı türdeki nesneleri tek bir component türünde birleştirdik. Bu sayede component türünden bir değişken tanımladığımızda söz konusu değişken button, label veya drop_down türlerinden herhangi birini işaret edebilir. Aralarda pipe işareti olduğuna dikkat etmemiz gerekiyor ve hatta `|` sonrası gelen isimlendirmede büyük harfle başlama zorunluluğu var, aksi halde **syntax error** hatası alınıyor. drop_down isimli record türünde bir **string list** kullanılıyor. Dolayısıyla birden fazla string öğe barındırabilir. Kitaptaki örnekten de esinlenerek bu **variant** türünü bir fonksiyona parametre olarak geçebiliriz.
 
 ```ocaml
 let get_item_count (c : component) : int =
@@ -575,16 +587,17 @@ let get_item_count (c : component) : int =
 
 let left_menu = DropDown {
   items = ["Save"; "Load"; "Exit"];
-  position = origin;
+  position = {x = 10.0; y = 20.0};
   is_enabled = true
-};;
+}
+;;
 
 get_item_count left_menu;;
 ```
 
 Bu fonksiyon component türünden bir parametre alıyor ve bu parametrenin hangi türde olduğunu **pattern matching** ile kontrol ediyor. Eğer button veya label ise 0 döndürüyor, ancak drop_down ise içindeki items listesinin uzunluğunu döndürüyor.
 
-![ocaml_05.png](./images/ocaml_05.png)
+![ocaml_35.png](./images/ocaml_35.png)
 
 Farklı bir fonksiyon daha yazalım. Örneğin bileşen detaylarını gösteren bir versiyon. Aynen aşağıdaki kod parçasında olduğu gibi.
 
@@ -605,13 +618,13 @@ show_component_details left_menu;;
 
 Fonksiyonumuz parametre olarak **component** isimli **variant** türünden bir nesne alıyor. Bu nesnenin hangi türde olduğunu **pattern matching** ile kontrol ediyoruz. Eğer button veya label ise başlık bilgisini yazdırıyoruz. Ancak drop_down ise içindeki items listesini dolaşıp her bir öğeyi yazdırıyoruz. List.iter fonksiyonu, verilen bir fonksiyonu listenin her bir elemanına uygulamak için kullanılmakta.
 
-![ocaml_06.png](./images/ocaml_06.png)
+![ocaml_36.png](./images/ocaml_36.png)
 
 ### Mutable Olma Hali
 
-> Varsayılan olarak immutable ama gerekirse mutable. Rust'ın açık bir şekilde benimsediği bir yaklaşım. Varsayılan olarak immutable olmak aslında bir şeylerin yanlışlıkla değiştirilmesini engellemek açısından anlamlı. Diğer yandan imperative yaklaşımın ele alındığı sayaçlar ve state machine gibi kodlar yazmanın önü de açık.
+> Varsayılan olarak immutable ama gerekirse mutable. Rust'ın açık bir şekilde benimsediği bir yaklaşım. Varsayılan olarak immutable olmak aslında bir şeylerin yanlışlıkla değiştirilmesini engellemek açısından anlamlı. Diğer yandan imperative yaklaşımın ele alındığı sayaçlar *(counters)* ve durum otomatı *(state machine)* gibi kodlar yazmanın önü de açık.
 
-OCaml'ın **safkan bir fonksiyonel dil** olduğu belirtiliyor. Yani, kodun çalışmasının bir parçası olarak değişkenlerin değerlerini değiştirmek normalde mümkün değil. Program state'i, **immutable** veri yapılarıyla temsil ediliyor. Buna karşın **imperative** programlama paradigmasını da destekliyor. Bir başka deyişle **mutable** veri yapıları da mevcuttur. **Array** veri yapısı bunlardan birisi. Bunun haricinde **record** türünün kendisi **immutable** olsa dahi üyeleri **mutable** olarak tanımlanabilir. Şimdi yine beni zorlayacak yazım stilleriyle bir **array** tanımlayalıp kullanalım. Hatta sonrasında birde **mutable** üyeler içeren bir **record** yazalım.
+OCaml'ın **safkan bir fonksiyonel dil** olduğu belirtiliyor. Yani, kodun çalışmasının bir parçası olarak değişkenlerin değerlerini değiştirmek normalde mümkün değil. Programın durumu **immutable** veri yapılarıyla temsil ediliyor. Buna karşın **imperative** programlama paradigmasını da destekliyor. Bir başka deyişle **mutable** veri yapıları da mevcut. Örneğin **Array** veri yapısı bunlardan birisi. Bunun haricinde **record** türünün kendisi **immutable** olsa dahi üyeleri **mutable** olarak tanımlanabilir. Şimdi yine beni zorlayacak yazım stilleriyle bir **array** tanımlayalım ve kullanalım. Hatta sonrasında **mutable** üyeler içeren bir **record** yazalım.
 
 ```ocaml
 (* float sayılardan oluşan bir array tanımı*)
@@ -639,9 +652,11 @@ for i = 0 to Array.length points - 1 do
 done;;
 ```
 
-Bu örnekte **points** isimli bir array tanımladık. Array elemanlarına erişmek için **.(index)** operatörünü kullandık. Bir array elemanını değiştirmek için ise **<-** operatörünü kullandık. Sonrasında array'in tamamını görüntüledik ve bir döngü yardımıyla her bir elemanı kontrol ederek geçip kalma durumunu yazdırdık. Öyleyse birde **mutable** üyeler içeren bir **record** tanımlayalım.
+![ocaml_37.png](./images/ocaml_37.png)
 
-Burada dikkat edilmesi gereken noktalardan birisi de **<-** operatörünün **unit ()** döndürmesidir. Bu, yapılan atama işleminin bir hesaplama *(calculation)* olmadığını aksiyon *(action)* olduğu belirtir. Yani, points.(0) <- 51.00 ifadesi bir değer döndürmez, sadece **points array**'inin ilk elemanını 51.00 olarak günceller.
+Bu örnekte **points** isimli bir array tanımladık. Array elemanlarına erişmek için **.(index)**, bir array elemanını değiştirmek için ise **<-** operatörünü kullandık. Sonrasında array'in tamamını görüntüledik ve bir döngü yardımıyla her bir elemanı kontrol ederek öğrencinin dersten geçme/kalma durumunu ekrana yazdırdık.
+
+Öyleyse birde **mutable** üyeler içeren bir **record** tanımlayalım. Burada dikkat edilmesi gereken noktalardan birisi de **<-** operatörünün **unit ()** döndürmesidir. Bu, yapılan atama işleminin bir hesaplama *(calculation)* olmadığını aksiyon *(action)* olduğunu belirtir. Yani, points.(0) <- 51.00 ifadesi bir değer döndürmez, sadece **points array**'inin ilk elemanını 51.00 olarak günceller.
 
 ```ocaml
 (* 
@@ -675,7 +690,9 @@ let move_player player new_position =
 move_player she_ra (5, 10);;
 ```
 
-Şimdi burada durup OCaml dilinin bu varsayılan immutable felsefesini düşünmek lazım. Normalde yukarıdaki gibi bir senaryo varsayılan olarak aşağıdaki gibi ifade edilir.
+![ocaml_38.png](./images/ocaml_38.png)
+
+Şimdi burada durup **OCaml** dilinin bu varsayılan **immutable** felsefesini düşünmek lazım. Normalde yukarıdaki gibi bir senaryo varsayılan olarak aşağıdaki gibi ifade edilir.
 
 ```ocaml
 (* 
@@ -715,10 +732,12 @@ let she_ra = { she_ra with position = (25, 50) };;
 Printf.printf "%s moved to position (%d, %d).\n" she_ra.name (fst she_ra.position) (snd she_ra.position);;
 ```
 
+![ocaml_39.png](./images/ocaml_39.png)
+
 Burada **fst** ve **snd** ifadeleri aslında birer fonksiyon. Bir tuple'ın ilk ve ikinci elemanına erişmek için kullanılırlar. Yani, fst new_position ifadesi new_position adlı tuple'ın ilk elemanını döndürürken, snd new_position ifadesi ikinci elemanını döndürmektedir. Yukarıdaki kod parçasında gerekli açıklamalar yer alıyor. Belki de hangisini ne zaman seçmek gerekir üzerine düşünmek lazım. Ne zaman **immutable** yerine **mutable** tercih edelim ya da tam tersi?
 
-- Varsayılan olarak **immutable** olmak, **concurrency** ve karmaşık logic içeren kodlarda hataların önüne geçmek açısından avantajlı olabilir. Değişkenlerin değerlerinin beklenmedik şekilde değişmesini engeller. Söz gelimi buradaki player'ın immutable olan versiyonunu bir fonksiyona geçireceksek, onun fonksiyon içinde değişmeyeceğinden emin olabiliriz.
-- Mutable veri yapıları ise veriyi kopyalamadan değiştirme imkanı sağlar ve bazı durumda örneğin state değiştirmek veya gerçek zamanlı güncellemeler yapmak istediğimizde daha performanslı olabilir. Ancak mutable veri yapıları kullanırken dikkatli olmak gerekir, çünkü yanlışlıkla veriyi değiştirmek veya beklenmedik yan etkiler oluşturmak mümkündür. Bu konuda sanıyorum en sık verilen örnek sayaç mekanizması. **OCaml** ile basit bir **counter** tasarlayalım.
+- Varsayılan olarak **immutable** olmak, **concurrency** ve karmaşık mantık içeren kodlarda hataların önüne geçmek açısından avantajlı olabilir. Zira değişken değerlerinin beklenmedik şekilde değişmesi engellenmiş olur. Söz gelimi buradaki player'ın immutable olan versiyonunu bir fonksiyona geçtiğimizde, onun ilgili fonksiyon içinde değişmeyeceğinden emin oluruz.
+- **Mutable** veri yapıları ise veriyi kopyalamadan değiştirme imkanı sağlar ve bazı durumlarda, örneğin state değiştirmek veya gerçek zamanlı güncellemeler yapmak istediğimizde daha performanslı olabilir. Ancak mutable veri yapılarını kullanırken dikkatli olmak gerekir, çünkü yanlışlıkla veriyi değiştirmek veya beklenmedik yan etkiler oluşturmak mümkündür. Bu konuda sanıyorum en sık verilen örnek sayaç mekanizması. **OCaml** ile basit bir **counter** tasarlayalım.
 
 ```ocaml
 (*
@@ -744,15 +763,28 @@ increment tick_counter;;
 Printf.printf "Current count: %d\n" tick_counter.count;;
 ```
 
+![ocaml_40.png](./images/ocaml_40.png)
+
 ### Refs
 
 Tekil bir mutable değişken oluşturmak için **ref** enstrümanı da kullanılabilir. **ref** esasında standart kütüphanede tanımlanmış bir tip ve hatta bir **record** türü. İçinde **contents** isimli bir alan içeriyor. Hatta stdlib.ml dosyasına bakarsak aşağıdaki gibi tanımlandığını görürüz.
 
 ![ocaml_07.png](./images/ocaml_07.png)
 
-Dikkat edileceği üzere **!** ve **:=** şeklinde tanımlanmış fonksiyonlar da dikkatinizi çekmiştir. **!** operatörü bir ref'in içindeki değere erişmek için kullanılırken, **:=** operatörü ise bir ref'in içindeki değeri değiştirmek için kullanılır. Yine **incr** ve **decr** fonksiyonları yardımıyla değer artırma ve azaltma işlemleri de yapılabiliyor. **OCaml** komut satırından bir deneme yapabiliriz.
+**!** ve **:=** şeklinde tanımlanmış fonksiyonlar dikkatinizi çekmiştir. **!** operatörü bir ref'in içindeki değere erişmek için kullanılırken, **:=** operatörü ise bir ref'in içindeki değeri değiştirmek için kullanılır. Yine **incr** ve **decr** fonksiyonları yardımıyla değer artırma ve azaltma işlemleri de yapılabilir. **OCaml** komut satırından bir deneme yapabiliriz.
 
-![ocaml_08.png](./images/ocaml_08.png)
+```ocaml
+let counter = ref 0;;
+!counter;;
+counter := !counter + 1;;
+!counter;;
+counter := !counter + 1;;
+!counter;;
+counter := !counter + 1;;
+!counter;;
+```
+
+![ocaml_41.png](./images/ocaml_41.png)
 
 Bu arada istersek **ref** türünü kendimiz de dizayn edebiliriz. Hatta kitap bunu gayet güzel bir şekilde örnekliyor. Bir deneyelim.
 
@@ -785,7 +817,9 @@ decr my_counter;;
 Printf.printf "My Counter: %d\n" (get my_counter);;
 ```
 
-**ref** türü iterasyonlarda değiştirilebilir *(mutable)* state tutarken de kullanışlı olabilir. Örneğin bir listedeki elemanların ortalamasını hesaplamak için bir fonksiyon geliştirelim. Aşağıdaki gibi bir kod düşünülebilir.
+![ocaml_42.png](./images/ocaml_42.png)
+
+**ref** türü iterasyonlarda değiştirilebilir *(mutable)* state tutarken de kullanışlı olabilir. Örneğin bir listedeki elemanların ortalamasını hesaplamak için aşağıdaki gibi bir fonksiyon geliştirelim.
 
 ```ocaml
 let avrage lst =
@@ -798,7 +832,9 @@ let numbers = [1; 2; 3; 4; 5; 10;];;
 Printf.printf "Average: %d\n" (match avrage numbers with Some avg -> avg | None -> 0);;
 ```
 
-average isimli fonksiyon içerisinde yer alan **sum** ve **count** değişkenleri **mutable** olarak tanımlanmıştır ve **List.iter** fonksiyonu kullanılarak listenin her bir elemanı üzerinde işlem yaparken bu değişkenlerin değerleri güncellenmektedir. Tabii iter fonksiyonuna verilen anonim fonksiyon içerisinde **!** operatörünü kullanarak ref'lerin içindeki değerlere erişiyoruz ve **:=** operatörünü kullanarak bu değerleri güncelliyoruz. Birde **in** operatörü ile karşılaştık tabii ki. Bu operatör sum ve count değişkenlerinin bulundukları fonksiyon bloğunda geçerli olduğunu belirtmek için kullanılmakta. Yani **scope** belirleme amacıyla kullanılır. **in** kullanımının farkını anlamak için OCaml komut satırına dönüyorum.
+![ocaml_43.png](./images/ocaml_43.png)
+
+**average** isimli fonksiyon içerisinde yer alan **sum** ve **count** değişkenleri **mutable** olarak tanımlanmıştır ve **List.iter** fonksiyonu kullanılarak listenin her bir elemanı üzerinde işlem yaparken bu değişkenlerin değerleri güncellenmektedir. Tabii **iter** fonksiyonuna verilen anonim fonksiyon içerisinde **!** operatörünü kullanarak ref'lerin içindeki değerlere erişiyoruz ve **:=** operatörünü kullanarak bu değerleri güncelliyoruz. Birde **in** operatörü ile karşılaştık tabii ki. Bu operatör **sum** ve **count** değişkenlerinin bulundukları fonksiyon bloğunda geçerli olduğunu belirtmek için kullanılmakta. Yani **scope** belirlemek için kullanılır. **in** kullanımının farkını anlamak için özellikle Utop ekranında aşağıdaki gibi bir deneme yapalım.
 
 ```text
 # let value = 12;;
@@ -815,9 +851,9 @@ Line 1, characters 0-5:
 Error: Unbound value point
 ```
 
-![ocaml_09.png](./images/ocaml_09.png)
+![ocaml_44.png](./images/ocaml_44.png)
 
-value isimli değişken global scope'ta tanımlanmış ve bu nedenle herhangi bir yerden erişilebilir durumda. Ancak point isimli değişken **in** operatörünün kullanıldığı fonksiyon bloğu içerisinde tanımlanmış ve bu nedenle sadece o blok içerisinde geçerli. Dolayısıyla point değişkenine global scope'tan erişmeye çalıştığımızda **Unbound value** hatası alıyoruz.
+**value** isimli değişken global scope'ta tanımlanmış ve bu nedenle herhangi bir yerden erişilebilir durumda. Ancak **point** isimli değişken **in** operatörünün kullanıldığı fonksiyon bloğu içerisinde tanımlanmış ve bu nedenle sadece o blok içerisinde geçerli. Dolayısıyla **point** değişkenine global scope'tan erişmeye çalıştığımızda **Unbound value** hatası alıyoruz.
 
 ### Döngüsüz Olmaz Tabii *(for, while loops)*
 
@@ -829,7 +865,6 @@ let count_for n =
     Printf.printf "%d," i
   done;
   Printf.printf "\n"
-;;
 
 let count_while n =
   let i = ref 1 in
@@ -844,24 +879,28 @@ count_for 5;;
 count_while 10;;
 ```
 
+![ocaml_45.png](./images/ocaml_45.png)
+
 Şimdi örneklerimizi biraz daha eğlenceli hale getirelim. Örneğin, tamsayılardan oluşan bir listeyi **Random** modülünden de yararlanarak belli aralıktaki rastgele sayılarla dolduralım.
 
 ```ocaml
-let generate_random_list n =
-  Random.self_init ();
-  let numbers = ref [] in
-  for i = 1 to n do
-    let random_number = Random.int 100 in
-    numbers := random_number :: !numbers
+let average arr = 
+  let sum = ref 0 in
+  for i = 0 to Array.length arr - 1 do
+    sum := !sum + arr.(i)
   done;
-  !numbers
+  float_of_int !sum /. float_of_int (Array.length arr)
 
-let random_numbers = generate_random_list 10;;
+let arr = generate_random_list 10 |> Array.of_list;;
 
-Printf.printf "Random numbers: %s\n" (String.concat "; " (List.map string_of_int random_numbers));;
+Printf.printf "Random numbers (while): %s\nAverage: %f\n" 
+  (String.concat "; " (List.map string_of_int (Array.to_list arr))) 
+  (average arr);;
 ```
 
-**generate_random_list** fonksiyonu n değerine göre bir liste döndürmekte. Bu listenin elemanları 0 ile 99 arasındaki rastgele sayılarla dolduruluyor. Örnekten **Random** isimli bir modül kullanıyoruz. Dikkat edilmesi gereken noktalardan birisi **self_init()** çağrısı. Bunu yapmadığımız takdirde her seferinde aynı rastgele sayıların üretildiğini görürüz. Üretilen rastgele sayılar **::** operatörü yardımıyla numbers isimli listeye ekleniyor. Sonrasında **!numbers** ifadesiyle de oluşturulan liste döndürülüyor. Kodun son satırında ise bu listeyi ekrana bastırmak için **String.concat** ve **List.map** fonksiyonlarından yararlanıyoruz. **List.map** fonksiyonu, verilen bir fonksiyonu listenin her bir elemanına uygulayarak yeni bir liste oluşturur. Bu örnekte, **string_of_int** fonksiyonunu kullanarak her bir tamsayıyı string'e dönüştürüyoruz. Ardından **String.concat** fonksiyonu ile bu string'leri "; " ile birleştirerek tek bir string elde ediyoruz ve bunu ekrana yazdırıyoruz. Aynı fonksiyonu birde **while** döngüsü kullanarak yazalım.
+![ocaml_46.png](./images/ocaml_46.png)
+
+**generate_random_list** fonksiyonu n değerine göre bir liste döndürmekte. Bu listenin elemanları 0 ile 99 arasındaki rastgele sayılarla dolduruluyor. Örnekte **Random** isimli bir modül kullanıyoruz *(Galiba her dilde bu modül mevcut :D)* Dikkat edilmesi gereken noktalardan birisi **self_init()** çağrısı. Bunu yapmadığımız takdirde her seferinde aynı rastgele sayıların üretildiğini görürüz. Üretilen rastgele sayılar **::** operatörü yardımıyla numbers isimli listeye ekleniyor. Sonrasında **!numbers** ifadesiyle de oluşturulan liste döndürülüyor. Kodun son satırında ise bu listeyi ekrana bastırmak için **String.concat** ve **List.map** fonksiyonlarından yararlanıyoruz. **List.map** fonksiyonu, verilen bir fonksiyonu listenin her bir elemanına uygulayarak yeni bir liste oluşturur. Bu örnekte, **string_of_int** fonksiyonunu kullanarak her bir tamsayıyı string'e dönüştürüyoruz. Ardından **String.concat** fonksiyonu ile bu string'leri "; " ile birleştirerek tek bir string elde ediyoruz ve bunu ekrana yazdırıyoruz. Aynı fonksiyonu birde **while** döngüsü kullanarak yazalım.
 
 ```ocaml
 let generate_random_list_while n =
@@ -880,9 +919,9 @@ let random_numbers_while = generate_random_list_while 10;;
 Printf.printf "Random numbers (while): %s\n" (String.concat "; " (List.map string_of_int random_numbers_while));;
 ```
 
-Bu fonksiyon da aynı şekilde n değerine göre bir liste döndürmekte ancak burada **while** döngüsü kullanılmıştır. Döngü içerisinde i değişkeni 1'den başlayarak n'ye kadar artırılır ve her iterasyonda rastgele bir sayı üretilerek numbers listesine eklenir. Her iki fonksiyonun çalışma zamanına ait bir çıktıyı da ekleyelim.
+Bu fonksiyonda aynı şekilde n değerine göre bir liste döndürmekte ancak bu kez **while** döngüsünü kullandık. Döngü içerisinde i değişkeni 1'den başlayarak n'ye kadar artırılır ve her iterasyonda rastgele bir sayı üretilerek numbers listesine eklenir. Her iki fonksiyonun çalışma zamanına ait bir çıktıyı da ekleyelim.
 
-![ocaml_10.png](./images/ocaml_10.png)
+![ocaml_47.png](./images/ocaml_47.png)
 
 Örneklerimize devam edelim. Parametre olarak gelen **Array** içindeki sayıların ortalamasını bulup döndüren bir fonksiyonu hem **for** hem de **while** döngüsü kullanarak yazalım.
 
@@ -898,18 +937,20 @@ let arr = generate_random_list 10 |> Array.of_list;;
 Printf.printf "Average: %f\n" (average arr);;
 ```
 
-**average** isimli fonksiyon, **arr** isimli bir parametre almakta. Tabii bunun bir **Array** olduğunu varsayıyoruz. **sum** isimli değişkeni **mutable** olarak tanımladık zira bir toplam değerine ihtiyacımız var. Sonrasında bir **for** döngüsü yardımıyla dizi elemanlarının arka arkaya topluyoruz. **!** operatörü ile sum'un içindeki değere erişiyoruz ve **:=** operatörünü kullanarak bu değeri güncelliyoruz. Döngü tamamlandıktan sonra toplam değeri dizi uzunluğuna bölerek ortalamayı hesaplıyoruz. Dikkat edelim, bölme işlemi sırasında tam sayı bölmesi yapmamak için hem toplamı hem de dizi uzunluğunu **float_of_int** fonksiyonu ile float türüne dönüştürüyoruz. Sonrasında bu fonksiyonu kullanarak bir dizi oluşturup ortalamasını ekrana yazdırıyoruz.
+![ocaml_48.png](./images/ocaml_48.png)
 
-Peki bu fonksiyona alakasız bir veri türü gönderirsek. Örneğin metinsel bir ifade gönderelim.
+**average** isimli fonksiyon, **arr** isimli bir parametre almakta. Tabii bunun bir **Array** olduğunu varsayıyoruz. **sum** isimli değişkeni **mutable** olarak tanımladık zira bir toplam değerine ihtiyacımız var. Sonrasında bir **for** döngüsü yardımıyla dizi elemanlarını arka arkaya toplatıyoruz. **!** operatörü ile sum dizisi içindeki değere erişiyoruz ve **:=** operatörünü kullanarak bu değeri güncelliyoruz. Döngü tamamlandıktan sonra toplam değeri dizi uzunluğuna bölerek ortalamayı hesaplıyoruz. Dikkat edelim, bölme işlemi sırasında tam sayı bölmesi yapMAmak için hem toplamı hem de dizi uzunluğunu **float_of_int** fonksiyonu ile **float** türüne dönüştürüyoruz. Sonrasında bu fonksiyonu kullanarak bir dizi oluşturup ortalamasını ekrana yazdırıyoruz.
+
+Peki bu fonksiyona alakasız bir veri türü göndersek ne olur, örneğin metinsel bir ifade...
 
 ```ocaml
 let himm = "Bu örneklerde for ve while döngülerini kullanarak listeler ve diziler üzerinde işlemler yaptık.";;
 let avg = average himm;;
 ```
 
-Bu durumda aşağıdaki gibi bir hata alırız.
+VS Code arabiriminden baktığımızda da çalışma zamanında denediğimizde de bir hata ile karşılaşırız.
 
-![ocaml_11.png](./images/ocaml_11.png)
+![ocaml_49.png](./images/ocaml_49.png)
 
 Sıradaki fonksiyonumuz iki boyutlu bir matris üretiyor. Herbir elemanı 0 veya 1 olabilen bir matris. Basit bir oyun sahasının iki boyutlu görünümünde duvar veya yol kararını vermeyi kolaylaştırabilecek çok basit bir örnek.
 
@@ -934,7 +975,7 @@ Array.iter (fun row ->
 
 Burada yardımcı birkaç fonksiyon da kullandık. Örneğin iki boyutlu bir matris dizisini oluşturmak için **make_matrix** fonksiyonuna başvurduk. İki boyutlu dizinin elemanlarını satır sütun bazında dolaşmak içinse klasik iç içe **for** döngüsü kullandık. Doğrudan dizinin elemanların atama işlemi yapılacağından **<-** operatörü ile 0 ile 1 şeklinde üretilen rastgele sayıları atadır. **Random.int** fonksiyonuna 2 değerini verdiğimizde sadece 0 veya 1 değerleri üretilebilir. Fonksiyon çıktısı olan matrisi ekrana yazdırmak için yine içiçe for döngüsü kullanabiliriz ama **fonksiyonel** bir yaklaşımla ilerlemek de oldukça şık. Nitekim **Array** modülünde yer alan **iter** fonksiyonu ile dizinin her bir elemanına uygulanacak bir fonksiyon çalıştırabiliriz. Dolayısıyla dış iterasyon, row'u parametre olarak alan ve dolayısıyla kolonları dolaşmayı sağlayacan anonim bir fonksiyon kullanıyor. İç iterasyon ise value'yu parametre olarak alan ve bu değeri ekrana yazdıran bir anonim fonksiyon. Her satırın sonunda ise yeni bir satır başlatmak için **Printf.printf "\n"** ifadesi yer almakta. Aşağıda çalışma zamanına ait örnek bir görüntü yer alıyor.
 
-![ocaml_12.png](./images/ocaml_12.png)
+![ocaml_50.png](./images/ocaml_50.png)
 
 ### Derleyerek Çalıştırmak
 
