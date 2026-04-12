@@ -24,6 +24,7 @@ Sözün özü bu tamamen kendi zihinsel yatırımım ve itiraf etmeliyim ki bu y
     - [Alcotest ile Birim Test Yazmak](#alcotest-ile-birim-test-yazmak)
   - [Biraz da Felsefe](#biraz-da-felsefe)
     - [Hata Yapmayı İmkansız Kılan Tip Desteği(Type Safety Değil Type Expressiveness)](#hata-yapmayı-i̇mkansız-kılan-tip-desteği-type-safety-değil-type-expressiveness)
+    - [Olabildiğince Fonksiyonel](#olabildiğince-fonksiyonel)
 
 ## Merak Ettiklerim
 
