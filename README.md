@@ -979,7 +979,7 @@ Burada yardımcı birkaç fonksiyon da kullandık. Örneğin iki boyutlu bir mat
 
 ### Derleyerek Çalıştırmak
 
-**Real World OCaml** kitabı bir sonraki bölüme geçmeden önce **A Complete Program** başlığında basit bir program örneği anlatıyor. Bu örnekte **ocaml** kodunun derlenerek çalıştırılması söz konusu. Derleme işlemi için **dune** *(Gezegen olan değil :D)* aracını kullanıyor. Burada temel amaç tek başına çalıştırılabilir *(standlone)* bir program oluşturmak. Öncelikle kodlarımızı oluşturalım. Bu amaçla **standalone** isimli bir klasör oluşturdum ve içerisine **main.ml** isimli bir dosya ekledim. Kolaya kaçarak daha önceden ele aldığımız bir fonksiyonu değerlendirebiliriz. Rastgele sayılalardan oluşan 10 elemanlı bir liste oluşturuyoruz.
+**Real World OCaml** kitabı bir sonraki bölüme geçmeden önce **A Complete Program** başlığında basit bir program örneği anlatıyor. Bu örnekte **ocaml** kodunun derlenerek çalıştırılması söz konusu. Derleme işlemi için **dune** *(Gezegen olan değil :D)* aracını kullanıyor. Burada temel amaç tek başına çalıştırılabilir *(standlone)* bir program oluşturmak. Öncelikle kodlarımızı oluşturalım. Bu amaçla **standalone** isimli bir klasör oluşturdum ve içerisine **rand_10.ml** isimli bir dosya ekledim. Kolaya kaçarak daha önceden ele aldığımız bir fonksiyonu değerlendirebiliriz. Rastgele sayılalardan oluşan 10 elemanlı bir liste oluşturuyoruz.
 
 ```ocaml
 let generate_random_list n =
@@ -1024,9 +1024,13 @@ ve işte çalışma zamanı çıktılarımız.
 
 ![ocaml_13.png](./images/ocaml_13.png)
 
+Örneği **ubuntu** platformunda da benzer şekilde derleyebiliriz. Ben **WSL** üzerinden denedim ve aşağıdaki gibi bir çıktı aldım.
+
+![ocaml_51.png](./images/ocaml_51.png)
+
 ### Alcotest ile Birim Test Yazmak
 
-**OCaml** kodlarını test etmek için birkaç yöntem var. Bunlardan birisi () ile oluşturulan program giriş noktasında klasik terminal çıktıları ile ilerlmek. Ancak birim test *(unit test)* yazmak elbetteki daha profesyonel bir yaklaşım ama daha da önemlisi bir standart. Bu amaçla **dune** ile entegre çalışabilen **Alcotest** isimli bir kütüphane bulunuyor. Öncelikle bu aracı **opam** ile sisteme yüklemek gerekiyor.
+**OCaml** kodlarını test etmek için birkaç yöntem var. Bunlardan birisi () ile oluşturulan program giriş noktasında klasik terminal çıktıları ile ilerlmek. Ancak birim test *(unit test)* yazmak elbetteki daha profesyonel bir yaklaşım ama daha da önemlisi bir standart. Bu amaçla **dune** ile entegre çalışabilen **Alcotest** isimli bir kütüphane bulunuyor. Öncelikle bu aracı **opam** ile sisteme yüklemek gerekiyor *(Windows veya Linux farketmez)*.
 
 ```bash
 opam install alcotest
@@ -1105,10 +1109,16 @@ dune runtest
 
 ![Testing](./images/ocaml_15.png)
 
-Burada dikkate değer bir durum da var. Dune, **Incremental Build** ve **caching** mekanizmaları sayesinde sadece değişen dosyaları derleyerek testleri çalıştırır. Dolayısıyla kod tabanında değişiklik olmadığında testler tekrardan çalıştırılmaz. Yani kodun aynı olması testlerin de aynı kalacağı anlamaına gelir ki bu durumda kaynakları boşa israf etmenin de bir alemi yoktur. Burada **dune** kod dosyalarının imzalarını takip ederek bir karara varır. Ancak yinede testler koşmaya zorlayabiliriz. Bunun için **--force** argümanını kullanabiliriz.
+İşte bu da **Ubuntu** çıktısı.
+
+![ocaml_52.png](./images/ocaml_52.png)
+
+Burada dikkate değer bir durum daha var. Dune, **Incremental Build** ve **caching** mekanizmaları sayesinde sadece değişen dosyaları derleyerek testleri çalıştırır. Dolayısıyla kod tabanında değişiklik olmadığında testler tekrardan çalıştırılmaz. Yani kodun aynı olması testlerin de aynı kalacağı anlamaına gelir ki bu durumda kaynakları boşa israf etmenin de bir alemi yoktur. Burada **dune** kod dosyalarının imzalarını takip ederek bir karara varır. Ancak yinede testleri koşmaya zorlayabiliriz. Bunun için **--force** argümanını kullanmak yeterlidir.
 
 ```bash
 dune runtest --force
 # veya
 dune runtest -f
 ```
+
+![ocaml_53.png](./images/ocaml_53.png)
