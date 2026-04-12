@@ -22,6 +22,8 @@ Sözün özü bu tamamen kendi zihinsel yatırımım ve itiraf etmeliyim ki bu y
     - [Döngüsüz Olmaz Tabii *(for, while loops)*](#döngüsüz-olmaz-tabii-for-while-loops)
     - [Derleyerek Çalıştırmak](#derleyerek-çalıştırmak)
     - [Alcotest ile Birim Test Yazmak](#alcotest-ile-birim-test-yazmak)
+  - [Biraz da Felsefe](#biraz-da-felsefe)
+    - [Hata Yapmayı İmkansız Kılan Tip Desteği(Type Safety Değil Type Expressiveness)](#hata-yapmayı-i̇mkansız-kılan-tip-desteği-type-safety-değil-type-expressiveness)
 
 ## Merak Ettiklerim
 
@@ -1066,3 +1068,47 @@ dune runtest -f
 ```
 
 ![ocaml_53.png](./images/ocaml_53.png)
+
+## Biraz da Felsefe
+
+En zor kısım burası. Şöyle bir soru soralım. Neden bazı diller Method Overloading kabiliyeti sunarken bazıları sunmuyor? Yazının bundan sonraki kısmında bu soruya cevap aramayacağız ama gerçekten dilin genleri ve felsefesi ile alakalı konuları kavramaya çalışacağız. Tipler ile başlayalım.
+
+### Hata Yapmayı İmkansız Kılan Tip Desteği *(Type Safety değil Type Expressiveness)*
+
+Verinin alabileceği tüm durumlar ilişik olduğu tip tarafından tanımlanır. Çok klasik bir örnek üzerinden ilerleyelim *(Rust tarafında da kullandığım bir teori ki OCAML'dan geliyormuş :D )*
+
+```ocaml
+type payment_type =
+  | Cash
+  | CreditCard of string * float
+  | Crypto of string * bool (*Vault adresi ile ağ onayını tutar*)
+
+let process_payment pay_t =
+  match pay_t with
+  | Cash -> "Processing cash payment"
+  | CreditCard (number, amount) -> Printf.sprintf "Processing credit card payment of %.2f for card %s" amount number
+  | Crypto (address, confirmed) ->
+      if confirmed then
+        Printf.sprintf "Processing crypto payment to address %s" address
+      else
+        Printf.sprintf "Crypto payment to address %s is pending confirmation" address
+
+let bills_payment = CreditCard ("1234-5678-9012-3456", 150.00);;
+let () = 
+  process_payment bills_payment
+  |> print_endline
+```
+
+Önce çalışma zamanına bir bakalım.
+
+![ocaml_54.png](./images/ocaml_54.png)
+
+**payment_type** içerisinde kullandığımız CreditCard tipini ele alalım. Kredi kartından bahsedebilmemiz için **string** ve **float** türünde iki bilgiye daha ihtiyacımız vardır. Bir başka deyişle CreditCard sadece bir etiket değil aynı zamanda bu iki bilgiyi de içeren bir yapıdır. Dolayısıyla CreditCard'ı kullanarak bir ödeme işlemi gerçekleştirebilmek için bu iki bilgiyi de sağlamamız gerekir. Sadece böyle bir durumda o veriye erişebiliriz. Bir başka mesele de **pattern match** kullanımıdır. Örneğin herhangi bir varyantı yazmazsak derleyici kızacaktır.
+
+![ocaml_55.png](./images/ocaml_55.png)
+
+Bir başka deyişle derleyici tasarımımızın bir ortağı gibi hareket eder. Bir varyantı unutmamıza izin vermez. **Rust** dili açısından bakarsak bu yapının bence çok daha şık bir şekli olan **enum** yapısı var. Üstelik Options/Result gibi türler de bu felsefeyi *(anlatabildim mi veya anlayabildim mi işte bütün mesele bu :D)* çok güzel bir şekilde ortaya koyuyor. O zaman mottomuzu söylüyoruz; Tip güvenliği değil tip ifade gücü *(type expressiveness)*.
+
+DEVAM EDECEK...
+
+[Bu çalışmadaki örneklere ve biraz daha fazlasına github reposundan ulaşabilirsiniz](https://github.com/buraksenyurt/learning-ocaml)
