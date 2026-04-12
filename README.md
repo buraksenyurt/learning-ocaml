@@ -1109,6 +1109,64 @@ let () =
 
 Bir başka deyişle derleyici tasarımımızın bir ortağı gibi hareket eder. Bir varyantı unutmamıza izin vermez. **Rust** dili açısından bakarsak bu yapının bence çok daha şık bir şekli olan **enum** yapısı var. Üstelik Options/Result gibi türler de bu felsefeyi *(anlatabildim mi veya anlayabildim mi işte bütün mesele bu :D)* çok güzel bir şekilde ortaya koyuyor. O zaman mottomuzu söylüyoruz; Tip güvenliği değil tip ifade gücü *(type expressiveness)*.
 
+### Olabildiğince Fonksiyonel
+
+OCaml mümkün olduğunca fonksiyonel olmayı hedefler. Yani her şeyi immutable yazmayı önerir. Lakin performans veya mantık gerektiren şeyler söz konusuysa imperative araçları da emrimize amade eder. Bu noktada **Haskell** gibi dillerden önemli ölçüde ayrıldığı söylenir ki tartışmaya açıktır *(Neden, çünkü Haskell ile hiç tecrübem yok)* Örnek kodlarda ele aldık ama sayaç artırıcı meselesini tekrar masaya yatırabiliriz. Aşağıdaki kod parçasını ele alalım.
+
+```ocaml
+(*Saf fonksiyonel yaklaşım*)
+let rec sum list = function 
+  | [] -> list 
+  | x :: xs -> sum (list + x) xs
+
+(* Pragmatik yaklaşım *)
+let incrementer () =
+  let count = ref 0 in
+  fun () -> 
+    count := !count + 1;
+    !count
+
+let () =
+  let inc = incrementer () in
+  print_endline (string_of_int (inc ()));
+  print_endline (string_of_int (inc ()));
+  print_endline (string_of_int (inc ()));
+```
+
+İlk önce çalışma zamanını bir değerlendirelim.
+
+![ocaml_56.png](./images/ocaml_56.png)
+
+**sum** için tam bir fonksiyonel yaklaşımın söz konusu olduğunu söyleyebiliriz. Hatta tam anlamıyla bir matematiksel bir zerafet sunar. Zira **mutable** bir state yoktur, recursive çalışan fonksiyon her çağrıda yeni bir değer döndürür ve bunlar arka arkaya toplanır. **incrementer** fonksiyonunda kullanılan **ref** keyword bir referans kutusu oluşturur ve **:=** operatörü ile bu kutunun içindeki değeri değiştirebiliriz. Bir başka deyişle bu fonksiyon state değiştiren bir fonksiyondur ve bu nedenle fonksiyonel değil, pragmatik bir yaklaşım sergiler.
+
+Aslında buradaki felsefeyi şöyle düşünebiliriz. Bazı senaryolarda her şeyin saf bir fonksiyon ile yazılması mümkün değildir. Örneğin, milyonlarca finansal işlemin yapıldığı gerçek zamanlı bir uygulamada *(Bence tam bu noktada [Jane Street'in hikayesine](https://ocaml.org/success-stories/large-scale-trading-system) bakılabilir)* veya çok oyunculu bir oyunda mutable state'lere ihtiyaç duyar ve hatta performans ararız. **OCaml** böyle durumlar içinde hazırlıklıdır ve sağladığı mutable araçları kullanarak pragmatik bir şekilde ilerleyebiliriz. Ancak mümkün olduğunca fonksiyonel bir yaklaşım benimsemek kodun daha temiz, anlaşılır ve hatasız olmasına da yardımcı olabilir. Bu nedenle OCaml, fonksiyonel programlama paradigmalarını teşvik ederken aynı zamanda pragmatik ihtiyaçlara da cevap verebilecek esneklikte tasarlanmıştır. **Rust** açısından bakarsak gerçekten de benzer bir felsefeye sahiptir. Her şey varsayılan olarak immutable'dır ve mutable olması gerekiyorsa bu açıkça belirtilmelidir. Ancak Rust'ın sahip olduğu ownership ve borrowing mekanizmaları sayesinde mutable state'ler üzerinde daha sıkı kontrol sağlanır ve bu da güvenli bir şekilde mutable state'ler kullanmamıza olanak tanır ki bu Rust'ı çekici kılan bir başka şeydir.
+
+Konuyu pekiştirmek adına bir başka örneğe bakalım.
+
+```ocaml
+let big_data = [|10.4; 20.5; 30.6; 1.0; 3.14 |]
+
+let scale_data factor data =
+  for i = 0 to Array.length data - 1 do
+    data.(i) <- data.(i) *. factor
+  done
+
+let () =
+  print_endline "Original data:";
+  Array.iter (Printf.printf "%.2f ") big_data;
+  print_endline "\nScaling data by a factor of 2.0...";
+  scale_data 2.0 big_data;
+  print_endline "Scaled data:";
+  Array.iter (Printf.printf "%.2f ") big_data;
+  print_endline ""
+```
+
+![ocaml_57.png](./images/ocaml_57.png)
+
+Tabii bu çok küçük bir veri kümesini ele alıyor. Elimizde milyon elamanlı bir veride olabilirdi. Vektörel sayıların olduğu bir dizi mesela. Tek bir değeri güncellemek gerekiyorsa bile diziyi kopyalamak fonksiyonel yaklaşım açısından çok maliyetlidir. Dolayısıyla dizinin elemanını olduğu yerde değiştirmek gerekir. Yukarıdaki kod parçasında **OCaml** bunu nasıl sağlıyoru bir kere daha görmekteyiz. **OCaml**, Array ve Bytes gibi yapıları doğrudan **mutable** olarak tasarlamıştır. **<-** operatörü tam anlamıyla emirsel *(imperative)* bir şekilde çalışır ve dizinin elemanlarını doğrudan değiştirmemize olanak tanır. Yani yerinde veriyi değiştirmemiz mümkündür.
+
+Buradan şu sonuca varabiliriz; Belkide yazacağımız algoritma imperative yaklaşım gerekleri ile daha hızlı çalışıyordur. **OCaml** buna destek verir. Dolayısıyla elimizde yüksek seviyeli dillerin zarifliğine sahip *(her ne kadar sentaksı zorlayıcı olsa da kavramsal olarak öyle)* ama gerektiğinde düşük seviyeli dillerin sunduğu bellek performansına yakın destek veren bir programlama dili var ve **Rust** bence bu özellikleri bir üst noktaya taşıyıp memory de gerçekten güvenli kalabilmenin yolunu da açmış durumda.
+
 DEVAM EDECEK...
 
 [Bu çalışmadaki örneklere ve biraz daha fazlasına github reposundan ulaşabilirsiniz](https://github.com/buraksenyurt/learning-ocaml)
