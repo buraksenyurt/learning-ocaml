@@ -1,6 +1,12 @@
 # Learning OCaml
 
-OCaml programlama dili ile ilgili maceralarımın yer aldığı kod deposudur.
+İlk programlama dilinden bu zamanlara değişen çok şey var. Üniversite yıllarım kişisel bilgisayarların ve internetin yaygınlaştığı World Wide Web devrimine denk geliyor. O vakitler bölümde gösterilen bilgisayar programlama derslerini düşünüyorum da; [GW-Basic](https://en.wikipedia.org/wiki/GW-BASIC), [Cobol](https://en.wikipedia.org/wiki/COBOL), C ve C++ ... Çoğunda belli seviyeye kadar geldiğimizi anımsıyorum. Aynı yıllarda iş dünyasının hızlandırıcı etkisine de şahit olmuştuk. Sadece klavye ve 8 renkten oluşan siyah terminal ekranları çok uzun zamandır mouse imleçleri ile renklenmişti. Dahası artık iş süreçlerinin internet ortamından yürütülebildiği bir dönemdi. Bu dalga ile birlikte ben ve birçok arkadaşım **Delphi**, **Java**, **Visual Basic** gibi diller yöneldi. Ben ağırlıklı olarak Delphi tarafına yakındım ama zamanla bu yerini **C#** programlama diline bıraktı.
+
+Anılar bir kenara dursun yıllarca popüler dillerle uygulama geliştirmenin ardından gelen bir farkındalık, araçlara değil, o araçları var eden felsefeye odaklanmam gerektiğini öğretti. Bazı programlama dillerini iş amaçlı kullanmak için değil, atası olduğu diğer dillere kattığı özellikleri düşünerek çalışmak gerekiyor. Örneğin uzun süre uğraştığım ve sahada deneyimleme şansını çok bulamadığım için şimdilerde paslandığım **Rust** programlama dili atası olan **OCaml** dilinden birçok özellik almıştı *(Güçlü tip sistemler, cebirsel veri tipleri - algebraic data types, hata payını azaltan örüntü eşleştirme - pattern matching, options vb)* Benzer şekilde **Scala**, **F#** ve bugünlerde dikkat çeken **Rocq**, **Gleam** gibi dillere de **OCaml** ilham vermişti. **OCaml** ile herhangi bir proje geliştirmeyeceğim veya onu iş yerinde kullanmayacağım ama fonksiyonel dil paradigmasını anlamak, bir derleyicinin ya da yorumlayıcının nasıl yazıldığını temelden öğrenmek ve birçok dilin **Ocaml** üzerinden aldığı kabiliyetleri kavramak için geç de olsa çalışmalıyım *(Sen bu yazıyı okuyan bir üniversite talebesi isen bence sende OCaml veya benzeri bazı dilleri iyice öğrenmeye çalışmalısın)*
+
+> F# programlama dilinin doğrudan bir türevi olduğu, Rust'ın tip güvenliği felsefesini benimsediği ve hatta ilk derleyicisinin OCaml ile yazıldığı düşünüldüğünde; OCaml öğrenmek modern programlama dillerinin genetik kodunu çözmek demektir.
+
+Sözün özü bu tamamen kendi zihinsel yatırımım ve itiraf etmeliyim ki bu yatırımı ellili yaşlarımda değil de yirmili yaşlarımda değerlendirmem gerekirdi.
 
 - [Giriş](#learning-ocaml)
   - [Merak Ettiklerim](#merak-ettiklerim)
@@ -20,13 +26,13 @@ OCaml programlama dili ile ilgili maceralarımın yer aldığı kod deposudur.
 ## Merak Ettiklerim
 
 - **OCaml ismi nerden geliyor?:** OCaml, "Objective Caml" ifadesinin kısaltması. Caml *( Categorical Abstract Machine Language)* diline nesne yönelimli programlama özelliklerinin eklenmiş bir versiyonu olarak düşünebiliriz ve evet logosunda deve var elbetteki :D
-- **Geliştiricileri kim?:** INRIA *(Institut National de Recherche en Informatique et en Automatique - Ulusal Bilgisayar Bilimi ve Otomasyon Araştırma Enstitüsü)* 'da Xavier Leroy, Jérôme Vouillon, Damien Doligez, ve Didier Rémy tarafından geliştirilmiş. Fransızlar tarafında geliştirildiği için söz dizimine yer yer fransız kaldığım da olmadı değil :D
-- **İlk versiyonu ne zaman çıktı?:** Kaynaklara göre ilk sürüm **1996** yılında piyasaya sürülmüş. Dokümanı yazdığım an itibariyle de son sürümü 2025-10-09 tarihinde yayınlanmış olan **5.4.0** versiyonu. Son sürümde immutable diziler, labelled tuple türleri, atomik record alanları gibi yeni özellikler eklenmiş.
-- **Dilin kullanım amacı:** Genel amaçlı bir programlama dili olduğunu düşünebiliriz zira nesne yönelimli olma hali ve fonksiyonel dil özellikleri ile birlikte pragmatik yaklaşımları içeriyor. Genelleştirilmiş Garbage Collection, birinci sınıf fonksiyonlar *(First Citizen Functions)*, statik tür sistemi *(Static Type System)*, immutable programlama taktikleri, tip çıkarımı *(Type Inference)*, cebirsel veri türleri *(Algebraic Data Types)*, pattern matching ve daha birçok özelliği destekleyen bir dil.
+- **Geliştiricileri kim?:** INRIA *(Institut National de Recherche en Informatique et en Automatique - Ulusal Bilgisayar Bilimi ve Otomasyon Araştırma Enstitüsü)* 'dan Xavier Leroy, Jérôme Vouillon, Damien Doligez ve Didier Rémy tarafından geliştirilmiş. Fransızlar tarafından geliştirildiği için söz dizimine yer yer fransız kaldığım da olmadı değil :D
+- **İlk versiyonu ne zaman çıktı?:** Kaynaklara göre ilk sürüm **1996** yılında piyasaya sürülmüş. Dokümanı yazdığım an itibariyle de son sürümü 2025-10-09 tarihinde yayınlanmış olan **5.4.0** versiyonu. Son sürümde **immutable diziler**, **labelled tuple** türleri, **atomik record** alanları gibi yeni özellikler eklenmiş.
+- **Dilin kullanım amacı:** Genel amaçlı bir programlama dili olduğunu düşünebiliriz zira nesne yönelimli olma hali ve fonksiyonel dil özellikleri ile birlikte pragmatik yaklaşımları içeriyor. Genelleştirilmiş çöp toplayıcısı *(Garbage Collector)*, birinci sınıf fonksiyonlar *(First Citizen Functions)*, statik tür sistemi *(Static Type System)*, immutable programlama taktikleri, tip çıkarımı *(Type Inference)*, cebirsel veri türleri *(Algebraic Data Types)*, örüntü eşleştirme *(pattern matching)* ve daha birçok özelliği destekleyen bir dil.
 - **Hangi dillerden esinlenmiş:** Sahip olduğu özellikler de düşünüldüğünde **Caml** başta olmak üzere, **C**, **Pascal**, **Modula-3** ve **Standard ML** dillerinden esinlenildiği belirtiliyor.
 - **Hangi dillere esin kaynağı olmuş:** Bir tanesi *[Rust](https://rust-lang.org/)* ki bende uğraştığım için biliyorum. Wikipedia kayıtlarına göre OCaml'dan etkilenen diğer diller arasında [Rocq](https://rocq-prover.org/), [F#](https://fsharp.org/), [Scala](https://www.scala-lang.org/), [Gleam](https://gleam.run/) gibi popüler diller de var.
-- **OCaml ile kendi programlama dilini yazabilir miyim?:** Teorik olarak evet, **OCaml** güçlü bir dil ve kendi dilinizi yazmak için gerekli araçları sağlayabilir.
-- **Hangi kaynaklardan öğrenebilirim?:** [Real World OCaml, Functional Programming for the Masses, Anıl Madhavapeddy, Yaron Minsky, Cambridge University Press](https://dev.realworldocaml.org/index.html) Bunun yanında **Cornell** Üniversitesinden **Michael Ryan Clarkson**'ın 2021 yılında yayınladığı [OCaml Programming: Correct + Efficient + Beautiful](https://youtube.com/playlist?list=PLre5AT9JnKShBOPeuiD9b-I4XROIJhkIU&si=fqYdWGlXmQwy8c_b) kursunu da tavsiye ederim. Ben 25 yıl kadar geç başlıyorum bazı şeylere doğrudur :D Ayrıca bu yayına ait güzel bir [kitap](https://cs3110.github.io/textbook/cover.html) da var.
+- **OCaml ile kendi programlama dilini yazabilir miyim?:** Teorik olarak evet, **OCaml** güçlü bir dil ve kendi dilinizi yazmak için gerekli araçları sağlayabilir. Zaten Rust'ın ilk sürümü bildiğim kadarı ile OCaml ile yazılıyor.
+- **Hangi kaynaklardan öğrenebilirim?:** [Real World OCaml, Functional Programming for the Masses, Anıl Madhavapeddy, Yaron Minsky, Cambridge University Press](https://dev.realworldocaml.org/index.html) Heybetli bir kitap. Gerçekten 20li yaşlarımda olmam gerekiyor :D Bunun yanında **Cornell** Üniversitesinden **Michael Ryan Clarkson**'ın 2021 yılında yayınladığı [OCaml Programming: Correct + Efficient + Beautiful](https://youtube.com/playlist?list=PLre5AT9JnKShBOPeuiD9b-I4XROIJhkIU&si=fqYdWGlXmQwy8c_b) kursunu da tavsiye ederim. Ben 25 yıl kadar geç başlıyorum bazı şeylere doğrudur :D Ayrıca bu yayına ait güzel bir [kitap](https://cs3110.github.io/textbook/cover.html) da var.
 
 ## Kurulumlar
 
@@ -56,14 +62,14 @@ ocaml
 
 ### WSL Tarafında Ubuntu Üzerinden Çalışmak
 
-Nedense bu tip dilleri çalışmak için en uygun platform **Linux** ortamı. Ben tüm çalışmalardan sonra konu tekrarları için **WSL** üzerinden ilerlemeye karar verdim. Hali hazırda WSD üzerinde bir **Ubuntu** sürümüm yüklü. Ancak değilse de,
+Nedense bu tip dilleri çalışmak için en uygun platform **Linux** ortamı sanırım *(Emektar Ubuntu sistemim Westworld tavan arasında ama Windows'ta WSL ile bir ubuntu üzerinde çalışmak mümkün)* Ben tüm çalışmalardan sonra konu tekrarları için **WSL** üzerinden ilerlemeye karar verdim. Hali hazırda WSL üzerinde bir **Ubuntu** sürümüm yüklü. Ancak değilse de,
 
 ```bash
 wsl --install -d Ubuntu
 # ile ubuntu'yu yükleyebiliriz.
 ```
 
-Ocaml kurulmarı içinse aşağıdaki adımları takip etmek gerekiyor.
+**Ocaml** kurulmarı içinse aşağıdaki adımları takip etmek gerekiyor.
 
 ```bash
 # Öncelikle apt paket yöneticisini güncelleyelim
@@ -104,15 +110,15 @@ Eğer her şey yolunda giderse ubuntu ortamında **utop** ile doğrudan **ocaml*
 
 ## Giriş Seviyesi
 
-Aşağıdaki kod örnekleri için komut satırından **ocaml** komutu çalıştırılarak ilerlenebilir. Ayrıca **utop** aracı ile de çalışabilir. Bu ikisi özellikle yazılan kodun anında çalıştırılması ve sonuçların görülmesi açısından faydalı araçlar. **utop** aracı daha gelişmiş özelliklere sahip bir **TopLevel** aracı olarak düşünülebilir ancak bir noktadan sonra **ml** uzantılı dosyalar üzerinden çalışmaya döndüğümü de belirtmek isterim. **TopLevel** bir nevi **REPL *(Read-Eval-Print Loop)*** aracıdır. Çok büyük çaplı olmayan kod parçalarını denemek için, özellikle dilin temel özelliklerini giriş seviyesinde öğrenirken oldukça kullanışlı bir araçtır.
+Aşağıdaki kod örnekleri için komut satırından **ocaml** komutu çalıştırılarak ilerlenebilir. Ayrıca **utop** aracı ile de çalışılabilir. Bu ikisi özellikle yazılan kodun anında çalıştırılması ve sonuçların görülmesi açısından faydalı araçlar. **utop**, daha gelişmiş özelliklere sahip bir **TopLevel** aracı olarak düşünülebilir ancak bir noktadan sonra **ml** uzantılı dosyalar üzerinden çalışmaya döndüğümü de belirtmek isterim. **TopLevel** bir nevi **REPL *(Read-Eval-Print Loop)*** aracı. Çok büyük çaplı olmayan kod parçalarını denemek için, özellikle dilin temel özelliklerini giriş seviyesinde öğrenirken oldukça kullanışlı bir araç. Yazılan bir ifadenin dil tarafından nasıl yorumlamdığını anında gösteriyor zira.
 
 ### Bazı Yararlı Utop Komutları
 
 - **#help;;** : Utop'ta kullanılabilecek komutları gösterir.
 - **CTRL + L** : Ekranı temizler. Bir noktadan sonra terminal ekranı çok kirlenirse silmek için ;)
 - **#quit;;** : Utop oturumunu sonlandırır.
-- **#show {module_name};;** : Belirtilen modülün içeriğini gösterir. Örneğin **#show List;;** komutu ile List modülünün içeriği görülebilir.
-- **#use "filename.ml";;** : Belirtilen dosyayı yükler ve içindeki kodu çalıştırır. Dosya uzantısı .ml olmalıdır. Örneğin aşağıdaki içeriğe sahip bir **ml** dosyamız olduğunu düşünelim. *(Clarkson'un öğretisine bağlı kalarak WSL ortamında 3110 isimli bir klasör oluşturup içine bu dosyayı koydum)*
+- **#show {module_name};;** : Belirtilen modülün içeriğini gösterir. Örneğin **#show List;;** komutu ile **List** modülünün içeriği görülebilir.
+- **#use "filename.ml";;** : Belirtilen dosyayı yükler ve içindeki kodu çalıştırır. Dosya uzantısı **.ml** olmalıdır. Örneğin aşağıdaki içeriğe sahip bir **ml** dosyamız olduğunu düşünelim. *(Clarkson'un öğretisine bağlı kalarak WSL ortamında 3110 isimli bir klasör oluşturup içine bu dosyayı koydum)*
 
 ```ocaml
 let x : int = 3110;;
@@ -124,62 +130,63 @@ print_string "Hello, world!\n";;
 
 ### Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler
 
-İlk olarak float değerler ile ilgili aritmetik birkaç işleme bakalım.
+Öyleyse ders notlarımıza başlayalım. İlk olarak **float** değerler ile ilgili aritmetik birkaç işleme bakalım. Deneyeceğimi ifadeleri aşağıdaki kod bloğuna ekliyorum. Bunları **utop** aracından denersek çok faydalı olacaktır.
 
-```text
-# 3.14 +. 2.1;;
-- : float = 5.24
-# 10+2;;
-- : int = 12
-# 10+.2;;
-Line 1, characters 0-2:
-1 | 10+.2;;
-    ^^
-Error: The constant 10 has type int but an expression was expected of type
-         float
-Hint: Did you mean 10.?
-# 10. +. 2;;
-Line 1, characters 7-8:
-1 | 10. +. 2;;
-           ^
-Error: The constant 2 has type int but an expression was expected of type
-         float
-Hint: Did you mean 2.?
-# 10. +. 2.;;
-- : float = 12.
-# 1_000_000 * 10_000;;
-- : int = 10000000000
-# (2 * 5) <= 10;;
-- : bool = true
-# (2 * 6) <= 10;;
-- : bool = false
-# let xValue = 10;;
-val xValue : int = 10
-# let y_value = 5;;
-val y_value : int = 5
-# let result = xValue + y_value;;
-val result : int = 15
-# let MaxUserCount = 8;;
-Line 1, characters 4-16:
-1 | let MaxUserCount = 8;;
-        ^^^^^^^^^^^^
-Error: Unbound constructor MaxUserCount
-# let 7even = 7;;
-Line 1, characters 4-9:
-1 | let 7even = 7;;
-        ^^^^^
-Error: Invalid literal 7even
-# let screen-width = 1024;;
-Line 1, characters 11-16:
-1 | let screen-width = 1024;;
-               ^^^^^
-Error: Syntax error
+```ocaml
+3.14 +. 2.1;;
+10+2;;
+10+.2;;
+(* 
+  Line 1, characters 0-2: 
+  1 | 10+.2;;
+      ^^
+  Error: The constant 10 has type int but an expression was expected of type
+          float
+  Hint: Did you mean 10.?
+*)
+10. +. 2;;
+(*
+  Line 1, characters 7-8:
+  1 | 10. +. 2;;
+            ^
+  Error: The constant 2 has type int but an expression was expected of type
+          float
+  Hint: Did you mean 2.?
+*)
+10. +. 2.;;
+1_000_000 * 10_000;;
+(2 * 5) <= 10;;
+(2 * 6) <= 10;;
+let xValue = 10;;
+let y_value = 5;;
+let result = xValue + y_value;;
+let MaxUserCount = 8;;
+(*
+  Line 1, characters 4-16:
+  1 | let MaxUserCount = 8;;
+          ^^^^^^^^^^^^
+  Error: Unbound constructor MaxUserCount
+*)
+let 7even = 7;;
+(*
+  Line 1, characters 4-9:
+  1 | let 7even = 7;;
+          ^^^^^
+  Error: Invalid literal 7even
+*)
+let screen-width = 1024;;
+(*
+  Line 1, characters 11-16:
+  1 | let screen-width = 1024;;
+                ^^^^^
+  Error: Syntax error
+*)
 ```
 
 ![Variables](./images/ocaml_18.png)
 
-- **;;** ile toplevel'a *(bu ne demek?)* ilgili satırı bir ifade olarak ele alması gerektiğini, yani hemen çalıştırmasını belirtmek için kullanılıyor. *(Evaluate Expression)*
-- İki **float** değeri toplamak için **+.** operatörü kullanılmalı. Ayrıca **float** ve **int** toplanacak küsürat olmasa bile . ile sayının **float** olarak ele alınacağı ifade edilmeli.
+- **;;** ile toplevel'a ilgili satırı bir ifade olarak ele alması gerektiğini, yani hemen çalıştırmasını belirtmek için kullanılıyor. *(Evaluate Expression)*
+- İki **float** değeri toplamak için **+.** operatörü kullanılmalı. Ayrıca **float** ve **int** toplanacaksa küsürat olmasa bile . işareti ile sayının **float** olarak ele alınacağı ifade edilmeli.
 - İfade çalıştırıldığında sadece sonuç değil tür bilgisi de dönülüyor.
 - Büyük sayılar **_** karakteri ile daha okunabilir yazılabilir.
 - Değişkenleri **let** anahtar kelimesi ile tanımlayabilir ilk değerleri atayabiliriz.
@@ -188,94 +195,90 @@ Error: Syntax error
 
 ### let'in Gücü ve Fonksiyon Tanımlamaları
 
-Başla işlemlerle devam edelim. **let** çok güçlü bir operatör. Değişkenleri bağlayabildiğimiz gibi, fonksiyonları da bağlayabiliriz.
+Başka işlemlerle devam edelim. **let** çok güçlü bir operatör. Değişkenleri değerlere bağlayabildiğimiz gibi, fonksiyonları da iş yapan kod bloklarına bağlayabiliriz.
 
-```text
-# let total x y = x + y;;
-val total : int -> int -> int = <fun>
-# total 1 5;;
-- : int = 6
-# total -5 5;;
-Line 1, characters 0-5:
-1 | total -5 5;;
-    ^^^^^
-Error: The value total has type int -> int -> int
-       but an expression was expected of type int
-# total (-5) 5;;
-- : int = 0
-# total 1.2 3.4;;
-Line 1, characters 6-9:
-1 | total 1.2 3.4;;
-          ^^^
-Error: The constant 1.2 has type float but an expression was expected of type
-         int
+```ocaml
+let total x y = x + y;;
+total 1 5;;
+total -5 5;;
+(*
+  Line 1, characters 0-5:
+  1 | total -5 5;;
+      ^^^^^
+  Error: The value total has type int -> int -> int
+        but an expression was expected of type int
+*)
+total (-5) 5;;
+total 1.2 3.4;;
+(*
+  Line 1, characters 6-9:
+  1 | total 1.2 3.4;;
+            ^^^
+  Error: The constant 1.2 has type float but an expression was expected of type
+          int
+*)
 # total 128 (8 * 1024);;
-- : int = 8320
 ```
 
 ![Power of let](./images/ocaml_19.png)
 
-Burada **total** isimli iki parametre alan ve varsayılan olaran **int** türünde değerleri toplayan bir fonksiyon tanımladık. Fonksiyon çağrılırken parametreler arasında parantez kullanımı önemli. Aksi halde eksi işareti operatör olarak algılanıyor. Ayrıca doğru türlerde işlem yapmak lazım.
+Burada **total** isimli iki parametre alan ve varsayılan olarak **int** türünden değerleri toplayan bir fonksiyon tanımladık. Fonksiyon çağrılırken parametreler arasında parantez kullanımı önemli. Aksi halde eksi işareti operatör olarak algılanıyor. Ayrıca doğru türlerde işlem yapmak lazım. Yeni ifadelerle devam edelim;
 
-![ocaml_00.png](./images/ocaml_00.png)
-
-```text
-# let total_1 x y = x + y;;
-val total_1 : int -> int -> int = <fun>
-# let total_2 x y = (x * x) + (y * y);;
-val total_2 : int -> int -> int = <fun>
-# total_1 3 4 + total_2 5 1;;
-- : int = 33
-# let div x y = Float.from_int x / Float.from_int y;;
-Line 1, characters 14-28:
-1 | let div x y = Float.from_int x / Float.from_int y;;
-                  ^^^^^^^^^^^^^^
-Error: Unbound value Float.from_int
-Hint:   Did you mean Float.of_int or Float.to_int?
-# let div x y = Float.of_int x / Float.of_int y;;
-Line 1, characters 14-28:
-1 | let div x y = Float.of_int x / Float.of_int y;;
-                  ^^^^^^^^^^^^^^
-Error: This expression has type float but an expression was expected of type
-         int
-# let div x y = Float.of_int x /. Float.of_int y;;
-val div : int -> int -> float = <fun>
-# div 1 3
-  ;;
-- : float = 0.33333333333333331
-# div 3.14 2.
-  ;;
-Line 1, characters 4-8:
-1 | div 3.14 2.
-        ^^^^
-Error: The constant 3.14 has type float
-       but an expression was expected of type int
+```ocaml
+let total_1 x y = x + y;;
+let total_2 x y = (x * x) + (y * y);;
+total_1 3 4 + total_2 5 1;;
+let div x y = Float.from_int x / Float.from_int y;;
+(*
+  Line 1, characters 14-28:
+  1 | let div x y = Float.from_int x / Float.from_int y;;
+                    ^^^^^^^^^^^^^^
+  Error: Unbound value Float.from_int
+  Hint:   Did you mean Float.of_int or Float.to_int?
+*)
+let div x y = Float.of_int x / Float.of_int y;;
+(*
+  Line 1, characters 14-28:
+  1 | let div x y = Float.of_int x / Float.of_int y;;
+                    ^^^^^^^^^^^^^^
+  Error: This expression has type float but an expression was expected of type
+          int
+*)
+let div x y = Float.of_int x /. Float.of_int y;;
+div 1 3 
+;;
+div 3.14 2. 
+;;
+(*
+  Line 1, characters 4-8:
+  1 | div 3.14 2.
+          ^^^^
+  Error: The constant 3.14 has type float
+        but an expression was expected of type int
+*)
 # div 3 2;;
-- : float = 1.5
 ```
 
 ![Float Division](./images/ocaml_20.png)
 
-> div fonksiyonunun yorumlanma şekli dikkat çekmiştir. int -> int -> float. Düşününce int,int->float gibi bir şey yazar diye bekliyor insan.
+> div fonksiyonunun yorumlanma şekli dikkatinizi çekmiştir. int -> int -> float. Düşününce int,int -> float gibi bir şey yazar diye bekliyor insan değil mi?
 
-Yukarıdaki örnekte, div isimli fonksiyonu tanımlamaya çalışıyorum. Fonksiyondan beklenti **int** türünden gelen iki sayıyı bölmek ama bunları **float** türünden ele almasını sağlamak. İlk denemede kitaptaki fonksiyon adını unuttum ve **of_int** yerine **from_int** yazdım. **Rust** günlüklerim geldi aklıma, yorumlayıcı *acaba şunu mu demek istedin* derken. Fonksiyonları düzelttikten sonra **/** operatörü ile **/.** arasındaki farka tosladım. **float** türler arasında bir bölme işlemi söz konusu olacağı için **/.** operatörünün kullanılması gerekiyor. Bölme operatörünün tipe özel versiyonlandığını ifade edebiliriz. Ayrıca **Float** bir Ocaml modülü.
+Yukarıdaki örnekte, **div** isimli fonksiyonu tanımlamaya çalışıyoruz. Fonksiyondan beklenti **int** türünden gelen iki sayıyı bölmek ama bunları **float** türünden ele almasını sağlamak. İlk denemede kitaptaki fonksiyon adını unuttum ve **of_int** yerine **from_int** yazdım. **Rust** günlüklerim geldi aklıma, yorumlayıcı *acaba şunu mu demek istedin* derdi. Fonksiyonları düzelttikten sonra **/** operatörü ile **/.** arasındaki farka tosladım. **float** türler arasında bir bölme işlemi söz konusu olacağı için **/.** operatörünün kullanılması gerekiyormuş. Bölme operatörünün tipe özel versiyonlandığını ifade edebiliriz. Ayrıca **Float** bir Ocaml modülüdür *(Büyük harfle başlayan isimler modülleri ifade eder)* ve bu modülün içinde **of_int** isimli bir fonksiyon var. Bu fonksiyonun görevi **int** türünden bir değeri **float** türüne çevirmek.
 
-Burada rahatsız edici nokta belki de **Float.of_int** kullanımı olabilir ama bunu kolaylaştırmak için **OCaml** ekosisteminde yazılmış bir başka [modül](https://ocaml.janestreet.com/ocaml-core/v0.13/doc/base/Base/Float/O/) var. Bu modüldeki amaçlardan birisi **float** değerler ile çalışırken +., /. operatörleri yerine +, / ile de çalışabilmek ve bunu **float-safe** modda yapabilmek. Ben şu an için standart kütüphane ile devam etmek istiyorum. Ekosistemdeki diğer modüllere sonradan odaklanırım. Standart kütühane aynı fonksiyonu aşağıdaki gibi yazmamıza da izin veriyor.
+Burada rahatsız edici nokta belki de **Float.of_int** kullanımı olabilir ama bunu kolaylaştırmak için **OCaml** ekosisteminde yazılmış bir başka [modül](https://ocaml.janestreet.com/ocaml-core/v0.13/doc/base/Base/Float/O/) var. Bu modüldeki amaçlardan birisi **float** değerler ile çalışırken **+.**, **/.** operatörleri yerine **+**, **/** */ ile de çalışabilmek ve bunu **float-safe** modda yapabilmek. Biz şu an için standart kütüphane ile devam edebiliriz. Ekosistemdeki diğer modüllere sonradan odaklanırız. Standart kütühane aynı fonksiyonu aşağıdaki gibi yazmamıza da izin veriyor.
 
-```text
-# let div x y =
+```ocaml
+let div x y =
         float_of_int x /. float_of_int y
-  ;;
-val div : int -> int -> float = <fun>
-# div 1 5;;
-- : float = 0.2
+;;
+div 1 5;;
 ```
 
 ![Float of int](./images/ocaml_21.png)
 
 #### Yine de Float.0 ile Çalışmak Gerekirse
 
-Bir noktada **Float.O** ile çalışmak gerekirse şöyle ilerlemek gerekiyor. Öncelikle komut satırından **utop** başlatılır. Ardından, **toplevel**, **Base** modülünü destekleyecek şekilde başlatılır. Bu işlemin ardından ilgili fonksiyon yazılabilir. Aşağıdaki ekran görüntüsünü geleceğe not olarak bırakayım.
+Bir noktada **Float.O** ile çalışmak gerekirse şöyle ilerlemek gerekiyor. Öncelikle komut satırından **utop** başlatılır. Ardından, **toplevel**, **Base** modülünü destekleyecek şekilde başlatılır. Bu işlemin ardından ilgili fonksiyon yazılabilir. Aşağıdaki ekran görüntüsünü geleceğe not olarak bırakalım.
 
 > Burada dikkat edilmesi gereken bir nokta da **Float.O** ifadesindeki O'nun büyük harf O olduğudur. 0 (sıfır) değil :D
 
@@ -287,33 +290,26 @@ Gelecekten geldim :D **WSL - Ubuntu** tarafından da bir bakalım.
 
 ### Zihin Yakan Bir Fonksiyon Kullanımı
 
-Şimdi, **int** türünden değer dönen bir fonksiyonu parametre olarak alan, ve diğer parametrede gelen **int** değer ile toplayan bir fonksiyon tanımlayalım.
+Şimdi, **int** türünden değer dönen bir fonksiyonu parametre olarak alan ve diğer parametreden gelen **int** değer ile toplayan bir fonksiyon tanımlayıp çalıştıralım.
 
-```text
-# let more_add f x y = f * x + y;;
-val more_add : int -> int -> int -> int = <fun>
-# let square n = n * n;;
-val square : int -> int = <fun>
-# more_add (square 1) 1 1;;
-- : int = 2
-# more_add (square 2) 3 5;;
-- : int = 17
+```ocaml
+let more_add f x y = f * x + y;;
+let square n = n * n;;
+more_add (square 1) 1 1;;
+more_add (square 2) 3 5;;
 ```
 
 ![ocaml_23.png](./images/ocaml_23.png)
 
-İlk olarak **more_add** fonksiyonuna bir bakalım. **f** harfinin bir fonksiyonu işaret ettiğini nereden anladı? Yorumlama kısmına baktığımızda **int -> int -> int -> int** şeklinde bir tanım var. `<fun\>` tabii ki bunun bir fonksiyon olduğunu ifade etmekte. f çıktısını x ile çarpıp y ile toplatıyoruz. Saçma bir fonksiyon ancak dinamiğini öğrenmek açısından kayda değer. Sonrasında **square** isimli bir fonksiyon tanımlıyoruz. Bu fonksiyon tek parametre alıyor ve karesini döndürüyor. Şimdi **more_add** fonksiyonunu çağırırken ilk parametre olarak **square 2** ifadesini veriyoruz. Bu ifade **4** değerini döndürecek ve bu değer **f** parametresine bağlanacak. Sonrasında ise 3 ve 5 değerleri sırasıyla x ve y parametrelerine bağlanacak. Yani fonksiyonun işleyişi şu şekilde olacak, 4 * 3 + 5 = 12 + 5 = 17. Ancak asıl zihin yakıcı örnek kitaptaki örnekten esinlenilerek geliyor;
+İlk olarak **more_add** fonksiyonuna bir bakalım. **f** harfinin bir fonksiyonu işaret ettiğini nereden anladı? Yorumlama kısmına baktığımızda **int -> int -> int -> int** şeklinde bir tanım var. `<fun\>` tabii ki bunun bir fonksiyon olduğunu ifade etmekte. **f** çıktısını x ile çarpıp y ile toplatıyoruz. Saçma bir fonksiyon ancak dinamiğini öğrenmek açısından kayda değer. Sonrasında **square** isimli bir fonksiyon daha tanımlıyoruz. Bu fonksiyon tek parametre alıyor ve karesini döndürüyor. Şimdi **more_add** fonksiyonunu çağırırken ilk parametre olarak **square 2** ifadesini veriyoruz. Bu ifade **4** değerini döndürecek ve bu değer **f** parametresine bağlanacak. Sonrasında ise 3 ve 5 değerleri sırasıyla x ve y parametrelerine bağlanacak. Yani fonksiyonun işleyişi şu şekilde olacak, 4 * 3 + 5 = 12 + 5 = 17. Ancak asıl zihin yakıcı örnek kitaptaki örnekten esinlenilerek geliyor;
 
-```text
-# let condition f first_arg second_arg =
-        (if f first_arg then first_arg else 0)
-        +
-        (if f second_arg then second_arg else 0);;
-val condition : (int -> bool) -> int -> int -> int = <fun>
-# let check_point value = value > 50;;
-val check_point : int -> bool = <fun>
-# condition check_point 28 76;;
-- : int = 76
+```ocaml
+let condition f first_arg second_arg =
+      (if f first_arg then first_arg else 0)
+      +
+      (if f second_arg then second_arg else 0);;
+let check_point value = value > 50;;
+condition check_point 28 76;;
 ```
 
 **condition** isimli fonksiyonun kullandığı **f** parametresi bir fonksiyonu işaret etmekte ve bu fonksiyonun türü **int -> bool**. Yani bir **int** alıp **bool** döndüren bir fonksiyon. Peki yorumlayıcı buna nasıl karar verdi ya da bu tür tahminini *(type inference)* neye göre yaptı? Bunu anlamak için **if** koşuluna odaklanmakta fayda var. Nitekim **else** kısımlarında 0 değeri kullanılmakta ki bu bir **int** türü. Buna göre **then** kısımlarında da **int** türü döndüren ifadeler olmalı. Sonuç olarak **f** fonksiyonu **int -> bool** türünde bir fonksiyon olmalı.
@@ -322,59 +318,46 @@ val check_point : int -> bool = <fun>
 
 **OCaml** uzmanlarına göre bu yazım stiline ve yorumlayıcının tip tahmini mekanizmasına alışmak zaman alabilir. Diğer yandan dilin çok güçlü bir yanını ispat eden bu yazım stiline alışamayanlar için *Annotations* yani tür açıklamaları ile fonksiyonları tanımlamak da mümkün. Aynı fonksiyonu aşağıdaki gibi de yazabiliriz.
 
-```text
-# let condition (f: int -> bool) (first_arg:int) (second_arg:int) : int =
-        (if f first_arg then first_arg else 0)
-        +
-        (if f second_arg then second_arg else 0);;
-val condition : (int -> bool) -> int -> int -> int = <fun>
-# let check_point value = value > 50;;
-val check_point : int -> bool = <fun>
-# condition check_point 28 76;;
-- : int = 76
+```ocaml
+let condition (f: int -> bool) (first_arg:int) (second_arg:int) : int =
+      (if f first_arg then first_arg else 0)
+      +
+      (if f second_arg then second_arg else 0);;
+let check_point value = value > 50;;
+condition check_point 28 76;;
 ```
 
 ![ocaml_25.png](./images/ocaml_25.png)
 
 ### Fonksiyonlarda Generic Parametre Kullanımı
 
-**OCaml** tür tahmini yapma konusundaki hünerini **generic** türler için de gösterir.
+**OCaml** tür tahmini yapma konusundaki hünerini **generic** türler için de gösterir. Aşağıdaki ifadeleri deneyerek devam edelim.
 
-```text
-# let identity value = value;;
-val identity : 'a -> 'a = <fun>
-# identity 1001;;
-- : int = 1001
-# identity "PRD-0001";;
-- : string = "PRD-0001"
-# let swap (left,right) = (right,left);;
-val swap : 'a * 'b -> 'b * 'a = <fun>
-# swap (4,"four");;
-- : string * int = ("four", 4)
+```ocaml
+let identity value = value;;
+identity 1001;;
+identity "PRD-0001";;
+let swap (left,right) = (right,left);;
+swap (4,"four");;
 ```
 
 ![ocaml_26.png](./images/ocaml_26.png)
 
-**identity** ve **swap** isimli fonksiyonlar tnaımlandıktan sonra yorumlayıcının verdiği çıktılara dikkat edelim. *(Açıkçası Rust'ı öğrenmeye başladığımda hem kavramsal olarak hem de sentaks olarak zorlandığım 'a - lifetime annotations kavramı geldi aklıma)* Her neyse, **'a** ve **'b** şeklinde yazılan ifadeler generic türler. Generic kavramına aşina olmayanlar için *a ve b yerine herhangi bir tür gelebilir ve bunun için her bir türe özel olacak şekilde bu fonksiyonunun farklı versiyonlarını yazmanıza gerek yoktur* diyelim. Şimdi biraz daha kafa karıştırabilecek bir örnek.
+**identity** ve **swap** isimli fonksiyonlar tnaımlandıktan sonra yorumlayıcının verdiği çıktılara dikkat edelim. *(Açıkçası Rust'ı öğrenmeye başladığımda hem kavramsal olarak hem de sentaks olarak zorlandığım 'a - lifetime annotations konusu geldi aklıma)* Her neyse, **'a** ve **'b** şeklinde yazılan ifadeler **generic** türler. Generic kavramına aşina olmayanlar için *a ve b yerine herhangi bir tür gelebilir ve bunun için her bir türe özel olacak şekilde bu fonksiyonunun farklı versiyonlarını yazmanıza gerek yoktur* diyelim. Şimdi biraz daha kafa karıştırabilecek bir örnek.
 
-```text
-# let compare f arg_1 arg_2 =
-        if f arg_1 then arg_1 else arg_2;;
-val compare : ('a -> bool) -> 'a -> 'a -> 'a = <fun>
-# let str_len string = String.length string > 8;;
-val str_len : string -> bool = <fun>
-# compare str_len "Some..." "Something happens";;
-- : string = "Something happens"
-# let is_pass score = score > 70;;
-val is_pass : int -> bool = <fun>
-# compare is_pass 68 50;;
-- : int = 50
-# compare is_pass "Black" "And White";;
-Line 1, characters 16-23:
-1 | compare is_pass "Black" "And White";;
-                    ^^^^^^^
-Error: This constant has type string but an expression was expected of type
-         int
+```ocaml
+let compare f arg_1 arg_2 = if f arg_1 then arg_1 else arg_2;;
+let str_len string = String.length string > 8;;
+compare str_len "Some..." "Something happens";;
+let is_pass score = score > 70;;
+compare is_pass 68 50;;
+compare is_pass "Black" "And White";;
+(*)
+  1 | compare is_pass "Black" "And White";;
+                      ^^^^^^^
+  Error: This constant has type string but an expression was expected of type
+          int
+*)
 ```
 
 ![ocaml_27.png](./images/ocaml_27.png)
@@ -383,130 +366,97 @@ Error: This constant has type string but an expression was expected of type
 
 ### Tuple, List ve Options veri türleri
 
-İlk olarak **tuple** veri türü ile ilgili basit bir örnek yapalım.
+İlk olarak **tuple** veri türü ile ilgili basit örneklerle ilerleyelim. Aşağıdaki ifadeleri deneyebiliriz.
 
-```text
-# let config = ("He-Man, Gölgelerin gücü adına",1920,1080,true);;
-val config : string * int * int * bool =
-  ("He-Man, Gölgelerin gücü adına", 1920, 1080, true)
-# let (title,width,height,is_active) = config;;
-val title : string = "He-Man, Gölgelerin gücü adına"
-val width : int = 1920
-val height : int = 1080
-val is_active : bool = true
-# let move (x,y) speed = (x + speed , y + speed);;
-val move : int * int -> int -> int * int = <fun>
-# move (10,15) 1;;
-- : int * int = (11, 16)
-# let (new_x,new_y) = move (11,16) 5;;
-val new_x : int = 16
-val new_y : int = 21
+```ocaml
+let config = ("He-Man, Gölgelerin gücü adına",1920,1080,true);;
+let (title,width,height,is_active) = config;;
+let move (x,y) speed = (x + speed , y + speed);;
+move (10,15) 1;;
+let (new_x,new_y) = move (11,16) 5;;
 ```
 
 ![ocaml_28.png](./images/ocaml_28.png)
 
-**config** isimli değişken bir tuple veri yapısını işaret ediyor. **Tuple** veri yapısı farklı türden değerler içerebilen zengin bir model. İstersek tanımladığımız config isimli tuple içeriğini **let** ile başka değişkenlere çıkartabiliriz *(export)* Burada **pattern matching** özelliğinin olduğunu da görebiliriz. **move** isimli fonksiyon da dikkate değer. İki parametre alıyor ancak x ve y koordinatlarını ifade eden ilk parametreyi bir tuple olarak tanımlıyor. Ayrıca fonksiyondan geriye yine bir **tuple** döndürmekteyiz.
+**config** isimli değişken bir tuple veri yapısını işaret ediyor. **Tuple** veri yapısı farklı türden değerler içerebilen zengin bir model. İstersek tanımladığımız config isimli tuple içeriğini **let** ile başka değişkenlere çıkartabiliriz *(export)* Burada **pattern matching** özelliğinin olduğunu da görebiliriz. **move** isimli fonksiyon da dikkate değer. İki parametre alıyor ancak x ve y koordinatlarını ifade eden ilk parametreyi bir tuple olarak tanımlıyor. Ayrıca fonksiyondan geriye yine bir **tuple** türü dönmekte.
 
-> Kitapta tuple veri türü tanımında neden **`*`** şeklinde bir tanım kullanıldığı da vurgulanıyor. Yani bir tuple tanımlandığında yorumlayıcı bunu okurken *string \* int \* int \* bool* gibi bir ifade kullanıyor. Türlerin toplam kümesini işaret eden bir kartezyen çarpımı söz konusu olduğundan çarpım sembolü kullanılıyor diyebiliriz. Kıssadan hisse bugün kullandığım Rust, C# ve Zig gibi dillerden önce belki de işe OCaml ile başlamak gerekiyordu...
+> Kitapta tuple veri türü tanımında neden **`*`** şeklinde bir operatör kullanıldığı da vurgulanıyor. Yani bir tuple tanımlandığında yorumlayıcı bunu okurken *string \* int \* int \* bool* gibi bir ifade kullanıyor. Türlerin toplam kümesini işaret eden bir kartezyen çarpımı söz konusu olduğundan çarpım sembolü kullanılıyor diyebiliriz. Kıssadan hisse bugün kullandığım Rust, C# ve Zig gibi dillerden önce belki de işe OCaml ile başlamak gerekiyordu...
 
-Eğer aynı türnden verilerden oluşan bir listeye ihtiyacımız varsa, pekala **List** veri yapısını kullanabiliriz :D
+Eğer aynı türde verilerden oluşan bir listeye ihtiyacımız varsa, pekala **List** veri yapısını kullanabiliriz :D Aşağıda yine yaptığım denemelerin peşi sıra gelen ifadeleri yer alıyor. Üşenmeyip **utop** aracını açın deneyin. Önemli olan **;;** sonrasın OCaml yorumlayıcısının verdiği çıktıları görmek ve anlamaya çalışmak.
 
-```text
-# let colors = ["Red" ; "Green" ; "Blue"];;
-val colors : string list = ["Red"; "Green"; "Blue"]
-# let numbers = [1;2;3;4;5];;
-val numbers : int list = [1; 2; 3; 4; 5]
-# let points = [0.40;0.25;0.55;0.45];;
-val points : float list = [0.4; 0.25; 0.55; 0.45]
-# let illegal = ["One";"Two";3;"Four"];;
-Line 1, characters 27-28:
-1 | let illegal = ["One";"Two";3;"Four"];;
-                               ^
-Error: The constant 3 has type int but an expression was expected of type
-         string
-# List.length colors;;
-- : int = 3
-# "Black" :: "White" :: colors;;
-- : string list = ["Black"; "White"; "Red"; "Green"; "Blue"]
-# colors;;
-- : string list = ["Red"; "Green"; "Blue"]
-# let extended = "Black" :: "White" :: colors;;
-val extended : string list = ["Black"; "White"; "Red"; "Green"; "Blue"]
-# extended;;
-- : string list = ["Black"; "White"; "Red"; "Green"; "Blue"]
-# let another_list = [1,2,3,4,5,6];;
-val another_list : (int * int * int * int * int * int) list =
-  [(1, 2, 3, 4, 5, 6)]
-# let origin = 0,0;;
-val origin : int * int = (0, 0)
-# "R","G","B";;
-- : string * string * string = ("R", "G", "B")
-# let left_side = [1;2;3];;
-val left_side : int list = [1; 2; 3]
-# let right_side = [4;5;6;7;8];;
-val right_side : int list = [4; 5; 6; 7; 8]
-# let combine = left_side @ right_side;;
-val combine : int list = [1; 2; 3; 4; 5; 6; 7; 8]
+```ocaml
+let colors = ["Red" ; "Green" ; "Blue"];;
+let numbers = [1;2;3;4;5];;
+let points = [0.40;0.25;0.55;0.45];;
+let illegal = ["One";"Two";3;"Four"];;
+(*
+  Line 1, characters 27-28:
+  1 | let illegal = ["One";"Two";3;"Four"];;
+                                ^
+  Error: The constant 3 has type int but an expression was expected of type
+          string
+*)
+List.length colors;;
+"Black" :: "White" :: colors;;
+colors;;
+let extended = "Black" :: "White" :: colors;;
+extended;;
+let another_list = [1,2,3,4,5,6];;
+let origin = 0,0;;
+"R","G","B";;
+let left_side = [1;2;3];;
+let right_side = [4;5;6;7;8];;
+let combine = left_side @ right_side;;
 ```
 
 ![ocaml_29.png](./images/ocaml_29.png)
 
-**colors**, **numbers** ve **points** kendi veri türlerinde elemanlar taşıyan birer liste. **illegal** isimli liste ise farklı türden elemanlardan oluşan bir liste yapısı oluşturmak istediğimizde alacağımız hatayı gösteriyor. OCaml'ın **List** modülünde bazı yardımcı fonksiyonlar da bulunuyor. Örnekte kodlarda listenin uzunluğunu bulmak için **List.length** fonksiyonu kullanıldı. Ayrıca liste başına eleman eklemek için **::** operatörü *(constructor operator)* kullanılmakta. Dikkat edelim, orijinal liste değişmiyor. İlaveler sonrası yeni bir liste oluşuyor. Çalışırken yaptığım hatalardan birisi de liste elemanlarını tanımlarken arada virgül kullanmaktı. Bunu yapınca bir liste yerine tek elemanlı bir tuple listesi oluştu. Dolayısıyla **;** ile *,* kullanımına dikkat etmek gerekiyor. Hatta bir **tuple** tanımlanırken parantez kullanmasak da, virgül ile ayrılmış değerler bir tuple olarak algılanıyor. **@**, yani add operatörünü kullanarak listeleri birleştirmek de mümkün.
+**colors**, **numbers** ve **points** kendi veri türlerinde elemanlar taşıyan birer liste. **illegal** isimli liste ise farklı türden elemanlardan oluşan bir liste yapısı oluşturmak istediğimizde alacağımız hatayı üretiyor. OCaml'ın **List** modülünde bazı yardımcı fonksiyonlar da bulunuyor. Örnek kodlarda listenin uzunluğunu bulmak için **List.length**, liste başına eleman eklemek için **::** operatörü *(constructor operator)* kullanılmakta. Dikkat edelim, orijinal liste değişmiyor! İlaveler sonrası yeni bir liste oluşuyor.
+
+Çalışırken yaptığım hatalardan birisi de liste elemanlarını tanımlarken arada virgül kullanmaktı. Bunu yapınca bir liste yerine tek elemanlı bir tuple listesi oluşmakta. Dolayısıyla **;** ile *,* kullanımına dikkat etmeli. Hatta bir **tuple** tanımlanırken parantez kullanmazsak, virgül ile ayrılmış değerler bir tuple olarak algılanıyor. **@**, yani add operatörünü kullanarak listeleri birleştirmek de mümkün.
 
 Peki bir liste veri yapısında *pattern matching* kullanabilir miyiz? Basit bir örnek üstünden ele alalım.
 
-```text
-# let first_or_default values =
-        match values with
-        | first :: the_rest -> first
-        | [] -> 0;;
-val first_or_default : int list -> int = <fun>
-# first_or_default [];;
-- : int = 0
-# first_or_default [12;0;23;9;14];;
-- : int = 12
+```ocaml
+let first_or_default values =
+      match values with
+      | first :: the_rest -> first
+      | [] -> 0;;
+first_or_default [];;
+first_or_default [12;0;23;9;14];;
 ```
 
 ![ocaml_30.png](./images/ocaml_30.png)
 
-Burada tanımladığımız **first_or_default** isimli fonksiyon **int** türünden bir listenin ilk elemanını döndürüyor ancak **pattern matching** ile uyguladığımız bir koşul var. Boş bir liste verilirse varsayılan olarak 0 değerini, aksine dolu bir liste gelirse ki bunu **first :: the_rest** ifadesi ile eşleştiriyoruz *(ilk eleman ve kalanlar anlamında düşünebiliriz)*  listenin ilk elemanını dönüyor. Yorumlayıcının boş bir liste söz konusu ise 0 döndürülmesinden yola çıkarak fonksiyonun integer bir liste ile çalışacağına kanaat getirdiğine dikkat edelim. Dolayısıyla bu fonksiyonu aşağıdaki gibi yazarsak generic bir versiyon da çıkarmış oluruz.
+Burada tanımladığımız **first_or_default** isimli fonksiyon **int** türünden bir listenin ilk elemanını döndürüyor ancak **pattern matching** ile uyguladığımız bir koşul var. Boş bir liste verilirse varsayılan olarak 0 değerini, aksine dolu bir liste gelirse ki bunu **first :: the_rest** ifadesi ile eşleştiriyoruz *(ilk eleman ve kalanlar anlamında düşünebiliriz)*  listenin ilk elemanını dönüyor. Yorumlayıcının boş bir liste söz konusu ise 0 döndürülmesinden yola çıkarak fonksiyonun **integer** bir liste ile çalışacağına kanaat getirdiğine dikkat edelim. Dolayısıyla bu fonksiyonu aşağıdaki gibi yazarsak generic bir versiyon da çıkarmış oluruz.
 
-```text
-# let first_or default values =
-        match values with
-        | first :: the_rest -> first
-        | [] -> default;;
-val first_or : 'a -> 'a list -> 'a = <fun>
-# first_or "" [];;
-- : string = ""
-# first_or 1 [];;
-- : int = 1
-# first_or 0 [12;2;6;9];;
-- : int = 12
-#
+```ocaml
+let first_or default values =
+      match values with
+      | first :: the_rest -> first
+      | [] -> default;;
+first_or "" [];;
+first_or 1 [];;
+first_or 0 [12;2;6;9];;
 ```
 
 ![ocaml_31.png](./images/ocaml_31.png)
 
 Şimdi bir sayı listesindeki elemanların toplamını hesaplayan hem **pattern matching** içeren hem de **recursive** olan bir fonksiyon yazalım. Eh, bir döngü ile listeyi dolaşmak vardı ama **Real World OCaml** kitabına göre öz yinelemeli fonksiyonlar, fonksiyonel dillerin gerçekten önemli bir parçası. Doğrusu bundan güzel bir sınav sorusu olurmuş, *"Herhangi bir sayı listesindeki elemanların toplamını bulacak bir fonksiyon yazın. Döngü kullanmak yasak, recursive fonksiyonellik şart"* :D
 
-```text
-# let rec sum_of list =
-        match list with
-        | [] -> 0
-        | head :: tail -> head + sum_of tail;;
-val sum_of : int list -> int = <fun>
-# sum_of [1;4;4;2;6;7];;
-- : int = 24
-# let numbers = [0;2;4;9;-4;-5];;
-val numbers : int list = [0; 2; 4; 9; -4; -5]
-# sum_of numbers;;
-- : int = 6
+```ocaml
+let rec sum_of list =
+      match list with
+      | [] -> 0
+      | head :: tail -> head + sum_of tail;;
+sum_of [1;4;4;2;6;7];;
+let numbers = [0;2;4;9;-4;-5];;
+sum_of numbers;;
 ```
 
 ![ocaml_32.png](./images/ocaml_32.png)
 
-Bunu büyük ihtimalle unutacağım ve bakmadan yazamayacağım ama birkaç önemli noktayı kayıt altına almak isterim. **sum_of** fonksiyonunun kendisini referans ettiğini belirttiğimiz bir yer var, **rec** anahtar kelimesi. Bir fonksiyonun recursive olduğunu belirtiyor. Boş liste veya dolu liste gelmesi ihtimallerine karşı bir **pattern match** kullanımı da söz konusu. Eğer boş bir liste gelirse toplamın sıfır döneceğini belirtmek aynı zamanda bu fonksiyonu **integer** listelerle çalışacak bir türe de dönüştürüyor. İkinci **match** dalında **head** ve **tail** kısımlarını ele alıyoruz ve fonksiyonu tekrar çağırarak sayıları birbirlerine ekliyoruz. Yani ilk sayıdan başlarsak 1 + sum_of [4;4;2;6;7] gibi bir dizilim ortaya çıkıyor. İkinci match kırılımı için **tümevarımsal *(inductive)*** yaklaşımın benimsendiğini vurgulayalım. Bu fonksiyonun işleyişine ait aşağıda bir örnekleme yer alıyor.
+Bunu büyük ihtimalle unutacağım ve bakmadan yazamayacağım ama birkaç önemli noktayı kayıt altına almak isterim. **sum_of** fonksiyonunun kendisini referans ettiğini belirttiğimiz bir yer var, **rec** anahtar kelimesi. Bir fonksiyonun recursive olduğunu belirtiyor. Boş liste veya dolu liste gelmesi ihtimallerine karşı bir **pattern matching** kullanımı da söz konusu. Eğer boş bir liste gelirse toplamın sıfır döneceğini belirtmek aynı zamanda bu fonksiyonu **integer** listelerle çalışacak bir türe dönüştürüyor. İkinci **match** dalında **head** ve **tail** durumlarını ele alıyoruz ve fonksiyonu tekrar çağırarak sayıları birbirlerine ekliyoruz. Yani ilk sayıdan başlarsak 1 + sum_of [4;4;2;6;7] gibi bir dizilim ortaya çıkıyor. İkinci match kırılımı için **tümevarımsal *(inductive)*** yaklaşımın benimsendiğini vurgulayalım. Bu fonksiyonun işleyişine ait aşağıda bir örnekleme yer alıyor.
 
 ```text
 = 1 + sum_of [4;4;2;6;7]
@@ -528,23 +478,19 @@ Piuvv! :D Parantezleri karıştırmış olabilirim. Kitapta 1;2;3 listesini topl
 
 Bugünkü terapide son olarak **Options** veri yapısına bakıyorum. Bir değer vardır veya yoktur sorusuna cevap veren bir veri yapısı. Şahsen **rust** dilinde **Options** türü çok işe yarıyor *(Rust'ı geliştiren Graydon Hoare'un OCaml'den esinlendiği birçok yerde belirtiliyor)* Aşağıdaki kod parçasında en basit kullanım şekli yer alıyor.
 
-```text
-# let div x y =
-        if y = 0 then None else Some (x/y);;
-val div : int -> int -> int option = <fun>
-# div 10 0;;
-- : int option = None
-# div 10 2;;
-- : int option = Some 5
+```ocaml
+let div x y = if y = 0 then None else Some (x/y);;
+div 10 0;;
+div 10 2;;
 ```
 
 ![ocaml_33.png](./images/ocaml_33.png)
 
-Eğer y sıfır ise **None** dönüyor, değilse bölme işlemi gerçekleştiriliyor. Dikkat edileceği üzere yorumlayıcı fonksiyonun dönüş türünü **int option** olarak belirledi. Bu son derece normal zira 7 değerinin 0 olup olmadığı kontrol ediliyor. Sıfırın varsayılan olarak **int** kabul edildiği düşünüldüğünde *int option* olarak yorumlanması son derece normal. Bu arada **None** ve **Some** ifadeleri rastgele isimlendirmeler değil birer **constructor** olarak kabul ediliyor.
+Eğer **y** sıfır ise **None** dönüyor değilse bölme işlemi gerçekleştiriliyor. Dikkat edileceği üzere yorumlayıcı fonksiyonun dönüş türünü **int option** olarak belirledi. Bu son derece normal zira 7 değerinin 0 olup olmadığı kontrol ediliyor. Sıfırın varsayılan olarak **int** olarak kabul edildiği düşünülürse *int option* olarak yorumlanması son derece doğal. Bu arada **None** ve **Some** ifadeleri rastgele isimlendirmeler değil birer **constructor** olarak kabul ediliyor.
 
 ### Record Veri Yapısı ve Variant Tipler
 
-Kendi veri yapılarımızı tasarlarken kullanabileceğimiz enstrümanlardan birisi **record** türü. Örneğin;
+Pek tabii var olan türler dışında karma türler de tanımlayabiliriz. Kendi veri yapılarımızı tasarlarken kullanabileceğimiz enstrümanlardan birisi **record** türüdür.
 
 ```ocaml
 type address = {host:string; port:int; route:string};;
@@ -558,7 +504,7 @@ let customer_service = {name = "Get customers"; is_active = true; kind = "REST";
 
 ![ocaml_34.png](./images/ocaml_34.png)
 
-Yukarıdaki kod parçasında iki **record** türü yer alıyor, **address** ve **service**. Dikkat edileceği üzere service **record** yapısındaki path alanı address veri yapısı türünden. cust_get ve customer_service isimli değişkenler ise bu türlerden nesneleri işaret ediyor. Açıkça belirtmesekte eşitliği sağ tarafında yapılan atamalar otomatikman cust_get'in bir address türü olmasını sağlıyor. Benzer şekilde customer_service değişkeni de service türünden bir nesne olarak tanımlanıyor. **utop** ekran görüntüsünde olduğu gibi çıktılara mutlaka bakmak lazım. **type inference** mekanizmasının nasıl çalıştığını görmek açısından önemli.
+Yukarıdaki kod parçasında iki **record** türü yer alıyor, **address** ve **service**. Dikkat edileceği üzere service **record** yapısındaki path alanı address veri yapısı türünden. cust_get ve customer_service isimli değişkenler ise bu türlera ait nesneleri işaret ediyor. Açıkça belirtmesek de eşitliğin sağ tarafından yapılan atamalar otomatikman cust_get'in bir address türü olmasını sağlıyor. Benzer şekilde customer_service değişkeni de service türünden bir nesne olarak tanımlanıyor. **utop** ekran görüntüsünde olduğu gibi çıktılara mutlaka bakmak lazım. **type inference** mekanizmasının nasıl çalıştığını görmek açısından önemli.
 
 Şimdi birde **variant** tanımlamayı deneyelim. Bu tür ile birden fazla nesneyi *(object)* tek bir tip altında birleştirmek mümkün. Aşağıdaki örnek kod parçası ile anlamaya çalışalım.
 
@@ -575,7 +521,7 @@ type component =
 ;;
 ```
 
-Bu kod parçasında button, label, drop_down gibi farklı türdeki nesneleri tek bir component türünde birleştirdik. Bu sayede component türünden bir değişken tanımladığımızda söz konusu değişken button, label veya drop_down türlerinden herhangi birini işaret edebilir. Aralarda pipe işareti olduğuna dikkat etmemiz gerekiyor ve hatta `|` sonrası gelen isimlendirmede büyük harfle başlama zorunluluğu var, aksi halde **syntax error** hatası alınıyor. drop_down isimli record türünde bir **string list** kullanılıyor. Dolayısıyla birden fazla string öğe barındırabilir. Kitaptaki örnekten de esinlenerek bu **variant** türünü bir fonksiyona parametre olarak geçebiliriz.
+Bu kod parçasında button, label, drop_down gibi farklı türden nesneleri tek bir component türünde birleştirdik. Bu sayede component türünden bir değişken tanımladığımızda söz konusu değişken button, label veya drop_down türlerinden herhangi birini işaret edebilir. Aralarda pipe işareti olduğuna dikkat etmemiz gerekiyor ve hatta `|` sonrası gelen isimlendirmede büyük harfle başlama zorunluluğu var, aksi halde **syntax error** hatası alınıyor. drop_down isimli record türünde bir **string list** kullanılıyor. Dolayısıyla birden fazla **string** öğe barındırabilir. Kitaptaki örnekten de esinlenerek bu **variant** türünü bir fonksiyona parametre olarak geçebiliriz.
 
 ```ocaml
 let get_item_count (c : component) : int =
@@ -599,7 +545,7 @@ Bu fonksiyon component türünden bir parametre alıyor ve bu parametrenin hangi
 
 ![ocaml_35.png](./images/ocaml_35.png)
 
-Farklı bir fonksiyon daha yazalım. Örneğin bileşen detaylarını gösteren bir versiyon. Aynen aşağıdaki kod parçasında olduğu gibi.
+Farklı bir fonksiyon daha yazalım. Örneğin bileşen detaylarını gösteren bir versiyon.
 
 ```ocaml
 let show_component_details (c : component) : unit =
@@ -616,7 +562,7 @@ let show_component_details (c : component) : unit =
 show_component_details left_menu;;
 ```
 
-Fonksiyonumuz parametre olarak **component** isimli **variant** türünden bir nesne alıyor. Bu nesnenin hangi türde olduğunu **pattern matching** ile kontrol ediyoruz. Eğer button veya label ise başlık bilgisini yazdırıyoruz. Ancak drop_down ise içindeki items listesini dolaşıp her bir öğeyi yazdırıyoruz. List.iter fonksiyonu, verilen bir fonksiyonu listenin her bir elemanına uygulamak için kullanılmakta.
+Fonksiyonumuz parametre olarak **component** isimli **variant** türünden bir nesne alıyor. Bu nesnenin hangi türde olduğunu **pattern matching** ile kontrol ediyoruz. Eğer button veya label ise başlık bilgisini yazdırıyoruz. Ancak drop_down ise içindeki items listesini dolaşıp her bir öğeyi yazdırıyoruz. **List.iter** fonksiyonu, verilen bir fonksiyonu listenin her bir elemanına uygulamak için kullanılmakta.
 
 ![ocaml_36.png](./images/ocaml_36.png)
 
@@ -836,19 +782,17 @@ Printf.printf "Average: %d\n" (match avrage numbers with Some avg -> avg | None 
 
 **average** isimli fonksiyon içerisinde yer alan **sum** ve **count** değişkenleri **mutable** olarak tanımlanmıştır ve **List.iter** fonksiyonu kullanılarak listenin her bir elemanı üzerinde işlem yaparken bu değişkenlerin değerleri güncellenmektedir. Tabii **iter** fonksiyonuna verilen anonim fonksiyon içerisinde **!** operatörünü kullanarak ref'lerin içindeki değerlere erişiyoruz ve **:=** operatörünü kullanarak bu değerleri güncelliyoruz. Birde **in** operatörü ile karşılaştık tabii ki. Bu operatör **sum** ve **count** değişkenlerinin bulundukları fonksiyon bloğunda geçerli olduğunu belirtmek için kullanılmakta. Yani **scope** belirlemek için kullanılır. **in** kullanımının farkını anlamak için özellikle Utop ekranında aşağıdaki gibi bir deneme yapalım.
 
-```text
-# let value = 12;;
-val value : int = 12
-# let point = 90 in
-  point + 10;;
-- : int = 100
-# value;;
-- : int = 12
-# point;;
-Line 1, characters 0-5:
-1 | point;;
-    ^^^^^
-Error: Unbound value point
+```ocaml
+let value = 12;;
+let point = 90 in point + 10;;
+value;;
+point;;
+(*
+  Line 1, characters 0-5:
+  1 | point;;
+      ^^^^^
+  Error: Unbound value point
+*)
 ```
 
 ![ocaml_44.png](./images/ocaml_44.png)
