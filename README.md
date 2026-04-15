@@ -25,6 +25,7 @@ Sözün özü bu tamamen kendi zihinsel yatırımım ve itiraf etmeliyim ki bu y
   - [Biraz da Felsefe](#biraz-da-felsefe)
     - [Hata Yapmayı İmkansız Kılan Tip Desteği(Type Safety Değil Type Expressiveness)](#hata-yapmayı-i̇mkansız-kılan-tip-desteği-type-safety-değil-type-expressiveness)
     - [Olabildiğince Fonksiyonel](#olabildiğince-fonksiyonel)
+    - [Tony Hoare Anısına](#tony-hoare-anısına)
 
 ## Merak Ettiklerim
 
@@ -1168,6 +1169,79 @@ Tabii bu çok küçük bir veri kümesini ele alıyor. Elimizde milyon elamanlı
 
 Buradan şu sonuca varabiliriz; Belkide yazacağımız algoritma imperative yaklaşım gerekleri ile daha hızlı çalışıyordur. **OCaml** buna destek verir. Dolayısıyla elimizde yüksek seviyeli dillerin zarifliğine sahip *(her ne kadar sentaksı zorlayıcı olsa da kavramsal olarak öyle)* ama gerektiğinde düşük seviyeli dillerin sunduğu bellek performansına yakın destek veren bir programlama dili var ve **Rust** bence bu özellikleri bir üst noktaya taşıyıp memory de gerçekten güvenli kalabilmenin yolunu da açmış durumda.
 
-DEVAM EDECEK...
+### Tony Hoare Anısına
+
+Yazı yazmamdan kısa bir süre önce aramızdan ayrılan, bilgisayar bilimlerinin efsane ismi **Tony Hoare**' ın milyar dolarlık hata olarak da isimlendirdiği **Null Pointer Exception**, programlama dillerinde sıkça karşılaşılan ve ciddi sorunlara yol açabilen bir durumu anlatır. Uğraştığımız pekçok programlama dilinde **null** diye bir kavram var. Kısaca, bir değişkenin değeri yoksa ona null atayabiliriz şeklinde ifade etsek yeridir. Diğer yandan bu durum kodu yazarken bir null kontrolü yapmamızı da gerektirir. *(null değer taşıyabilen bir referansın kullanıldığı her yerde null olup olmadığını kontrol ederek hareket etmek)*. **OCaml** bu konuya şöyle bir felsefe ile yaklaşıyor; **"Eğer bir hata oluşacaksa çalışma zamanında değil derleme zamanında olmalıdır"**. Hımmm...Yani... O zaman null değer yoktur diyebiliriz. Evet, gerçekten de null diye bir kavram **OCaml** dilinde yok. Bunun yerine programcıya sunulan bir seçenek var; **Option**...
+
+Şöyle bir senaryo üzerinden ilerleyelim. Bir identity değerine göre kullanıcı aradığımızı varsayalım. Bunu şöyle yorumlamalıyız; "Kullanıcı ya vardır ya da yoktur"
+
+```ocaml
+(*  Aboneleri bir Record tipi olarak tanımladık *)
+type subscriber ={
+  id:int;
+  name:string;
+  email:string;
+}
+
+(* 
+  Liste türünden hayali bir veritabanı ya da mock liste.
+*)
+let database = [
+  {id=1001; name="John Doe"; email="john.doe@azon.com"};
+  {id=1002; name="Jane Doe"; email="jane.doe@azon.com"};
+  {id=1003; name="Mario"; email="mario@azon.com"};
+]
+
+(*
+  Abone ID'sine göre abone arayan bir fonksiyon.
+  Eğer abone bulunursa Some subscriber döner, bulunmazsa None döner.
+
+  Özellikle fonksiyonun dönüş tipine dikkat edelim: subscriber option. 
+  Bu, fonksiyonun ya bir subscriber döndüreceği ya da hiçbir şey döndürmeyeceği anlamına gelir.
+*)
+let rec find_subscriber_by_id id subscribers =
+  match subscribers with
+  | [] -> None
+  | current :: rest ->
+      if current.id = id then Some current
+      else find_subscriber_by_id id rest
+
+(*
+  Burada derleyici bizi tüm senaryolara bakmaya zorlar.
+*)
+let say_hello id = let result = find_subscriber_by_id id database in
+  match result with
+  | Some subscriber -> Printf.sprintf "Hello, %s!" subscriber.name
+  | None -> "Subscriber not found."
+
+(* Test *)
+let () =
+  let message1 = say_hello 1002 in
+  let message2 = say_hello 9999 in
+  print_endline message1;  (* Output: Hello, Jane Doe! *)
+  print_endline message2   (* Output: Subscriber not found. *) 
+```
+
+Öncelikle kodun çalışma zamanı çıktısına bakalım.
+
+![ocaml_58.png](./images/ocaml_58.png)
+
+Rust tarafından buraya geçmek gerçekten çok enteresan bir deneyim. Zira yıllardır Rust dilinde **Option**, **Result** gibi önemli veri yapılarını hangi felsefeden geldiğini çok da anlamadan hareket etmişim. Pişmanım :D Neyse neyse... Kodda bir abone listesinden **id** bazlı kullanıcı araması yaptığımız **recursive** bir fonksiyon bulunuyor. Kodun sentaxına bakarken çok fazla bir şey anlamayabiliriz ama **VS Code** ya da **Utop** fonksiyon imzasında **option** döndüğünü açıkça ilan eder.
+
+![ocaml_59.png](./images/ocaml_59.png)
+
+![ocaml_60.png](./images/ocaml_60.png)
+
+En önemli parça **say_hello** fonksiyonunda yer alan **match** ifadesidir. Burada **result** değişkeninin ya bir abone içerdiği ya da hiçbir şey içermediği durumları ele alınır. Velev ki match ifadesini eksik yazdık. İşte gelen tepkiler...
+
+![ocaml_61.png](./images/ocaml_61.png)
+
+![ocaml_62.png](./images/ocaml_62.png)
+
+Görüldüğü üzere kaçma şansımız yok. **None** olasılığını da mutlaka kod içerisinde değerlendirmemiz gerekiyor. Buradan hareketle bir değerin olmayışının aslında somut bir veri tipi olduğunu söyleyebiliriz. Yani bir değerin olmayışı da bir durumdur, bu durumun bir tipi vardır ve bu tipin adı **option**'dır. Diğer yandan, **find_subscriber_by_id** fonksiyonu bize bir abone döndirmez esasında. Bunun yerine içinde abone olabilecek bir kutu *(Some veya None)* döndürür. Bir **match** bloğu kullanmadan bir başka deyişle **None** ihtimalini ele almadan kutunun içindeki **name** bilgisine erişmemize derleyici fiziken müsaade etmez. Bu da geliştiricilerin **"burada Null gelmez, ı ıhhh, mümkün değil"** diyerek hareket etmesini engeller.*(Burası ciddi bir kurum asker. İyimserliğe yer yok! Marş marş... :D)* Derleyici olası tüm ihtimalleri değerlendirmemizi bekler. Tabii bu yaklaşımın en güzel yanlarından birisi de huzurlu bir gece uykusudur. Çünkü rüyalarımıza girebilecek herhangi bir **NullReferenceException** öcüsü yoktur.
+
+**Rust** programlama dilindeki `Option<T>` ve hata yönetimi için kullanılan `Result<T,E>` kavramları bu felsefeden gelir. Diğer yandan örneğin **C#** programlama dili çok sonradan **Nullable Type** yeteneği kazanmıştır fakat dilin temel felsefesinde halen **null** diye bir kavram olduğu için bu sonradan eklenmiş bir özellik olarak kabul edilir, bir başka deyişle dilin genlerine işlenmiş matematiksel bir güvence yoktur. Burada genel olarak ifade edilen bir sorunun cevabı da bulunabilir; *Neden modern diller gün geçtikçe OCaml'a benzemeye çalışıyor?*
+
+DEVAM EDECEK
 
 [Bu çalışmadaki örneklere ve biraz daha fazlasına github reposundan ulaşabilirsiniz](https://github.com/buraksenyurt/learning-ocaml)
