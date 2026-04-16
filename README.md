@@ -26,6 +26,7 @@ Sözün özü bu tamamen kendi zihinsel yatırımım ve itiraf etmeliyim ki bu y
     - [Hata Yapmayı İmkansız Kılan Tip Desteği(Type Safety Değil Type Expressiveness)](#hata-yapmayı-i̇mkansız-kılan-tip-desteği-type-safety-değil-type-expressiveness)
     - [Olabildiğince Fonksiyonel](#olabildiğince-fonksiyonel)
     - [Tony Hoare Anısına](#tony-hoare-anısına)
+    - [Yüksek Matematik Lisanslı Derleyici](#yüksek-matematik-lisanslı-derleyici)
 
 ## Merak Ettiklerim
 
@@ -1241,6 +1242,89 @@ En önemli parça **say_hello** fonksiyonunda yer alan **match** ifadesidir. Bur
 Görüldüğü üzere kaçma şansımız yok. **None** olasılığını da mutlaka kod içerisinde değerlendirmemiz gerekiyor. Buradan hareketle bir değerin olmayışının aslında somut bir veri tipi olduğunu söyleyebiliriz. Yani bir değerin olmayışı da bir durumdur, bu durumun bir tipi vardır ve bu tipin adı **option**'dır. Diğer yandan, **find_subscriber_by_id** fonksiyonu bize bir abone döndirmez esasında. Bunun yerine içinde abone olabilecek bir kutu *(Some veya None)* döndürür. Bir **match** bloğu kullanmadan bir başka deyişle **None** ihtimalini ele almadan kutunun içindeki **name** bilgisine erişmemize derleyici fiziken müsaade etmez. Bu da geliştiricilerin **"burada Null gelmez, ı ıhhh, mümkün değil"** diyerek hareket etmesini engeller.*(Burası ciddi bir kurum asker. İyimserliğe yer yok! Marş marş... :D)* Derleyici olası tüm ihtimalleri değerlendirmemizi bekler. Tabii bu yaklaşımın en güzel yanlarından birisi de huzurlu bir gece uykusudur. Çünkü rüyalarımıza girebilecek herhangi bir **NullReferenceException** öcüsü yoktur.
 
 **Rust** programlama dilindeki `Option<T>` ve hata yönetimi için kullanılan `Result<T,E>` kavramları bu felsefeden gelir. Diğer yandan örneğin **C#** programlama dili çok sonradan **Nullable Type** yeteneği kazanmıştır fakat dilin temel felsefesinde halen **null** diye bir kavram olduğu için bu sonradan eklenmiş bir özellik olarak kabul edilir, bir başka deyişle dilin genlerine işlenmiş matematiksel bir güvence yoktur. Burada genel olarak ifade edilen bir sorunun cevabı da bulunabilir; *Neden modern diller gün geçtikçe OCaml'a benzemeye çalışıyor?*
+
+### Yüksek Matematik Lisanslı Derleyici
+
+Programlama dillerini birçok açıdan ayrıştırabiliriz. Performans ve hıza odaklanıp bazı güvenli alanları kenara bırakanlar, iş modellerini gerçeğe yakın organize edip performanstan ödün verenler gibi. Ancak birde akademik ve endüstriyel olanlar şeklinde iki ana kategoriye de ayrılabilirler. Söz gelimi öğrenmesi görece daha zor olan **Haskell**, **Lisp** gibi diller matematiksel açıdan kusursuza yakındır ancak gerçek dünya problemlerini modellemeye çalıştığımızda bizi daha da zorlayabilir. Diğer yandan **C++**, **Java**, **Go** gibi iş bitirici türden yani endstüriyel çözümlere daha yatkın olan diller de vardır ancak bunlarda kritik hataların oluşmasına müsait dillerdir. Kaynaklar **OCaml** programlama dilinin akademik titizliğe sahip ve endüstriyel olarak da güçlü olduğuna vurgu yaparlar.
+
+Konuyu biraz daha açmaya çalışalım. **OCaml** derleyicisi **[Hindley-Milner](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)** olarak bilinen bir tip sistemini kullanılır. Bu aslında bazı matematiksel enstrümanları ve ispatları barındıran bir yapıdır. Evet evet yanlış duymadınız, matematiksel ispatları dedim :D **Hindley-Milner** tip sistemini baz alan derleyici kodları okuduktan sonra bunları hemen makine diline çevirmez. Öncesinde sembolik mantık ve küme teorisine göre bazı denklemler çözer. Bu çözümler yazılan kodun mantıksal olarak tutarlı olduğunun matematiksel ispatı için işletilir. Dolayısıyla kod derleniyorsa metmatiksel olarak doğrudur *(Akademik anlamda güvenilirdir)*. Bununla birlikte derleyici optimize edilmiş endüstüriyel makine kodu üretir. *(Şu an için ne sizi ne de kendimi bu formüllerle boğmak istemiyorum ama bir ara bu konuyu derinlemesine ele alacağım)*
+
+Bu tip sistemi aklımızın bir köşesinde dursun ve gelin bir örnekle konuyu pekiştirmeye çalışalım. Finansal operasyonların her adımı son derece kritiktir. Büyük bir finans sisteminde farklı türden para birimlerinin olması da kesindir. Örneğin Dolar, Sterlin, Euro gibi para birimlerini göz önüne alalım. Tümü **float** türünden olsalar da bunları birbiriyle yanlışlıkla toplamak faciaya neden olabilir. 1000 Dolar ile 1000 Euro'nun toplanabildiğini düşünün, korkunç... **OCaml** ile bu sorunu nasıl aşabiliriz gelin örnek kod parçası ile bakalım.
+
+```ocaml
+(*
+  CURRENCY isimli bir modül tanımladık ama bunu bir sözleşme/contract gibi düşünelim.
+
+  Bu sözleşmeye göre var olan bir t tipi için,
+  create fonksiyonu float türünden bir değer alarak t türünden bir değer döndürmeli,
+  value fonksiyonu t türünden bir değer alarak float türünden bir değer döndürmeli,
+  add fonksiyonu ise iki t türünden değer alarak t türünden bir değer döndürmeli.
+
+  Biraz generic constraint'leri hatırlatıyor gibi ;)
+*)
+module type CURRENCY = sig
+  type t
+  val create : float -> t
+  val value : t -> float
+  val add : t -> t -> t
+end
+
+(*
+  Para birimi için CURRENCY isimli bir sözleşmemiz var.
+  Buna göre Euro, Dolar ve Sterlin implementasyonları yapabiliriz.
+*)
+module Euro : CURRENCY = struct
+  type t = float
+  let create x = x
+  let value x = x
+  let add x y = x +. y
+end
+
+module Dollar : CURRENCY = struct
+  type t = float
+  let create x = x
+  let value x = x
+  let add x y = x +. y
+end
+
+module Sterlin : CURRENCY = struct
+  type t = float
+  let create x = x
+  let value x = x
+  let add x y = x +. y
+end
+
+(*
+  Şimdi bu para birimlerinden birkaç değer tanımlayalım
+  birbirleriyle toplama işlemi yapmaya çalışalım.
+*)
+let payment_limit = Euro.create 1000.0
+let payment_limit2 = Dollar.create 750.0 
+let payment_limit3 = Sterlin.create 650.0
+
+(* Aşağıdaki satır derlenmeyecektir çünkü farklı türler birbirleriyle toplanamaz *)
+let total_payment = Euro.add payment_limit payment_limit2
+```
+
+Son satırda kasıtlı olarak farklı para birimleri toplanmaya çalışılmaktadır. Bakalım derleyici nasıl tepkiler vermiş.
+
+VS Code ortamından bir görüntü,
+
+![ocaml_63.png](./images/ocaml_63.png)
+
+ve terminalden derlemenin sonucu.
+
+![ocaml_64.png](./images/ocaml_64.png)
+
+**OCaml** derleyicisi tüm para birimleri **float** veri türünü kullanıyor olsalar da, **CURRENCY** modülünden yapılan implementasyonlar sebebiyle farklı türlerin toplanmasına izin vermeyecektir *(Domain Driven Design tarafında Value Object türleri ile de benzer bir tedbir alınabilir değil mi? Bi düşünün ;) )* Buradaki felsefe şudur; **hataları testler yazarak değil tip sistemini kullanarak derleme zamanında engelle.** Endişe edeceğimiz noktalardan birisi belki de performans kaybıdır ancak burada **Zero Cost Abstraction** söz konusudur. Zira derleyici makine kodunu üretirken **Dollar.t**, **Euro.t** gibi ayrımları silip doğrudan **float** toplama işlemini ele alır.
+
+Bu genler **Rust** diline de geçmiştir ve hatta çok daha şık bir şekilde. Rust dili de **Zero Cost Abstraction** felsefesini benimse ve hatta parasal bir birimi şu şekilde yazmamıza izin veren **Newtype** desenini sunar.
+
+```rust
+struct Dollar(f64);
+```
+
+C# tarafından olaya baktığımızda sanıyorum en yakın çözüm **record struct** gibi bir türden yararlanmak olacaktır. Nitekim **C#** ve **Java** gibi dillerde bu tür bir korumayı sağlamak için sınıflara başvurduğumuzda bellekte ekstra nesneler oluşmasına neden olup gereksiz **GC** döngülerine sebebiyet verebiliriz. Ancak bu söylediklerimi ispat edebilir miyim, ımmmm, hayır :D
 
 DEVAM EDECEK
 
