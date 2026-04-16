@@ -1,8 +1,8 @@
 # Learning OCaml
 
-İlk programlama dilinden bu zamanlara değişen çok şey var. Üniversite yıllarım kişisel bilgisayarların ve internetin yaygınlaştığı World Wide Web devrimine denk geliyor. O vakitler bölümde gösterilen bilgisayar programlama derslerini düşünüyorum da; [GW-Basic](https://en.wikipedia.org/wiki/GW-BASIC), [Cobol](https://en.wikipedia.org/wiki/COBOL), C ve C++ ... Çoğunda belli seviyeye kadar geldiğimizi anımsıyorum. Aynı yıllarda iş dünyasının hızlandırıcı etkisine de şahit olmuştuk. Sadece klavye ve 8 renkten oluşan siyah terminal ekranları çok uzun zamandır mouse imleçleri ile renklenmişti. Dahası artık iş süreçlerinin internet ortamından yürütülebildiği bir dönemdi. Bu dalga ile birlikte ben ve birçok arkadaşım **Delphi**, **Java**, **Visual Basic** gibi diller yöneldi. Ben ağırlıklı olarak Delphi tarafına yakındım ama zamanla bu yerini **C#** programlama diline bıraktı.
+İlk programlama dilinden bu zamanlara değişen çok şey var. Üniversite yıllarım kişisel bilgisayarların ve internetin yaygınlaştığı World Wide Web devrimine denk geliyor. O vakitler bölümde gösterilen bilgisayar programlama derslerini düşünüyorum da; [GW-Basic](https://en.wikipedia.org/wiki/GW-BASIC), [Cobol](https://en.wikipedia.org/wiki/COBOL), C ve C++ ... Çoğunda belli seviyeye kadar geldiğimizi anımsıyorum. Aynı yıllarda iş dünyasının hızlandırıcı etkisine de şahit olmuştuk. Sadece klavye ve 8 renkten oluşan siyah terminal ekranları çok uzun zamandır mouse imleçleri ile renklenmişti. Dahası artık iş süreçlerinin internet ortamından yürütülebildiği bir dönemdi. Bu dalgayla birlikte ben ve birçok arkadaşım **Delphi**, **Java**, **Visual Basic** gibi dillere yöneldi. Ben ağırlıklı olarak Delphi tarafına yakındım ama zamanla bu yakınlık yerini **C#** programlama diline bıraktı.
 
-Anılar bir kenara dursun yıllarca popüler dillerle uygulama geliştirmenin ardından gelen bir farkındalık, araçlara değil, o araçları var eden felsefeye odaklanmam gerektiğini öğretti. Bazı programlama dillerini iş amaçlı kullanmak için değil, atası olduğu diğer dillere kattığı özellikleri düşünerek çalışmak gerekiyor. Örneğin uzun süre uğraştığım ve sahada deneyimleme şansını çok bulamadığım için şimdilerde paslandığım **Rust** programlama dili atası olan **OCaml** dilinden birçok özellik almıştı *(Güçlü tip sistemler, cebirsel veri tipleri - algebraic data types, hata payını azaltan örüntü eşleştirme - pattern matching, options vb)* Benzer şekilde **Scala**, **F#** ve bugünlerde dikkat çeken **Rocq**, **Gleam** gibi dillere de **OCaml** ilham vermişti. **OCaml** ile herhangi bir proje geliştirmeyeceğim veya onu iş yerinde kullanmayacağım ama fonksiyonel dil paradigmasını anlamak, bir derleyicinin ya da yorumlayıcının nasıl yazıldığını temelden öğrenmek ve birçok dilin **Ocaml** üzerinden aldığı kabiliyetleri kavramak için geç de olsa çalışmalıyım *(Sen bu yazıyı okuyan bir üniversite talebesi isen bence sende OCaml veya benzeri bazı dilleri iyice öğrenmeye çalışmalısın)*
+Anılar bir kenara dursun, yıllarca popüler dillerle uygulama geliştirmenin ardından gelen bir farkındalık, araçlara değil, o araçları var eden felsefeye odaklanmam gerektiğini öğretti. Bazı programlama dillerini iş amaçlı kullanmak için değil, atası olduğu diğer dillere kattığı özellikleri düşünerek çalışmak gerekiyor. Örneğin uzun süre uğraştığım ve sahada deneyimleme şansını çok bulamadığım için şimdilerde paslandığım **Rust** programlama dili, atası sayılabilecek **OCaml** dilinden birçok özellik almıştı *(Güçlü tip sistemler, cebirsel veri tipleri - algebraic data types, hata payını azaltan örüntü eşleştirme - pattern matching, options vb)* Benzer şekilde **Scala**, **F#** ve bugünlerde dikkat çeken **Rocq**, **Gleam** gibi dillere de **OCaml** ilham vermişti. **OCaml** ile herhangi bir proje geliştirmeyeceğim veya onu iş yerinde kullanmayacağım ama fonksiyonel dil paradigmasını anlamak, bir derleyicinin ya da yorumlayıcının nasıl yazıldığını temelden öğrenmek ve birçok dilin **OCaml** üzerinden aldığı kabiliyetleri kavramak için geç de olsa çalışmalıyım *(Sen bu yazıyı okuyan bir üniversite talebesi isen, bence sen de OCaml veya benzeri bazı dilleri iyice öğrenmeye çalışmalısın.)*
 
 > F# programlama dilinin doğrudan bir türevi olduğu, Rust'ın tip güvenliği felsefesini benimsediği ve hatta ilk derleyicisinin OCaml ile yazıldığı düşünüldüğünde; OCaml öğrenmek modern programlama dillerinin genetik kodunu çözmek demektir.
 
@@ -30,14 +30,14 @@ Sözün özü bu tamamen kendi zihinsel yatırımım ve itiraf etmeliyim ki bu y
 
 ## Merak Ettiklerim
 
-- **OCaml ismi nerden geliyor?:** OCaml, "Objective Caml" ifadesinin kısaltması. Caml *( Categorical Abstract Machine Language)* diline nesne yönelimli programlama özelliklerinin eklenmiş bir versiyonu olarak düşünebiliriz ve evet logosunda deve var elbetteki :D
-- **Geliştiricileri kim?:** INRIA *(Institut National de Recherche en Informatique et en Automatique - Ulusal Bilgisayar Bilimi ve Otomasyon Araştırma Enstitüsü)* 'dan Xavier Leroy, Jérôme Vouillon, Damien Doligez ve Didier Rémy tarafından geliştirilmiş. Fransızlar tarafından geliştirildiği için söz dizimine yer yer fransız kaldığım da olmadı değil :D
+- **OCaml ismi nereden geliyor?:** OCaml, "Objective Caml" ifadesinin kısaltması. Caml *(Categorical Abstract Machine Language)* diline nesne yönelimli programlama özelliklerinin eklenmiş bir versiyonu olarak düşünebiliriz ve evet, logosunda elbette ki deve var :D
+- **Geliştiricileri kim?:** INRIA *(Institut National de Recherche en Informatique et en Automatique - Ulusal Bilgisayar Bilimi ve Otomasyon Araştırma Enstitüsü)*'dan Xavier Leroy, Jérôme Vouillon, Damien Doligez ve Didier Rémy tarafından geliştirilmiş. Fransızlar tarafından geliştirildiği için söz dizimine yer yer Fransız kaldığım da olmadı değil :D
 - **İlk versiyonu ne zaman çıktı?:** Kaynaklara göre ilk sürüm **1996** yılında piyasaya sürülmüş. Dokümanı yazdığım an itibariyle de son sürümü 2025-10-09 tarihinde yayınlanmış olan **5.4.0** versiyonu. Son sürümde **immutable diziler**, **labelled tuple** türleri, **atomik record** alanları gibi yeni özellikler eklenmiş.
 - **Dilin kullanım amacı:** Genel amaçlı bir programlama dili olduğunu düşünebiliriz zira nesne yönelimli olma hali ve fonksiyonel dil özellikleri ile birlikte pragmatik yaklaşımları içeriyor. Genelleştirilmiş çöp toplayıcısı *(Garbage Collector)*, birinci sınıf fonksiyonlar *(First Citizen Functions)*, statik tür sistemi *(Static Type System)*, immutable programlama taktikleri, tip çıkarımı *(Type Inference)*, cebirsel veri türleri *(Algebraic Data Types)*, örüntü eşleştirme *(pattern matching)* ve daha birçok özelliği destekleyen bir dil.
 - **Hangi dillerden esinlenmiş:** Sahip olduğu özellikler de düşünüldüğünde **Caml** başta olmak üzere, **C**, **Pascal**, **Modula-3** ve **Standard ML** dillerinden esinlenildiği belirtiliyor.
-- **Hangi dillere esin kaynağı olmuş:** Bir tanesi *[Rust](https://rust-lang.org/)* ki bende uğraştığım için biliyorum. Wikipedia kayıtlarına göre OCaml'dan etkilenen diğer diller arasında [Rocq](https://rocq-prover.org/), [F#](https://fsharp.org/), [Scala](https://www.scala-lang.org/), [Gleam](https://gleam.run/) gibi popüler diller de var.
-- **OCaml ile kendi programlama dilini yazabilir miyim?:** Teorik olarak evet, **OCaml** güçlü bir dil ve kendi dilinizi yazmak için gerekli araçları sağlayabilir. Zaten Rust'ın ilk sürümü bildiğim kadarı ile OCaml ile yazılıyor.
-- **Hangi kaynaklardan öğrenebilirim?:** [Real World OCaml, Functional Programming for the Masses, Anıl Madhavapeddy, Yaron Minsky, Cambridge University Press](https://dev.realworldocaml.org/index.html) Heybetli bir kitap. Gerçekten 20li yaşlarımda olmam gerekiyor :D Bunun yanında **Cornell** Üniversitesinden **Michael Ryan Clarkson**'ın 2021 yılında yayınladığı [OCaml Programming: Correct + Efficient + Beautiful](https://youtube.com/playlist?list=PLre5AT9JnKShBOPeuiD9b-I4XROIJhkIU&si=fqYdWGlXmQwy8c_b) kursunu da tavsiye ederim. Ben 25 yıl kadar geç başlıyorum bazı şeylere doğrudur :D Ayrıca bu yayına ait güzel bir [kitap](https://cs3110.github.io/textbook/cover.html) da var.
+- **Hangi dillere esin kaynağı olmuş:** Bir tanesi *[Rust](https://rust-lang.org/)* ki ben de uğraştığım için biliyorum. Wikipedia kayıtlarına göre OCaml'dan etkilenen diğer diller arasında [Rocq](https://rocq-prover.org/), [F#](https://fsharp.org/), [Scala](https://www.scala-lang.org/), [Gleam](https://gleam.run/) gibi popüler diller de var.
+- **OCaml ile kendi programlama dilini yazabilir miyim?:** Teorik olarak evet, **OCaml** güçlü bir dil ve kendi dilinizi yazmak için gerekli araçları sağlayabilir. Zaten Rust'ın ilk sürümü bildiğim kadarıyla OCaml ile yazılıyor.
+- **Hangi kaynaklardan öğrenebilirim?:** [Real World OCaml, Functional Programming for the Masses, Anıl Madhavapeddy, Yaron Minsky, Cambridge University Press](https://dev.realworldocaml.org/index.html) Heybetli bir kitap. Gerçekten yirmili yaşlarımda olmam gerekiyor :D Bunun yanında **Cornell** Üniversitesinden **Michael Ryan Clarkson**'ın 2021 yılında yayınladığı [OCaml Programming: Correct + Efficient + Beautiful](https://youtube.com/playlist?list=PLre5AT9JnKShBOPeuiD9b-I4XROIJhkIU&si=fqYdWGlXmQwy8c_b) kursunu da tavsiye ederim. Ben 25 yıl kadar geç başlıyorum bazı şeylere doğrudur :D Ayrıca bu yayına ait güzel bir [kitap](https://cs3110.github.io/textbook/cover.html) da var.
 
 ## Kurulumlar
 
@@ -57,7 +57,7 @@ ocaml -version
 #ve örneğin hello-world.ml dosyasını doğrudan aşağıdaki komutla çalıştırabildim
 ocaml hello-world.ml
 
-#Ocaml' ı interaktif modda kullanmak için ise aşağıdaki komutu kullanmak yeterli
+#OCaml'ı interaktif modda kullanmak için ise aşağıdaki komutu kullanmak yeterli
 ocaml
 ```
 
@@ -74,7 +74,7 @@ wsl --install -d Ubuntu
 # ile ubuntu'yu yükleyebiliriz.
 ```
 
-**Ocaml** kurulmarı içinse aşağıdaki adımları takip etmek gerekiyor.
+**OCaml** kurulumları içinse aşağıdaki adımları takip etmek gerekiyor.
 
 ```bash
 # Öncelikle apt paket yöneticisini güncelleyelim
@@ -91,7 +91,7 @@ opam update
 
 # Güncel bir OCaml sürümü ile çalışmak için aşağıdaki komutu kullanarak bir switch oluşturabiliriz
 opam switch create ocaml-5.3 ocaml-base-compiler.5.3.0
-# Terminalimizinn yeni switch'i tanıması için aşağıdaki komutu çalıştırmakta fayda var
+# Terminalimizin yeni switch'i tanıması için aşağıdaki komutu çalıştırmakta fayda var
 eval $(opam env)
 # switch listesini görmek için
 opam switch list
@@ -115,7 +115,7 @@ Eğer her şey yolunda giderse ubuntu ortamında **utop** ile doğrudan **ocaml*
 
 ## Giriş Seviyesi
 
-Aşağıdaki kod örnekleri için komut satırından **ocaml** komutu çalıştırılarak ilerlenebilir. Ayrıca **utop** aracı ile de çalışılabilir. Bu ikisi özellikle yazılan kodun anında çalıştırılması ve sonuçların görülmesi açısından faydalı araçlar. **utop**, daha gelişmiş özelliklere sahip bir **TopLevel** aracı olarak düşünülebilir ancak bir noktadan sonra **ml** uzantılı dosyalar üzerinden çalışmaya döndüğümü de belirtmek isterim. **TopLevel** bir nevi **REPL *(Read-Eval-Print Loop)*** aracı. Çok büyük çaplı olmayan kod parçalarını denemek için, özellikle dilin temel özelliklerini giriş seviyesinde öğrenirken oldukça kullanışlı bir araç. Yazılan bir ifadenin dil tarafından nasıl yorumlamdığını anında gösteriyor zira.
+Aşağıdaki kod örnekleri için komut satırından **ocaml** komutu çalıştırılarak ilerlenebilir. Ayrıca **utop** aracı ile de çalışılabilir. Bu ikisi özellikle yazılan kodun anında çalıştırılması ve sonuçların görülmesi açısından faydalı araçlar. **utop**, daha gelişmiş özelliklere sahip bir **TopLevel** aracı olarak düşünülebilir ancak bir noktadan sonra **ml** uzantılı dosyalar üzerinden çalışmaya döndüğümü de belirtmek isterim. **TopLevel** bir nevi **REPL *(Read-Eval-Print Loop)*** aracı. Çok büyük çaplı olmayan kod parçalarını denemek için, özellikle dilin temel özelliklerini giriş seviyesinde öğrenirken oldukça kullanışlı bir araç. Yazılan bir ifadenin dil tarafından nasıl yorumlandığını anında gösteriyor.
 
 ### Bazı Yararlı Utop Komutları
 
@@ -135,7 +135,7 @@ print_string "Hello, world!\n";;
 
 ### Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler
 
-Öyleyse ders notlarımıza başlayalım. İlk olarak **float** değerler ile ilgili aritmetik birkaç işleme bakalım. Deneyeceğimi ifadeleri aşağıdaki kod bloğuna ekliyorum. Bunları **utop** aracından denersek çok faydalı olacaktır.
+Öyleyse ders notlarımıza başlayalım. İlk olarak **float** değerler ile ilgili aritmetik birkaç işleme bakalım. Deneyeceğim ifadeleri aşağıdaki kod bloğuna ekliyorum. Bunları **utop** aracından denersek çok faydalı olacaktır.
 
 ```ocaml
 3.14 +. 2.1;;
@@ -190,11 +190,11 @@ let screen-width = 1024;;
 
 ![Variables](./images/ocaml_18.png)
 
-- **;;** ile toplevel'a ilgili satırı bir ifade olarak ele alması gerektiğini, yani hemen çalıştırmasını belirtmek için kullanılıyor. *(Evaluate Expression)*
+- **;;** ile toplevel'a ilgili satırın bir ifade olarak ele alınması, yani hemen çalıştırılması gerektiğini belirtmiş oluyoruz. *(Evaluate Expression)*
 - İki **float** değeri toplamak için **+.** operatörü kullanılmalı. Ayrıca **float** ve **int** toplanacaksa küsürat olmasa bile . işareti ile sayının **float** olarak ele alınacağı ifade edilmeli.
 - İfade çalıştırıldığında sadece sonuç değil tür bilgisi de dönülüyor.
 - Büyük sayılar **_** karakteri ile daha okunabilir yazılabilir.
-- Değişkenleri **let** anahtar kelimesi ile tanımlayabilir ilk değerleri atayabiliriz.
+- Değişkenleri **let** anahtar kelimesi ile tanımlayabilir, ilk değerleri atayabiliriz.
 - Değişken isimlendirme kurallarına göre büyük harfle, sayıyla başlayan değişken adları verilemez *(MaxUserCount, 7even)* gibi. Büyük harf kullanılmama sebebi, modül adlarının büyük harfle başlaması olabilir.
 - Hatta değişken isimlendirmelerinde **-** operatörü de kullanılamaz.
 
@@ -268,9 +268,9 @@ div 3.14 2.
 
 > div fonksiyonunun yorumlanma şekli dikkatinizi çekmiştir. int -> int -> float. Düşününce int,int -> float gibi bir şey yazar diye bekliyor insan değil mi?
 
-Yukarıdaki örnekte, **div** isimli fonksiyonu tanımlamaya çalışıyoruz. Fonksiyondan beklenti **int** türünden gelen iki sayıyı bölmek ama bunları **float** türünden ele almasını sağlamak. İlk denemede kitaptaki fonksiyon adını unuttum ve **of_int** yerine **from_int** yazdım. **Rust** günlüklerim geldi aklıma, yorumlayıcı *acaba şunu mu demek istedin* derdi. Fonksiyonları düzelttikten sonra **/** operatörü ile **/.** arasındaki farka tosladım. **float** türler arasında bir bölme işlemi söz konusu olacağı için **/.** operatörünün kullanılması gerekiyormuş. Bölme operatörünün tipe özel versiyonlandığını ifade edebiliriz. Ayrıca **Float** bir Ocaml modülüdür *(Büyük harfle başlayan isimler modülleri ifade eder)* ve bu modülün içinde **of_int** isimli bir fonksiyon var. Bu fonksiyonun görevi **int** türünden bir değeri **float** türüne çevirmek.
+Yukarıdaki örnekte, **div** isimli fonksiyonu tanımlamaya çalışıyoruz. Fonksiyondan beklenti **int** türünden gelen iki sayıyı bölmek ama bunları **float** türünden ele almasını sağlamak. İlk denemede kitaptaki fonksiyon adını unuttum ve **of_int** yerine **from_int** yazdım. **Rust** günlüklerim geldi aklıma, yorumlayıcı *acaba şunu mu demek istedin* derdi. Fonksiyonları düzelttikten sonra **/** operatörü ile **/.** arasındaki farka tosladım. **float** türler arasında bir bölme işlemi söz konusu olacağı için **/.** operatörünün kullanılması gerekiyormuş. Bölme operatörünün tipe özel versiyonlandığını ifade edebiliriz. Ayrıca **Float** bir OCaml modülüdür *(Büyük harfle başlayan isimler modülleri ifade eder)* ve bu modülün içinde **of_int** isimli bir fonksiyon var. Bu fonksiyonun görevi **int** türünden bir değeri **float** türüne çevirmek.
 
-Burada rahatsız edici nokta belki de **Float.of_int** kullanımı olabilir ama bunu kolaylaştırmak için **OCaml** ekosisteminde yazılmış bir başka [modül](https://ocaml.janestreet.com/ocaml-core/v0.13/doc/base/Base/Float/O/) var. Bu modüldeki amaçlardan birisi **float** değerler ile çalışırken **+.**, **/.** operatörleri yerine **+**, **/** */ ile de çalışabilmek ve bunu **float-safe** modda yapabilmek. Biz şu an için standart kütüphane ile devam edebiliriz. Ekosistemdeki diğer modüllere sonradan odaklanırız. Standart kütühane aynı fonksiyonu aşağıdaki gibi yazmamıza da izin veriyor.
+Burada rahatsız edici nokta belki de **Float.of_int** kullanımı olabilir ama bunu kolaylaştırmak için **OCaml** ekosisteminde yazılmış bir başka [modül](https://ocaml.janestreet.com/ocaml-core/v0.13/doc/base/Base/Float/O/) var. Bu modüldeki amaçlardan birisi **float** değerler ile çalışırken **+.**, **/.** operatörleri yerine **+**, **/** ve **\*** ile de çalışabilmek ve bunu **float-safe** modda yapabilmek. Biz şu an için standart kütüphane ile devam edebiliriz. Ekosistemdeki diğer modüllere sonradan odaklanırız. Standart kütüphane aynı fonksiyonu aşağıdaki gibi yazmamıza da izin veriyor.
 
 ```ocaml
 let div x y =
@@ -348,7 +348,7 @@ swap (4,"four");;
 
 ![ocaml_26.png](./images/ocaml_26.png)
 
-**identity** ve **swap** isimli fonksiyonlar tnaımlandıktan sonra yorumlayıcının verdiği çıktılara dikkat edelim. *(Açıkçası Rust'ı öğrenmeye başladığımda hem kavramsal olarak hem de sentaks olarak zorlandığım 'a - lifetime annotations konusu geldi aklıma)* Her neyse, **'a** ve **'b** şeklinde yazılan ifadeler **generic** türler. Generic kavramına aşina olmayanlar için *a ve b yerine herhangi bir tür gelebilir ve bunun için her bir türe özel olacak şekilde bu fonksiyonunun farklı versiyonlarını yazmanıza gerek yoktur* diyelim. Şimdi biraz daha kafa karıştırabilecek bir örnek.
+**identity** ve **swap** isimli fonksiyonlar tanımlandıktan sonra yorumlayıcının verdiği çıktılara dikkat edelim. *(Açıkçası Rust'ı öğrenmeye başladığımda hem kavramsal olarak hem de sentaks olarak zorlandığım 'a - lifetime annotations konusu geldi aklıma)* Her neyse, **'a** ve **'b** şeklinde yazılan ifadeler **generic** türler. Generic kavramına aşina olmayanlar için *a ve b yerine herhangi bir tür gelebilir ve bunun için her bir türe özel olacak şekilde bu fonksiyonun farklı versiyonlarını yazmanıza gerek yoktur* diyelim. Şimdi biraz daha kafa karıştırabilecek bir örnek.
 
 ```ocaml
 let compare f arg_1 arg_2 = if f arg_1 then arg_1 else arg_2;;
@@ -367,7 +367,7 @@ compare is_pass "Black" "And White";;
 
 ![ocaml_27.png](./images/ocaml_27.png)
 
-**compare** isimli fonksiyonumuz bir fonksiyon alıp diğer iki argümanı da hesaba katarak bir **if** koşulu işletmekte. **compare** fonksiyonundaki parametrelerin generic **'a** türü olarak yorumlandığa dikkat edelim. Sonraki adımlarda **str_len** ve **is_pass** isimli iki farklı fonksiyon daha tanımlanıyor. İlki, **String** modülünden **length** fonksiyonunu kullanarak bir değer döndürdüğü için **string** veri türü ile çalışacağı aşikar. Diğer fonksiyon ise sayısal bir karşılaştırma kullanıyor ve buna göre de **int** değerlerle çalışacağı anlaşılıyor. **compare** fonksiyonuna bu iki fonksiyonu parametre olarak verebiliriz ama devam eden argümanların da uygun tipler olması beklenir. Yani **str_len** kullanıyorsak diğer iki argümanın da **string** türünden olması gerekiyor.
+**compare** isimli fonksiyonumuz bir fonksiyon alıp diğer iki argümanı da hesaba katarak bir **if** koşulu işletmekte. **compare** fonksiyonundaki parametrelerin generic **'a** türü olarak yorumlandığına dikkat edelim. Sonraki adımlarda **str_len** ve **is_pass** isimli iki farklı fonksiyon daha tanımlanıyor. İlki, **String** modülünden **length** fonksiyonunu kullanarak bir değer döndürdüğü için **string** veri türü ile çalışacağı aşikar. Diğer fonksiyon ise sayısal bir karşılaştırma kullanıyor ve buna göre de **int** değerlerle çalışacağı anlaşılıyor. **compare** fonksiyonuna bu iki fonksiyonu parametre olarak verebiliriz ama devam eden argümanların da uygun tipler olması beklenir. Yani **str_len** kullanıyorsak diğer iki argümanın da **string** türünden olması gerekiyor.
 
 ### Tuple, List ve Options veri türleri
 
@@ -383,11 +383,11 @@ let (new_x,new_y) = move (11,16) 5;;
 
 ![ocaml_28.png](./images/ocaml_28.png)
 
-**config** isimli değişken bir tuple veri yapısını işaret ediyor. **Tuple** veri yapısı farklı türden değerler içerebilen zengin bir model. İstersek tanımladığımız config isimli tuple içeriğini **let** ile başka değişkenlere çıkartabiliriz *(export)* Burada **pattern matching** özelliğinin olduğunu da görebiliriz. **move** isimli fonksiyon da dikkate değer. İki parametre alıyor ancak x ve y koordinatlarını ifade eden ilk parametreyi bir tuple olarak tanımlıyor. Ayrıca fonksiyondan geriye yine bir **tuple** türü dönmekte.
+**config** isimli değişken bir tuple veri yapısını işaret ediyor. **Tuple** veri yapısı farklı türden değerler içerebilen zengin bir model. İstersek tanımladığımız config isimli tuple içeriğini **let** ile başka değişkenlere çıkarabiliriz *(export)* Burada **pattern matching** özelliğinin olduğunu da görebiliriz. **move** isimli fonksiyon da dikkate değer. İki parametre alıyor ancak x ve y koordinatlarını ifade eden ilk parametreyi bir tuple olarak tanımlıyor. Ayrıca fonksiyondan geriye yine bir **tuple** türü dönmekte.
 
 > Kitapta tuple veri türü tanımında neden **`*`** şeklinde bir operatör kullanıldığı da vurgulanıyor. Yani bir tuple tanımlandığında yorumlayıcı bunu okurken *string \* int \* int \* bool* gibi bir ifade kullanıyor. Türlerin toplam kümesini işaret eden bir kartezyen çarpımı söz konusu olduğundan çarpım sembolü kullanılıyor diyebiliriz. Kıssadan hisse bugün kullandığım Rust, C# ve Zig gibi dillerden önce belki de işe OCaml ile başlamak gerekiyordu...
 
-Eğer aynı türde verilerden oluşan bir listeye ihtiyacımız varsa, pekala **List** veri yapısını kullanabiliriz :D Aşağıda yine yaptığım denemelerin peşi sıra gelen ifadeleri yer alıyor. Üşenmeyip **utop** aracını açın deneyin. Önemli olan **;;** sonrasın OCaml yorumlayıcısının verdiği çıktıları görmek ve anlamaya çalışmak.
+Eğer aynı türde verilerden oluşan bir listeye ihtiyacımız varsa, pekala **List** veri yapısını kullanabiliriz :D Aşağıda yine yaptığım denemelerin peşi sıra gelen ifadeleri yer alıyor. Üşenmeyip **utop** aracını açın, deneyin. Önemli olan **;;** sonrasında OCaml yorumlayıcısının verdiği çıktıları görmek ve anlamaya çalışmak.
 
 ```ocaml
 let colors = ["Red" ; "Green" ; "Blue"];;
@@ -433,7 +433,7 @@ first_or_default [12;0;23;9;14];;
 
 ![ocaml_30.png](./images/ocaml_30.png)
 
-Burada tanımladığımız **first_or_default** isimli fonksiyon **int** türünden bir listenin ilk elemanını döndürüyor ancak **pattern matching** ile uyguladığımız bir koşul var. Boş bir liste verilirse varsayılan olarak 0 değerini, aksine dolu bir liste gelirse ki bunu **first :: the_rest** ifadesi ile eşleştiriyoruz *(ilk eleman ve kalanlar anlamında düşünebiliriz)*  listenin ilk elemanını dönüyor. Yorumlayıcının boş bir liste söz konusu ise 0 döndürülmesinden yola çıkarak fonksiyonun **integer** bir liste ile çalışacağına kanaat getirdiğine dikkat edelim. Dolayısıyla bu fonksiyonu aşağıdaki gibi yazarsak generic bir versiyon da çıkarmış oluruz.
+Burada tanımladığımız **first_or_default** isimli fonksiyon **int** türünden bir listenin ilk elemanını döndürüyor ancak **pattern matching** ile uyguladığımız bir koşul var. Boş bir liste verilirse varsayılan olarak 0 değerini döndürüyor; dolu bir liste gelirse, bunu **first :: the_rest** ifadesi ile eşleştirip *(ilk eleman ve kalanlar anlamında düşünebiliriz)* listenin ilk elemanını döndürüyor. Yorumlayıcının boş bir liste söz konusu ise 0 döndürülmesinden yola çıkarak fonksiyonun **integer** bir liste ile çalışacağına kanaat getirdiğine dikkat edelim. Dolayısıyla bu fonksiyonu aşağıdaki gibi yazarsak generic bir versiyon da çıkarmış oluruz.
 
 ```ocaml
 let first_or default values =
@@ -481,7 +481,7 @@ Bunu büyük ihtimalle unutacağım ve bakmadan yazamayacağım ama birkaç öne
 
 Piuvv! :D Parantezleri karıştırmış olabilirim. Kitapta 1;2;3 listesini toplamıştı.
 
-Bugünkü terapide son olarak **Options** veri yapısına bakıyorum. Bir değer vardır veya yoktur sorusuna cevap veren bir veri yapısı. Şahsen **rust** dilinde **Options** türü çok işe yarıyor *(Rust'ı geliştiren Graydon Hoare'un OCaml'den esinlendiği birçok yerde belirtiliyor)* Aşağıdaki kod parçasında en basit kullanım şekli yer alıyor.
+Bugünkü terapide son olarak **option** veri yapısına bakıyorum. Bir değer vardır veya yoktur sorusuna cevap veren bir veri yapısı. Şahsen **Rust** dilinde **Option** türü çok işe yarıyor *(Rust'ı geliştiren Graydon Hoare'un OCaml'den esinlendiği birçok yerde belirtiliyor)* Aşağıdaki kod parçasında en basit kullanım şekli yer alıyor.
 
 ```ocaml
 let div x y = if y = 0 then None else Some (x/y);;
@@ -509,9 +509,9 @@ let customer_service = {name = "Get customers"; is_active = true; kind = "REST";
 
 ![ocaml_34.png](./images/ocaml_34.png)
 
-Yukarıdaki kod parçasında iki **record** türü yer alıyor, **address** ve **service**. Dikkat edileceği üzere service **record** yapısındaki path alanı address veri yapısı türünden. cust_get ve customer_service isimli değişkenler ise bu türlera ait nesneleri işaret ediyor. Açıkça belirtmesek de eşitliğin sağ tarafından yapılan atamalar otomatikman cust_get'in bir address türü olmasını sağlıyor. Benzer şekilde customer_service değişkeni de service türünden bir nesne olarak tanımlanıyor. **utop** ekran görüntüsünde olduğu gibi çıktılara mutlaka bakmak lazım. **type inference** mekanizmasının nasıl çalıştığını görmek açısından önemli.
+Yukarıdaki kod parçasında iki **record** türü yer alıyor, **address** ve **service**. Dikkat edileceği üzere service **record** yapısındaki path alanı address veri yapısı türünden. cust_get ve customer_service isimli değişkenler ise bu türlere ait nesneleri işaret ediyor. Açıkça belirtmesek de eşitliğin sağ tarafından yapılan atamalar otomatik olarak cust_get'in bir address türü olmasını sağlıyor. Benzer şekilde customer_service değişkeni de service türünden bir nesne olarak tanımlanıyor. **utop** ekran görüntüsünde olduğu gibi çıktılara mutlaka bakmak lazım. **type inference** mekanizmasının nasıl çalıştığını görmek açısından önemli.
 
-Şimdi birde **variant** tanımlamayı deneyelim. Bu tür ile birden fazla nesneyi *(object)* tek bir tip altında birleştirmek mümkün. Aşağıdaki örnek kod parçası ile anlamaya çalışalım.
+Şimdi bir de **variant** tanımlamayı deneyelim. Bu tür ile birden fazla nesneyi *(object)* tek bir tip altında birleştirmek mümkün. Aşağıdaki örnek kod parçası ile anlamaya çalışalım.
 
 ```ocaml
 type location = { x : float; y : float }
@@ -593,7 +593,7 @@ Printf.printf "Updated first point to: %.2f\n" points.(0);;
 points;;
 
 (* 
-Belki bir döngü yardımıyla array elemanlarını görütülemek isteyebiriz
+Belki bir döngü yardımıyla array elemanlarını görüntülemek isteyebiliriz
 Hatta döngü içinde pattern match kullanıp dersten geçti, kaldı vs diyebiliriz
 *)
 for i = 0 to Array.length points - 1 do
@@ -607,13 +607,13 @@ done;;
 
 Bu örnekte **points** isimli bir array tanımladık. Array elemanlarına erişmek için **.(index)**, bir array elemanını değiştirmek için ise **<-** operatörünü kullandık. Sonrasında array'in tamamını görüntüledik ve bir döngü yardımıyla her bir elemanı kontrol ederek öğrencinin dersten geçme/kalma durumunu ekrana yazdırdık.
 
-Öyleyse birde **mutable** üyeler içeren bir **record** tanımlayalım. Burada dikkat edilmesi gereken noktalardan birisi de **<-** operatörünün **unit ()** döndürmesidir. Bu, yapılan atama işleminin bir hesaplama *(calculation)* olmadığını aksiyon *(action)* olduğunu belirtir. Yani, points.(0) <- 51.00 ifadesi bir değer döndürmez, sadece **points array**'inin ilk elemanını 51.00 olarak günceller.
+Öyleyse bir de **mutable** üyeler içeren bir **record** tanımlayalım. Burada dikkat edilmesi gereken noktalardan birisi de **<-** operatörünün **unit ()** döndürmesidir. Bu, yapılan atama işleminin bir hesaplama *(calculation)* olmadığını, bir aksiyon *(action)* olduğunu belirtir. Yani, points.(0) <- 51.00 ifadesi bir değer döndürmez, sadece **points array**'inin ilk elemanını 51.00 olarak günceller.
 
 ```ocaml
 (* 
   Varsayılan olarak immutable olan record üyeleri mutable yapılabilir.
   Şöyle anlamlı bir örnek düşünelim. Bir oyuncunun adı genellikle oyun sırasında değiştirilmez
-  ancak canı, bulunduğu konu gibi bilgiler anlık olarak değişebilir.
+  ancak canı, bulunduğu konum gibi bilgiler anlık olarak değişebilir.
 *)
 
 type player = {
@@ -675,7 +675,7 @@ let she_ra = take_damage she_ra 8;;
 
 (* 
   Bir fonksiyon tanımlamadan değer değiştirmek istersek bu durumda aşağıdaki gibi ilerleyebiliriz. 
-  Söz gelimi pozisyonu değiştrelim.
+  Söz gelimi pozisyonu değiştirelim.
 *)
 Printf.printf "%s is currently at position (%d, %d).\n" she_ra.name (fst she_ra.position) (snd she_ra.position);;
 let she_ra = { she_ra with position = (25, 50) };;
@@ -737,7 +737,7 @@ counter := !counter + 1;;
 
 ![ocaml_41.png](./images/ocaml_41.png)
 
-Bu arada istersek **ref** türünü kendimiz de dizayn edebiliriz. Hatta kitap bunu gayet güzel bir şekilde örnekliyor. Bir deneyelim.
+Bu arada istersek **ref** türünü kendimiz de tasarlayabiliriz. Hatta kitap bunu gayet güzel bir şekilde örnekliyor. Bir deneyelim.
 
 ```ocaml
 (*
@@ -785,7 +785,7 @@ Printf.printf "Average: %d\n" (match avrage numbers with Some avg -> avg | None 
 
 ![ocaml_43.png](./images/ocaml_43.png)
 
-**average** isimli fonksiyon içerisinde yer alan **sum** ve **count** değişkenleri **mutable** olarak tanımlanmıştır ve **List.iter** fonksiyonu kullanılarak listenin her bir elemanı üzerinde işlem yaparken bu değişkenlerin değerleri güncellenmektedir. Tabii **iter** fonksiyonuna verilen anonim fonksiyon içerisinde **!** operatörünü kullanarak ref'lerin içindeki değerlere erişiyoruz ve **:=** operatörünü kullanarak bu değerleri güncelliyoruz. Birde **in** operatörü ile karşılaştık tabii ki. Bu operatör **sum** ve **count** değişkenlerinin bulundukları fonksiyon bloğunda geçerli olduğunu belirtmek için kullanılmakta. Yani **scope** belirlemek için kullanılır. **in** kullanımının farkını anlamak için özellikle Utop ekranında aşağıdaki gibi bir deneme yapalım.
+**average** isimli fonksiyon içerisinde yer alan **sum** ve **count** değişkenleri **mutable** olarak tanımlanmıştır ve **List.iter** fonksiyonu kullanılarak listenin her bir elemanı üzerinde işlem yaparken bu değişkenlerin değerleri güncellenmektedir. Tabii **iter** fonksiyonuna verilen anonim fonksiyon içerisinde **!** operatörünü kullanarak ref'lerin içindeki değerlere erişiyoruz ve **:=** operatörünü kullanarak bu değerleri güncelliyoruz. Bir de **in** operatörü ile karşılaştık tabii ki. Bu operatör **sum** ve **count** değişkenlerinin bulundukları fonksiyon bloğunda geçerli olduğunu belirtmek için kullanılmakta. Yani **scope** belirlemek için kullanılır. **in** kullanımının farkını anlamak için özellikle Utop ekranında aşağıdaki gibi bir deneme yapalım.
 
 ```ocaml
 let value = 12;;
@@ -849,7 +849,7 @@ Printf.printf "Random numbers (while): %s\nAverage: %f\n"
 
 ![ocaml_46.png](./images/ocaml_46.png)
 
-**generate_random_list** fonksiyonu n değerine göre bir liste döndürmekte. Bu listenin elemanları 0 ile 99 arasındaki rastgele sayılarla dolduruluyor. Örnekte **Random** isimli bir modül kullanıyoruz *(Galiba her dilde bu modül mevcut :D)* Dikkat edilmesi gereken noktalardan birisi **self_init()** çağrısı. Bunu yapmadığımız takdirde her seferinde aynı rastgele sayıların üretildiğini görürüz. Üretilen rastgele sayılar **::** operatörü yardımıyla numbers isimli listeye ekleniyor. Sonrasında **!numbers** ifadesiyle de oluşturulan liste döndürülüyor. Kodun son satırında ise bu listeyi ekrana bastırmak için **String.concat** ve **List.map** fonksiyonlarından yararlanıyoruz. **List.map** fonksiyonu, verilen bir fonksiyonu listenin her bir elemanına uygulayarak yeni bir liste oluşturur. Bu örnekte, **string_of_int** fonksiyonunu kullanarak her bir tamsayıyı string'e dönüştürüyoruz. Ardından **String.concat** fonksiyonu ile bu string'leri "; " ile birleştirerek tek bir string elde ediyoruz ve bunu ekrana yazdırıyoruz. Aynı fonksiyonu birde **while** döngüsü kullanarak yazalım.
+**generate_random_list** fonksiyonu n değerine göre bir liste döndürmekte. Bu listenin elemanları 0 ile 99 arasındaki rastgele sayılarla dolduruluyor. Örnekte **Random** isimli bir modül kullanıyoruz *(Galiba her dilde bu modül mevcut :D)* Dikkat edilmesi gereken noktalardan birisi **self_init()** çağrısı. Bunu yapmadığımız takdirde her seferinde aynı rastgele sayıların üretildiğini görürüz. Üretilen rastgele sayılar **::** operatörü yardımıyla numbers isimli listeye ekleniyor. Sonrasında **!numbers** ifadesiyle de oluşturulan liste döndürülüyor. Kodun son satırında ise bu listeyi ekrana bastırmak için **String.concat** ve **List.map** fonksiyonlarından yararlanıyoruz. **List.map** fonksiyonu, verilen bir fonksiyonu listenin her bir elemanına uygulayarak yeni bir liste oluşturur. Bu örnekte, **string_of_int** fonksiyonunu kullanarak her bir tamsayıyı string'e dönüştürüyoruz. Ardından **String.concat** fonksiyonu ile bu string'leri "; " ile birleştirerek tek bir string elde ediyoruz ve bunu ekrana yazdırıyoruz. Aynı fonksiyonu bir de **while** döngüsü kullanarak yazalım.
 
 ```ocaml
 let generate_random_list_while n =
@@ -868,7 +868,7 @@ let random_numbers_while = generate_random_list_while 10;;
 Printf.printf "Random numbers (while): %s\n" (String.concat "; " (List.map string_of_int random_numbers_while));;
 ```
 
-Bu fonksiyonda aynı şekilde n değerine göre bir liste döndürmekte ancak bu kez **while** döngüsünü kullandık. Döngü içerisinde i değişkeni 1'den başlayarak n'ye kadar artırılır ve her iterasyonda rastgele bir sayı üretilerek numbers listesine eklenir. Her iki fonksiyonun çalışma zamanına ait bir çıktıyı da ekleyelim.
+Bu fonksiyon da aynı şekilde **n** değerine göre bir liste döndürüyor ancak bu kez **while** döngüsünü kullandık. Döngü içerisinde **i** değişkeni 1'den başlayarak n'ye kadar artırılır ve her iterasyonda rastgele bir sayı üretilerek **numbers** listesine eklenir. Her iki fonksiyonun çalışma zamanına ait bir çıktıyı da ekleyelim.
 
 ![ocaml_47.png](./images/ocaml_47.png)
 
@@ -888,7 +888,7 @@ Printf.printf "Average: %f\n" (average arr);;
 
 ![ocaml_48.png](./images/ocaml_48.png)
 
-**average** isimli fonksiyon, **arr** isimli bir parametre almakta. Tabii bunun bir **Array** olduğunu varsayıyoruz. **sum** isimli değişkeni **mutable** olarak tanımladık zira bir toplam değerine ihtiyacımız var. Sonrasında bir **for** döngüsü yardımıyla dizi elemanlarını arka arkaya toplatıyoruz. **!** operatörü ile sum dizisi içindeki değere erişiyoruz ve **:=** operatörünü kullanarak bu değeri güncelliyoruz. Döngü tamamlandıktan sonra toplam değeri dizi uzunluğuna bölerek ortalamayı hesaplıyoruz. Dikkat edelim, bölme işlemi sırasında tam sayı bölmesi yapMAmak için hem toplamı hem de dizi uzunluğunu **float_of_int** fonksiyonu ile **float** türüne dönüştürüyoruz. Sonrasında bu fonksiyonu kullanarak bir dizi oluşturup ortalamasını ekrana yazdırıyoruz.
+**average** isimli fonksiyon, **arr** isimli bir parametre almakta. Tabii bunun bir **Array** olduğunu varsayıyoruz. **sum** isimli değişkeni **mutable** olarak tanımladık zira bir toplam değerine ihtiyacımız var. Sonrasında bir **for** döngüsü yardımıyla dizi elemanlarını arka arkaya toplatıyoruz. **!** operatörü ile sum dizisi içindeki değere erişiyoruz ve **:=** operatörünü kullanarak bu değeri güncelliyoruz. Döngü tamamlandıktan sonra toplam değeri dizi uzunluğuna bölerek ortalamayı hesaplıyoruz. Dikkat edelim, bölme işlemi sırasında tam sayı bölmesi yapmamak için hem toplamı hem de dizi uzunluğunu **float_of_int** fonksiyonu ile **float** türüne dönüştürüyoruz. Sonrasında bu fonksiyonu kullanarak bir dizi oluşturup ortalamasını ekrana yazdırıyoruz.
 
 Peki bu fonksiyona alakasız bir veri türü göndersek ne olur, örneğin metinsel bir ifade...
 
@@ -901,7 +901,7 @@ VS Code arabiriminden baktığımızda da çalışma zamanında denediğimizde d
 
 ![ocaml_49.png](./images/ocaml_49.png)
 
-Sıradaki fonksiyonumuz iki boyutlu bir matris üretiyor. Herbir elemanı 0 veya 1 olabilen bir matris. Basit bir oyun sahasının iki boyutlu görünümünde duvar veya yol kararını vermeyi kolaylaştırabilecek çok basit bir örnek.
+Sıradaki fonksiyonumuz iki boyutlu bir matris üretiyor. Her bir elemanı 0 veya 1 olabilen bir matris. Basit bir oyun sahasının iki boyutlu görünümünde duvar veya yol kararını vermeyi kolaylaştırabilecek çok basit bir örnek.
 
 ```ocaml
 let generate_matrix row_count col_count =
@@ -922,13 +922,13 @@ Array.iter (fun row ->
 ) matrix;;
 ```
 
-Burada yardımcı birkaç fonksiyon da kullandık. Örneğin iki boyutlu bir matris dizisini oluşturmak için **make_matrix** fonksiyonuna başvurduk. İki boyutlu dizinin elemanlarını satır sütun bazında dolaşmak içinse klasik iç içe **for** döngüsü kullandık. Doğrudan dizinin elemanların atama işlemi yapılacağından **<-** operatörü ile 0 ile 1 şeklinde üretilen rastgele sayıları atadır. **Random.int** fonksiyonuna 2 değerini verdiğimizde sadece 0 veya 1 değerleri üretilebilir. Fonksiyon çıktısı olan matrisi ekrana yazdırmak için yine içiçe for döngüsü kullanabiliriz ama **fonksiyonel** bir yaklaşımla ilerlemek de oldukça şık. Nitekim **Array** modülünde yer alan **iter** fonksiyonu ile dizinin her bir elemanına uygulanacak bir fonksiyon çalıştırabiliriz. Dolayısıyla dış iterasyon, row'u parametre olarak alan ve dolayısıyla kolonları dolaşmayı sağlayacan anonim bir fonksiyon kullanıyor. İç iterasyon ise value'yu parametre olarak alan ve bu değeri ekrana yazdıran bir anonim fonksiyon. Her satırın sonunda ise yeni bir satır başlatmak için **Printf.printf "\n"** ifadesi yer almakta. Aşağıda çalışma zamanına ait örnek bir görüntü yer alıyor.
+Burada yardımcı birkaç fonksiyon da kullandık. Örneğin iki boyutlu bir matris dizisini oluşturmak için **make_matrix** fonksiyonuna başvurduk. İki boyutlu dizinin elemanlarını satır sütun bazında dolaşmak içinse klasik iç içe **for** döngüsü kullandık. Doğrudan dizinin elemanlarına atama yapıldığından **<-** operatörü ile 0 ve 1 şeklinde üretilen rastgele sayıları atarız. **Random.int** fonksiyonuna 2 değerini verdiğimizde sadece 0 veya 1 değerleri üretilebilir. Fonksiyon çıktısı olan matrisi ekrana yazdırmak için yine iç içe **for** döngüsü kullanabiliriz ama **fonksiyonel** bir yaklaşımla ilerlemek de oldukça şık. Nitekim **Array** modülünde yer alan **iter** fonksiyonu ile dizinin her bir elemanına uygulanacak bir fonksiyon çalıştırabiliriz. Dolayısıyla dış iterasyon, row'u parametre olarak alan ve dolayısıyla kolonları dolaşmayı sağlayacak anonim bir fonksiyon kullanıyor. İç iterasyon ise value'yu parametre olarak alan ve bu değeri ekrana yazdıran bir anonim fonksiyon. Her satırın sonunda ise yeni bir satır başlatmak için **Printf.printf "\n"** ifadesi yer almakta. Aşağıda çalışma zamanına ait örnek bir görüntü yer alıyor.
 
 ![ocaml_50.png](./images/ocaml_50.png)
 
 ### Derleyerek Çalıştırmak
 
-**Real World OCaml** kitabı bir sonraki bölüme geçmeden önce **A Complete Program** başlığında basit bir program örneği anlatıyor. Bu örnekte **ocaml** kodunun derlenerek çalıştırılması söz konusu. Derleme işlemi için **dune** *(Gezegen olan değil :D)* aracını kullanıyor. Burada temel amaç tek başına çalıştırılabilir *(standlone)* bir program oluşturmak. Öncelikle kodlarımızı oluşturalım. Bu amaçla **standalone** isimli bir klasör oluşturdum ve içerisine **rand_10.ml** isimli bir dosya ekledim. Kolaya kaçarak daha önceden ele aldığımız bir fonksiyonu değerlendirebiliriz. Rastgele sayılalardan oluşan 10 elemanlı bir liste oluşturuyoruz.
+**Real World OCaml** kitabı bir sonraki bölüme geçmeden önce **A Complete Program** başlığında basit bir program örneği anlatıyor. Bu örnekte **ocaml** kodunun derlenerek çalıştırılması söz konusu. Derleme işlemi için **dune** *(Gezegen olan değil :D)* aracını kullanıyor. Burada temel amaç tek başına çalıştırılabilir *(standalone)* bir program oluşturmak. Öncelikle kodlarımızı oluşturalım. Bu amaçla **standalone** isimli bir klasör oluşturdum ve içerisine **rand_10.ml** isimli bir dosya ekledim. Kolaya kaçarak daha önceden ele aldığımız bir fonksiyonu değerlendirebiliriz. Rastgele sayılardan oluşan 10 elemanlı bir liste oluşturuyoruz.
 
 ```ocaml
 let generate_random_list n =
@@ -945,9 +945,9 @@ let () =
   Printf.printf "Random numbers: %s\n" (String.concat "; " (List.map string_of_int random_numbers))
 ```
 
-Tabii program kodunda dikkat etmemiz gereken şeyler de var. Öncelikle artık **;;** operaötrünü kullanmadığımıza dikkat edelim. Diğer yandan bir de **let () =** ifadesi var. Bunu programın giriş noktası olarak düşünebiliriz. Yani, program çalıştığında ilk olarak bu kısım çalışacaktır.
+Tabii program kodunda dikkat etmemiz gereken şeyler de var. Öncelikle artık **;;** operatörünü kullanmadığımıza dikkat edelim. Diğer yandan bir de **let () =** ifadesi var. Bunu programın giriş noktası olarak düşünebiliriz. Yani, program çalıştığında ilk olarak bu kısım çalışacaktır.
 
-Derleme işleminden önce bu klasörde oluşturmamız gereken iki dosya daha var; **dune** ve **dune-project**. İkisinin de uzantısı yoktur ve derlenecek programla ilgili bir takım konfigürasyon bilgilerini içerirler *(Tahmin edileceği üzere)*. **dune** içeriğini şöyle oluşturabiliriz.
+Derleme işleminden önce bu klasörde oluşturmamız gereken iki dosya daha var; **dune** ve **dune-project**. İkisinin de uzantısı yoktur ve derlenecek programla ilgili birtakım konfigürasyon bilgilerini içerirler *(Tahmin edileceği üzere)*. **dune** içeriğini şöyle oluşturabiliriz.
 
 ```dune
 (executable
@@ -979,7 +979,7 @@ ve işte çalışma zamanı çıktılarımız.
 
 ### Alcotest ile Birim Test Yazmak
 
-**OCaml** kodlarını test etmek için birkaç yöntem var. Bunlardan birisi () ile oluşturulan program giriş noktasında klasik terminal çıktıları ile ilerlmek. Ancak birim test *(unit test)* yazmak elbetteki daha profesyonel bir yaklaşım ama daha da önemlisi bir standart. Bu amaçla **dune** ile entegre çalışabilen **Alcotest** isimli bir kütüphane bulunuyor. Öncelikle bu aracı **opam** ile sisteme yüklemek gerekiyor *(Windows veya Linux farketmez)*.
+**OCaml** kodlarını test etmek için birkaç yöntem var. Bunlardan birisi () ile oluşturulan program giriş noktasında klasik terminal çıktıları ile ilerlemek. Ancak birim test *(unit test)* yazmak elbette ki daha profesyonel bir yaklaşım ama daha da önemlisi bir standart. Bu amaçla **dune** ile entegre çalışabilen **Alcotest** isimli bir kütüphane bulunuyor. Öncelikle bu aracı **opam** ile sisteme yüklemek gerekiyor *(Windows veya Linux fark etmez)*.
 
 ```bash
 opam install alcotest
@@ -1018,7 +1018,7 @@ let rec power base exp =
  (libraries math alcotest))
 ```
 
-Şimdi de birim testleri içeren **test_math.ml** dosyasını oluşturalım. Burada olası tüm durumları test etmekte yarar var elbette ki ancak ben örnek olması açısında birkaç tanesine yer verdim.
+Şimdi de birim testleri içeren **test_math.ml** dosyasını oluşturalım. Burada olası tüm durumları test etmekte yarar var elbette ki ancak ben örnek olması açısından birkaç tanesine yer verdim.
 
 ```ocaml
 let test_factorial () =
@@ -1062,7 +1062,7 @@ dune runtest
 
 ![ocaml_52.png](./images/ocaml_52.png)
 
-Burada dikkate değer bir durum daha var. Dune, **Incremental Build** ve **caching** mekanizmaları sayesinde sadece değişen dosyaları derleyerek testleri çalıştırır. Dolayısıyla kod tabanında değişiklik olmadığında testler tekrardan çalıştırılmaz. Yani kodun aynı olması testlerin de aynı kalacağı anlamaına gelir ki bu durumda kaynakları boşa israf etmenin de bir alemi yoktur. Burada **dune** kod dosyalarının imzalarını takip ederek bir karara varır. Ancak yinede testleri koşmaya zorlayabiliriz. Bunun için **--force** argümanını kullanmak yeterlidir.
+Burada dikkate değer bir durum daha var. Dune, **Incremental Build** ve **caching** mekanizmaları sayesinde sadece değişen dosyaları derleyerek testleri çalıştırır. Dolayısıyla kod tabanında değişiklik olmadığında testler tekrardan çalıştırılmaz. Yani kodun aynı olması testlerin de aynı kalacağı anlamına gelir ki bu durumda kaynakları boşa israf etmenin de bir alemi yoktur. Burada **dune** kod dosyalarının imzalarını takip ederek bir karara varır. Ancak yine de testleri koşmaya zorlayabiliriz. Bunun için **--force** argümanını kullanmak yeterlidir.
 
 ```bash
 dune runtest --force
@@ -1078,7 +1078,7 @@ En zor kısım burası. Şöyle bir soru soralım. Neden bazı diller Method Ove
 
 ### Hata Yapmayı İmkansız Kılan Tip Desteği *(Type Safety değil Type Expressiveness)*
 
-Verinin alabileceği tüm durumlar ilişik olduğu tip tarafından tanımlanır. Çok klasik bir örnek üzerinden ilerleyelim *(Rust tarafında da kullandığım bir teori ki OCAML'dan geliyormuş :D )*
+Verinin alabileceği tüm durumlar ilişkili olduğu tip tarafından tanımlanır. Çok klasik bir örnek üzerinden ilerleyelim *(Rust tarafında da kullandığım bir teori ki OCaml'dan geliyormuş :D )*
 
 ```ocaml
 type payment_type =
@@ -1140,9 +1140,9 @@ let () =
 
 ![ocaml_56.png](./images/ocaml_56.png)
 
-**sum** için tam bir fonksiyonel yaklaşımın söz konusu olduğunu söyleyebiliriz. Hatta tam anlamıyla bir matematiksel bir zerafet sunar. Zira **mutable** bir state yoktur, recursive çalışan fonksiyon her çağrıda yeni bir değer döndürür ve bunlar arka arkaya toplanır. **incrementer** fonksiyonunda kullanılan **ref** keyword bir referans kutusu oluşturur ve **:=** operatörü ile bu kutunun içindeki değeri değiştirebiliriz. Bir başka deyişle bu fonksiyon state değiştiren bir fonksiyondur ve bu nedenle fonksiyonel değil, pragmatik bir yaklaşım sergiler.
+**sum** için tam bir fonksiyonel yaklaşımın söz konusu olduğunu söyleyebiliriz. Hatta tam anlamıyla matematiksel bir zarafet sunar. Zira **mutable** bir state yoktur, recursive çalışan fonksiyon her çağrıda yeni bir değer döndürür ve bunlar arka arkaya toplanır. **incrementer** fonksiyonunda kullanılan **ref** keyword bir referans kutusu oluşturur ve **:=** operatörü ile bu kutunun içindeki değeri değiştirebiliriz. Bir başka deyişle bu fonksiyon state değiştiren bir fonksiyondur ve bu nedenle fonksiyonel değil, pragmatik bir yaklaşım sergiler.
 
-Aslında buradaki felsefeyi şöyle düşünebiliriz. Bazı senaryolarda her şeyin saf bir fonksiyon ile yazılması mümkün değildir. Örneğin, milyonlarca finansal işlemin yapıldığı gerçek zamanlı bir uygulamada *(Bence tam bu noktada [Jane Street'in hikayesine](https://ocaml.org/success-stories/large-scale-trading-system) bakılabilir)* veya çok oyunculu bir oyunda mutable state'lere ihtiyaç duyar ve hatta performans ararız. **OCaml** böyle durumlar içinde hazırlıklıdır ve sağladığı mutable araçları kullanarak pragmatik bir şekilde ilerleyebiliriz. Ancak mümkün olduğunca fonksiyonel bir yaklaşım benimsemek kodun daha temiz, anlaşılır ve hatasız olmasına da yardımcı olabilir. Bu nedenle OCaml, fonksiyonel programlama paradigmalarını teşvik ederken aynı zamanda pragmatik ihtiyaçlara da cevap verebilecek esneklikte tasarlanmıştır. **Rust** açısından bakarsak gerçekten de benzer bir felsefeye sahiptir. Her şey varsayılan olarak immutable'dır ve mutable olması gerekiyorsa bu açıkça belirtilmelidir. Ancak Rust'ın sahip olduğu ownership ve borrowing mekanizmaları sayesinde mutable state'ler üzerinde daha sıkı kontrol sağlanır ve bu da güvenli bir şekilde mutable state'ler kullanmamıza olanak tanır ki bu Rust'ı çekici kılan bir başka şeydir.
+Aslında buradaki felsefeyi şöyle düşünebiliriz. Bazı senaryolarda her şeyin saf bir fonksiyon ile yazılması mümkün değildir. Örneğin, milyonlarca finansal işlemin yapıldığı gerçek zamanlı bir uygulamada *(Bence tam bu noktada [Jane Street'in hikayesine](https://ocaml.org/success-stories/large-scale-trading-system) bakılabilir)* veya çok oyunculu bir oyunda mutable state'lere ihtiyaç duyar ve hatta performans ararız. **OCaml** böyle durumlara da hazırlıklıdır ve sağladığı mutable araçları kullanarak pragmatik bir şekilde ilerleyebiliriz. Ancak mümkün olduğunca fonksiyonel bir yaklaşım benimsemek kodun daha temiz, anlaşılır ve hatasız olmasına da yardımcı olabilir. Bu nedenle OCaml, fonksiyonel programlama paradigmalarını teşvik ederken aynı zamanda pragmatik ihtiyaçlara da cevap verebilecek esneklikte tasarlanmıştır. **Rust** açısından bakarsak gerçekten de benzer bir felsefeye sahiptir. Her şey varsayılan olarak immutable'dır ve mutable olması gerekiyorsa bu açıkça belirtilmelidir. Ancak Rust'ın sahip olduğu ownership ve borrowing mekanizmaları sayesinde mutable state'ler üzerinde daha sıkı kontrol sağlanır ve bu da güvenli bir şekilde mutable state'ler kullanmamıza olanak tanır ki bu Rust'ı çekici kılan bir başka şeydir.
 
 Konuyu pekiştirmek adına bir başka örneğe bakalım.
 
@@ -1166,13 +1166,13 @@ let () =
 
 ![ocaml_57.png](./images/ocaml_57.png)
 
-Tabii bu çok küçük bir veri kümesini ele alıyor. Elimizde milyon elamanlı bir veride olabilirdi. Vektörel sayıların olduğu bir dizi mesela. Tek bir değeri güncellemek gerekiyorsa bile diziyi kopyalamak fonksiyonel yaklaşım açısından çok maliyetlidir. Dolayısıyla dizinin elemanını olduğu yerde değiştirmek gerekir. Yukarıdaki kod parçasında **OCaml** bunu nasıl sağlıyoru bir kere daha görmekteyiz. **OCaml**, Array ve Bytes gibi yapıları doğrudan **mutable** olarak tasarlamıştır. **<-** operatörü tam anlamıyla emirsel *(imperative)* bir şekilde çalışır ve dizinin elemanlarını doğrudan değiştirmemize olanak tanır. Yani yerinde veriyi değiştirmemiz mümkündür.
+Tabii bu çok küçük bir veri kümesini ele alıyor. Elimizde milyon elemanlı bir veri de olabilirdi. Vektörel sayıların olduğu bir dizi mesela. Tek bir değeri güncellemek gerekiyorsa bile diziyi kopyalamak fonksiyonel yaklaşım açısından çok maliyetlidir. Dolayısıyla dizinin elemanını olduğu yerde değiştirmek gerekir. Yukarıdaki kod parçasında **OCaml**'ın bunu nasıl sağladığını bir kere daha görüyoruz. **OCaml**, Array ve Bytes gibi yapıları doğrudan **mutable** olarak tasarlamıştır. **<-** operatörü tam anlamıyla emirsel *(imperative)* bir şekilde çalışır ve dizinin elemanlarını doğrudan değiştirmemize olanak tanır. Yani yerinde veriyi değiştirmemiz mümkündür.
 
-Buradan şu sonuca varabiliriz; Belkide yazacağımız algoritma imperative yaklaşım gerekleri ile daha hızlı çalışıyordur. **OCaml** buna destek verir. Dolayısıyla elimizde yüksek seviyeli dillerin zarifliğine sahip *(her ne kadar sentaksı zorlayıcı olsa da kavramsal olarak öyle)* ama gerektiğinde düşük seviyeli dillerin sunduğu bellek performansına yakın destek veren bir programlama dili var ve **Rust** bence bu özellikleri bir üst noktaya taşıyıp memory de gerçekten güvenli kalabilmenin yolunu da açmış durumda.
+Buradan şu sonuca varabiliriz; belki de yazacağımız algoritma imperative yaklaşım gerekleri ile daha hızlı çalışıyordur. **OCaml** buna destek verir. Dolayısıyla elimizde yüksek seviyeli dillerin zarifliğine sahip *(her ne kadar sentaksı zorlayıcı olsa da kavramsal olarak öyle)* ama gerektiğinde düşük seviyeli dillerin sunduğu bellek performansına yakın destek veren bir programlama dili var ve **Rust** bence bu özellikleri bir üst noktaya taşıyıp bellek tarafında gerçekten güvenli kalabilmenin yolunu da açmış durumda.
 
 ### Tony Hoare Anısına
 
-Yazı yazmamdan kısa bir süre önce aramızdan ayrılan, bilgisayar bilimlerinin efsane ismi **Tony Hoare**' ın milyar dolarlık hata olarak da isimlendirdiği **Null Pointer Exception**, programlama dillerinde sıkça karşılaşılan ve ciddi sorunlara yol açabilen bir durumu anlatır. Uğraştığımız pekçok programlama dilinde **null** diye bir kavram var. Kısaca, bir değişkenin değeri yoksa ona null atayabiliriz şeklinde ifade etsek yeridir. Diğer yandan bu durum kodu yazarken bir null kontrolü yapmamızı da gerektirir. *(null değer taşıyabilen bir referansın kullanıldığı her yerde null olup olmadığını kontrol ederek hareket etmek)*. **OCaml** bu konuya şöyle bir felsefe ile yaklaşıyor; **"Eğer bir hata oluşacaksa çalışma zamanında değil derleme zamanında olmalıdır"**. Hımmm...Yani... O zaman null değer yoktur diyebiliriz. Evet, gerçekten de null diye bir kavram **OCaml** dilinde yok. Bunun yerine programcıya sunulan bir seçenek var; **Option**...
+Yazı yazmamdan kısa bir süre önce aramızdan ayrılan, bilgisayar bilimlerinin efsane ismi **Tony Hoare**'ın milyar dolarlık hata olarak da isimlendirdiği **Null Pointer Exception**, programlama dillerinde sıkça karşılaşılan ve ciddi sorunlara yol açabilen bir durumu anlatır. Uğraştığımız pek çok programlama dilinde **null** diye bir kavram var. Kısaca, bir değişkenin değeri yoksa ona null atayabiliriz şeklinde ifade etsek yeridir. Diğer yandan bu durum kodu yazarken bir null kontrolü yapmamızı da gerektirir. *(null değer taşıyabilen bir referansın kullanıldığı her yerde null olup olmadığını kontrol ederek hareket etmek)*. **OCaml** bu konuya şöyle bir felsefe ile yaklaşıyor; **"Eğer bir hata oluşacaksa çalışma zamanında değil derleme zamanında olmalıdır"**. Hımmm... Yani... O zaman null değer yoktur diyebiliriz. Evet, gerçekten de null diye bir kavram **OCaml** dilinde yok. Bunun yerine programcıya sunulan bir seçenek var; **Option**...
 
 Şöyle bir senaryo üzerinden ilerleyelim. Bir identity değerine göre kullanıcı aradığımızı varsayalım. Bunu şöyle yorumlamalıyız; "Kullanıcı ya vardır ya da yoktur"
 
@@ -1227,13 +1227,13 @@ let () =
 
 ![ocaml_58.png](./images/ocaml_58.png)
 
-Rust tarafından buraya geçmek gerçekten çok enteresan bir deneyim. Zira yıllardır Rust dilinde **Option**, **Result** gibi önemli veri yapılarını hangi felsefeden geldiğini çok da anlamadan hareket etmişim. Pişmanım :D Neyse neyse... Kodda bir abone listesinden **id** bazlı kullanıcı araması yaptığımız **recursive** bir fonksiyon bulunuyor. Kodun sentaxına bakarken çok fazla bir şey anlamayabiliriz ama **VS Code** ya da **Utop** fonksiyon imzasında **option** döndüğünü açıkça ilan eder.
+Rust tarafından buraya geçmek gerçekten çok enteresan bir deneyim. Zira yıllardır Rust dilinde **Option**, **Result** gibi önemli veri yapılarını hangi felsefeden geldiğini çok da anlamadan kullanmışım. Pişmanım :D Neyse neyse... Kodda bir abone listesinden **id** bazlı kullanıcı araması yaptığımız **recursive** bir fonksiyon bulunuyor. Kodun sentaksına bakarken çok fazla bir şey anlamayabiliriz ama **VS Code** ya da **Utop** fonksiyon imzasında **option** döndüğünü açıkça ilan eder.
 
 ![ocaml_59.png](./images/ocaml_59.png)
 
 ![ocaml_60.png](./images/ocaml_60.png)
 
-En önemli parça **say_hello** fonksiyonunda yer alan **match** ifadesidir. Burada **result** değişkeninin ya bir abone içerdiği ya da hiçbir şey içermediği durumları ele alınır. Velev ki match ifadesini eksik yazdık. İşte gelen tepkiler...
+En önemli parça **say_hello** fonksiyonunda yer alan **match** ifadesidir. Burada **result** değişkeninin ya bir abone içerdiği ya da hiçbir şey içermediği durumlar ele alınır. Velev ki match ifadesini eksik yazdık. İşte gelen tepkiler...
 
 ![ocaml_61.png](./images/ocaml_61.png)
 
@@ -1245,9 +1245,9 @@ Görüldüğü üzere kaçma şansımız yok. **None** olasılığını da mutla
 
 ### Yüksek Matematik Lisanslı Derleyici
 
-Programlama dillerini birçok açıdan ayrıştırabiliriz. Performans ve hıza odaklanıp bazı güvenli alanları kenara bırakanlar, iş modellerini gerçeğe yakın organize edip performanstan ödün verenler gibi. Ancak birde akademik ve endüstriyel olanlar şeklinde iki ana kategoriye de ayrılabilirler. Söz gelimi öğrenmesi görece daha zor olan **Haskell**, **Lisp** gibi diller matematiksel açıdan kusursuza yakındır ancak gerçek dünya problemlerini modellemeye çalıştığımızda bizi daha da zorlayabilir. Diğer yandan **C++**, **Java**, **Go** gibi iş bitirici türden yani endstüriyel çözümlere daha yatkın olan diller de vardır ancak bunlarda kritik hataların oluşmasına müsait dillerdir. Kaynaklar **OCaml** programlama dilinin akademik titizliğe sahip ve endüstriyel olarak da güçlü olduğuna vurgu yaparlar.
+Programlama dillerini birçok açıdan ayrıştırabiliriz. Performans ve hıza odaklanıp bazı güvenli alanları kenara bırakanlar, iş modellerini gerçeğe yakın organize edip performanstan ödün verenler gibi. Ancak bir de akademik ve endüstriyel olanlar şeklinde iki ana kategoriye de ayrılabilirler. Söz gelimi öğrenmesi görece daha zor olan **Haskell**, **Lisp** gibi diller matematiksel açıdan kusursuza yakındır ancak gerçek dünya problemlerini modellemeye çalıştığımızda bizi daha da zorlayabilir. Diğer yandan **C++**, **Java**, **Go** gibi iş bitirici türden yani endüstriyel çözümlere daha yatkın olan diller de vardır ancak bunlarda kritik hataların oluşmasına müsait dillerdir. Kaynaklar **OCaml** programlama dilinin akademik titizliğe sahip ve endüstriyel olarak da güçlü olduğuna vurgu yaparlar.
 
-Konuyu biraz daha açmaya çalışalım. **OCaml** derleyicisi **[Hindley-Milner](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)** olarak bilinen bir tip sistemini kullanılır. Bu aslında bazı matematiksel enstrümanları ve ispatları barındıran bir yapıdır. Evet evet yanlış duymadınız, matematiksel ispatları dedim :D **Hindley-Milner** tip sistemini baz alan derleyici kodları okuduktan sonra bunları hemen makine diline çevirmez. Öncesinde sembolik mantık ve küme teorisine göre bazı denklemler çözer. Bu çözümler yazılan kodun mantıksal olarak tutarlı olduğunun matematiksel ispatı için işletilir. Dolayısıyla kod derleniyorsa metmatiksel olarak doğrudur *(Akademik anlamda güvenilirdir)*. Bununla birlikte derleyici optimize edilmiş endüstüriyel makine kodu üretir. *(Şu an için ne sizi ne de kendimi bu formüllerle boğmak istemiyorum ama bir ara bu konuyu derinlemesine ele alacağım)*
+Konuyu biraz daha açmaya çalışalım. **OCaml** derleyicisi **[Hindley-Milner](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)** olarak bilinen bir tip sistemini kullanır. Bu aslında bazı matematiksel enstrümanları ve ispatları barındıran bir yapıdır. Evet evet yanlış duymadınız, matematiksel ispatları dedim :D **Hindley-Milner** tip sistemini baz alan derleyici kodları okuduktan sonra bunları hemen makine diline çevirmez. Öncesinde sembolik mantık ve küme teorisine göre bazı denklemler çözer. Bu çözümler yazılan kodun mantıksal olarak tutarlı olduğunun matematiksel ispatı için işletilir. Dolayısıyla kod derleniyorsa matematiksel olarak doğrudur *(Akademik anlamda güvenilirdir)*. Bununla birlikte derleyici optimize edilmiş endüstriyel makine kodu üretir. *(Şu an için ne sizi ne de kendimi bu formüllerle boğmak istemiyorum ama bir ara bu konuyu derinlemesine ele alacağım)*
 
 Bu tip sistemi aklımızın bir köşesinde dursun ve gelin bir örnekle konuyu pekiştirmeye çalışalım. Finansal operasyonların her adımı son derece kritiktir. Büyük bir finans sisteminde farklı türden para birimlerinin olması da kesindir. Örneğin Dolar, Sterlin, Euro gibi para birimlerini göz önüne alalım. Tümü **float** türünden olsalar da bunları birbiriyle yanlışlıkla toplamak faciaya neden olabilir. 1000 Dolar ile 1000 Euro'nun toplanabildiğini düşünün, korkunç... **OCaml** ile bu sorunu nasıl aşabiliriz gelin örnek kod parçası ile bakalım.
 
@@ -1318,7 +1318,7 @@ ve terminalden derlemenin sonucu.
 
 **OCaml** derleyicisi tüm para birimleri **float** veri türünü kullanıyor olsalar da, **CURRENCY** modülünden yapılan implementasyonlar sebebiyle farklı türlerin toplanmasına izin vermeyecektir *(Domain Driven Design tarafında Value Object türleri ile de benzer bir tedbir alınabilir değil mi? Bi düşünün ;) )* Buradaki felsefe şudur; **hataları testler yazarak değil tip sistemini kullanarak derleme zamanında engelle.** Endişe edeceğimiz noktalardan birisi belki de performans kaybıdır ancak burada **Zero Cost Abstraction** söz konusudur. Zira derleyici makine kodunu üretirken **Dollar.t**, **Euro.t** gibi ayrımları silip doğrudan **float** toplama işlemini ele alır.
 
-Bu genler **Rust** diline de geçmiştir ve hatta çok daha şık bir şekilde. Rust dili de **Zero Cost Abstraction** felsefesini benimse ve hatta parasal bir birimi şu şekilde yazmamıza izin veren **Newtype** desenini sunar.
+Bu genler **Rust** diline de geçmiştir ve hatta çok daha şık bir şekilde. Rust dili de **Zero Cost Abstraction** felsefesini benimser ve hatta parasal bir birimi şu şekilde yazmamıza izin veren **Newtype** desenini sunar.
 
 ```rust
 struct Dollar(f64);
@@ -1328,11 +1328,11 @@ C# tarafından olaya baktığımızda sanıyorum en yakın çözüm **record str
 
 ### Modüller Birinci Sınıfı Vatandaştır *(First Class Citizen)*
 
-Rahmetli babam çok uzun yıllar Almanya' da çalışmıştı. Savaş sonrası kalkınmaya çalışan Almanya' ya erken dönem gidenler arasındaydı. Orada edindiği dostluklar yurda temelli döndükten sonra da devam etmişti. Öyle ki beni çok seven birçok arkadaşı ne zaman onu ziyaret için ülkeye gelse küçük ya da büyük lego setleri getirirdi. Taa o zamanlarda kalma bir Lego sevgisi vardır içimde. Halen daha yapıyorum demek isterdim ama malum fiyatlar :|
+Rahmetli babam çok uzun yıllar Almanya'da çalışmıştı. Savaş sonrası kalkınmaya çalışan Almanya'ya erken dönem gidenler arasındaydı. Orada edindiği dostluklar yurda temelli döndükten sonra da devam etmişti. Öyle ki beni çok seven birçok arkadaşı ne zaman onu ziyaret için ülkeye gelse küçük ya da büyük lego setleri getirirdi. Taa o zamanlarda kalma bir Lego sevgisi vardır içimde. Halen daha yapıyorum demek isterdim ama malum fiyatlar :|
 
-**OCaml** açısından olaya bakacak olursak dilin en güçlü özelliklerinden birisi lego parçalarına benzettiğim modülleri birinci sınıf vatandaş olarak ele almasıdır. Bu bazı dillerde kullandığımız paket *(package)*, isim alanı *(namespace)* gibi kavramlardan çok farklı bir anlayıştır. Dahası var; modüller birbirlerine birer değişken gibi bağlanabilir, iç içe geçebilir ve **functor** adı verilen yapılarla bir modülden başka bir modül üretilebilir. Bir başka deyişle modül deyip geçmemek lazım :D
+**OCaml** açısından olaya bakacak olursak dilin en güçlü özelliklerinden birisi lego parçalarına benzettiğim modülleri birinci sınıf vatandaş olarak ele almasıdır. Bu, bazı dillerde kullandığımız paket *(package)*, isim alanı *(namespace)* gibi kavramlardan çok farklı bir anlayıştır. Dahası var; modüller birbirlerine birer değişken gibi bağlanabilir, iç içe geçebilir ve **functor** adı verilen yapılarla bir modülden başka bir modül üretilebilir. Bir başka deyişle modül deyip geçmemek lazım :D
 
-Şimdi konuyu koda döküp felsefesine gelmeye çalışalım. **C#** ve **Java** gibi dillerde bileşenler arasındaki bağımlılıklar hep başa dert olmuştur. Bunları yönetmek için **Dependency Injection** gibi desenler ortaya çıkmıştır. Bağımlılıklar genellikle soyutlamalar üzerinden *(interface, abstract class)* yönetilir ve diğer bileşenlere yapıcı metotlar, özellikler veya servis sağlayıcılar aracılığıyla enjekte edilir. Ne var ki bu işlem çalışma zamanında gerçekleşir ve doğal olarak bir ısınma maliyeti *(Warm-up cost)* vardır. Tahmin edin **OCaml** da bu nerede çözülür ;)
+Şimdi konuyu koda döküp felsefesine gelmeye çalışalım. **C#** ve **Java** gibi dillerde bileşenler arasındaki bağımlılıklar hep başa dert olmuştur. Bunları yönetmek için **Dependency Injection** gibi desenler ortaya çıkmıştır. Bağımlılıklar genellikle soyutlamalar üzerinden *(interface, abstract class)* yönetilir ve diğer bileşenlere yapıcı metotlar, özellikler veya servis sağlayıcılar aracılığıyla enjekte edilir. Ne var ki bu işlem çalışma zamanında gerçekleşir ve doğal olarak bir ısınma maliyeti *(Warm-up cost)* vardır. Tahmin edin, **OCaml**'da bu nerede çözülür ;)
 
 Klasik bir kod loglama işlevini ele alalım.
 
@@ -1343,7 +1343,7 @@ Klasik bir kod loglama işlevini ele alalım.
   Sözleşme üç fonksiyonu içeriyor: info, error ve warning.
   Ve üretilen diğer modüllerin bu fonksiyonları yazması gerekiyor.
 *)
-module type LOGGER = sig (* sig kelimesi signature' ın kısaltması *)
+module type LOGGER = sig (* sig kelimesi signature'ın kısaltması *)
   val info : string -> unit
   val error : string -> unit
   val warning : string -> unit
@@ -1407,14 +1407,14 @@ let () =
   FileAppTracer.log_data "This is a file log message."
 ```
 
-Örnekte terminal ekranına ve **log.txt** dosyasına basit log mesajları bırakan bir kod akışına yer veriliyor. Bir önceki örnektekine benzer şekilde bir sözleşme tanımlayarak işe başlıyoruz. Bu sözleşme gerçekten de bir imza *(signature)* tanımlıyor. **ConsoleLogger** ve **FileLogger** modülleri bu sözleşmeyi uygulayan iki farklı modül olarak ortaya çıkıyor. Daha sonra **AppTracer** adında bir **functor** tanımlanıyor. Fabrika görevi üstlenen bu modül, bir **LOGGER** modülünü parametre olarak alıyor ve bu loglayıcıyı kullanarak veri işleme sürecini izleyen bir servis sağlıyor. Yani bağımlılıkları enjekte ettiğimiz yer olarak düşünebiliriz. Son olarak, bu servisi hem **ConsoleLogger** hem de **FileLogger** ile çalıştırmak için gerekli modül bazında birleştirmeler yapılır. Tüm bu işlemler derleme zamanında gerçekleşir. Ayrıca yeni bir loglama yönetimi mi gerekti. Mevcut kodu bozmadan **SOLID**' in **Open/Closed** prensibine uygun olarak yeni bir modül tanımlayıp onu da **AppTracer**'a enjekte edebiliriz. Bu esneklik ve genişletilebilirlik, modüllerin birinci sınıf vatandaş olarak ele alınmasının önemli avantajlarından biridir.
+Örnekte terminal ekranına ve **log.txt** dosyasına basit log mesajları bırakan bir kod akışına yer veriliyor. Bir önceki örnektekine benzer şekilde bir sözleşme tanımlayarak işe başlıyoruz. Bu sözleşme gerçekten de bir imza *(signature)* tanımlıyor. **ConsoleLogger** ve **FileLogger** modülleri bu sözleşmeyi uygulayan iki farklı modül olarak ortaya çıkıyor. Daha sonra **AppTracer** adında bir **functor** tanımlanıyor. Fabrika görevi üstlenen bu modül, bir **LOGGER** modülünü parametre olarak alıyor ve bu loglayıcıyı kullanarak veri işleme sürecini izleyen bir servis sağlıyor. Yani bağımlılıkları enjekte ettiğimiz yer olarak düşünebiliriz. Son olarak, bu servisi hem **ConsoleLogger** hem de **FileLogger** ile çalıştırmak için gerekli modül bazında birleştirmeler yapılır. Tüm bu işlemler derleme zamanında gerçekleşir. Ayrıca yeni bir loglama yönetimi gerekirse, mevcut kodu bozmadan **SOLID**'in **Open/Closed** prensibine uygun olarak yeni bir modül tanımlayıp onu da **AppTracer**'a enjekte edebiliriz. Bu esneklik ve genişletilebilirlik, modüllerin birinci sınıf vatandaş olarak ele alınmasının önemli avantajlarından biridir.
 
 ![ocaml_65.png](./images/ocaml_65.png)
 
-Bağımlılıkların derleme zamanında çözülmesi, çalışma zamanındaki maliyetten kurtulmamızı sağlar *(Zero Cost Dependency Injection)*. Yani derleyici **AppTracer(ConsoleLogger)** ifadesini gördüğünde, **ConsoleLogger** modülünün içeriğini **AppTracer**'ın içine yerleştirerek makine kodu üretir ve böylece çalışma zamanında herhangi bir soyutlama ya da arayüz çağrısına gerek kalmaz. **Rust** dilinde benzer şekilde trait'ler aracılığıyla bağımlılıkların derleme zamanında çözülmesi sağlanır. Dolayısıyla **Rust**'ın **OCaml** dilindeki **signature** ve modül sisteminden genetik izler taşıdığını söyleyebiliriz. Diğer yandan C# veya Java dillerindeki generic yapıların ve interface'lerin OCaml'daki functor' ların daha zayıf bir versiyonu olduğu ifade edilir. Bunu şöyle açıklamak mümkün; **OCaml** functor'ları kullanarak davranışlar bütününü soyutlarken C# daha çok parametreleri soyutlar. Örneğin **C#** dilinde **generic** bir sınıf tanımlarken bu sınıfın hangi türde çalışacağını belirtiriz *(`<T>` kullanımı)* ancak bu türün hangi davranışlara sahip olması gerektiği konusunda daha az kontrolümüz olur. **OCaml**'da ise functor'lar aracılığıyla sadece türleri değil aynı zamanda bu türlerin sahip olması gereken fonksiyonları da tanımlarız. Dolayısıyla daha güçlü bir soyutlama ve daha sıkı bir tip güvenliği sağlamış oluruz.
+Bağımlılıkların derleme zamanında çözülmesi, çalışma zamanındaki maliyetten kurtulmamızı sağlar *(Zero Cost Dependency Injection)*. Yani derleyici **AppTracer(ConsoleLogger)** ifadesini gördüğünde, **ConsoleLogger** modülünün içeriğini **AppTracer**'ın içine yerleştirerek makine kodu üretir ve böylece çalışma zamanında herhangi bir soyutlama ya da arayüz çağrısına gerek kalmaz. **Rust** dilinde benzer şekilde trait'ler aracılığıyla bağımlılıkların derleme zamanında çözülmesi sağlanır. Dolayısıyla **Rust**'ın **OCaml** dilindeki **signature** ve modül sisteminden genetik izler taşıdığını söyleyebiliriz. Diğer yandan C# veya Java dillerindeki generic yapıların ve interface'lerin OCaml'daki functor'ların daha zayıf bir versiyonu olduğu ifade edilir. Bunu şöyle açıklamak mümkün; **OCaml** functor'ları kullanarak davranışlar bütününü soyutlarken C# daha çok parametreleri soyutlar. Örneğin **C#** dilinde **generic** bir sınıf tanımlarken bu sınıfın hangi türde çalışacağını belirtiriz *(`<T>` kullanımı)* ancak bu türün hangi davranışlara sahip olması gerektiği konusunda daha az kontrolümüz olur. **OCaml**'da ise functor'lar aracılığıyla sadece türleri değil aynı zamanda bu türlerin sahip olması gereken fonksiyonları da tanımlarız. Dolayısıyla daha güçlü bir soyutlama ve daha sıkı bir tip güvenliği sağlamış oluruz.
 
 ## Sonuç
 
-Bir merakla başladığım **OCaml** yolculuğumdaki hedefim bir programlama dili geliştirmek için gerekli becerileri öğrenmekti. Henüz bu noktanın çok uzağında olmakla birlikte severek kullandığım **Rust**'ın genlerini aldığı bu dille uğraşmak bir başka meydan okumaydı ama değdi. Öğrenmeye devam, umarım sizlere de yeni bir şeyler öğrenmek için ilham veren bir çalışma olmuştur. Bir başka çalışmada görüşmek üzere, hoşça kalın.
+Bir merakla başladığım **OCaml** yolculuğumdaki hedefim bir programlama dili geliştirmek için gerekli becerileri öğrenmekti. Henüz bu noktanın çok uzağında olmakla birlikte, severek kullandığım **Rust**'ın genlerini aldığı bu dille uğraşmak bir başka meydan okumaydı ama değdi. Öğrenmeye devam; umarım sizlere de yeni bir şeyler öğrenmek için ilham veren bir çalışma olmuştur. Bir başka çalışmada görüşmek üzere, hoşça kalın.
 
 [Bu çalışmadaki örneklere ve biraz daha fazlasına github reposundan ulaşabilirsiniz](https://github.com/buraksenyurt/learning-ocaml)
