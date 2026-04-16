@@ -1326,6 +1326,95 @@ struct Dollar(f64);
 
 C# tarafından olaya baktığımızda sanıyorum en yakın çözüm **record struct** gibi bir türden yararlanmak olacaktır. Nitekim **C#** ve **Java** gibi dillerde bu tür bir korumayı sağlamak için sınıflara başvurduğumuzda bellekte ekstra nesneler oluşmasına neden olup gereksiz **GC** döngülerine sebebiyet verebiliriz. Ancak bu söylediklerimi ispat edebilir miyim, ımmmm, hayır :D
 
-DEVAM EDECEK
+### Modüller Birinci Sınıfı Vatandaştır *(First Class Citizen)*
+
+Rahmetli babam çok uzun yıllar Almanya' da çalışmıştı. Savaş sonrası kalkınmaya çalışan Almanya' ya erken dönem gidenler arasındaydı. Orada edindiği dostluklar yurda temelli döndükten sonra da devam etmişti. Öyle ki beni çok seven birçok arkadaşı ne zaman onu ziyaret için ülkeye gelse küçük ya da büyük lego setleri getirirdi. Taa o zamanlarda kalma bir Lego sevgisi vardır içimde. Halen daha yapıyorum demek isterdim ama malum fiyatlar :|
+
+**OCaml** açısından olaya bakacak olursak dilin en güçlü özelliklerinden birisi lego parçalarına benzettiğim modülleri birinci sınıf vatandaş olarak ele almasıdır. Bu bazı dillerde kullandığımız paket *(package)*, isim alanı *(namespace)* gibi kavramlardan çok farklı bir anlayıştır. Dahası var; modüller birbirlerine birer değişken gibi bağlanabilir, iç içe geçebilir ve **functor** adı verilen yapılarla bir modülden başka bir modül üretilebilir. Bir başka deyişle modül deyip geçmemek lazım :D
+
+Şimdi konuyu koda döküp felsefesine gelmeye çalışalım. **C#** ve **Java** gibi dillerde bileşenler arasındaki bağımlılıklar hep başa dert olmuştur. Bunları yönetmek için **Dependency Injection** gibi desenler ortaya çıkmıştır. Bağımlılıklar genellikle soyutlamalar üzerinden *(interface, abstract class)* yönetilir ve diğer bileşenlere yapıcı metotlar, özellikler veya servis sağlayıcılar aracılığıyla enjekte edilir. Ne var ki bu işlem çalışma zamanında gerçekleşir ve doğal olarak bir ısınma maliyeti *(Warm-up cost)* vardır. Tahmin edin **OCaml** da bu nerede çözülür ;)
+
+Klasik bir kod loglama işlevini ele alalım.
+
+```ocaml
+(*
+  Öncelikle bir loglayıcının nasıl olması gerektiğini tarifleyelim.
+  Bunu bir modül tanımı aracılığı ile yapabiliriz.
+  Sözleşme üç fonksiyonu içeriyor: info, error ve warning.
+  Ve üretilen diğer modüllerin bu fonksiyonları yazması gerekiyor.
+*)
+module type LOGGER = sig (* sig kelimesi signature' ın kısaltması *)
+  val info : string -> unit
+  val error : string -> unit
+  val warning : string -> unit
+end
+
+(*
+  Şimdi bu loglayıcıdan örnek iki loglayıcı hazırlayalım.
+  Aslında LOGGER modülünden bir başka modül türetiyoruz gibi.
+
+  ConsoleLogger bir struct 
+  İçinde info, error ve warning isimli fonksiyonların asıl iş yapan sürümleri var.
+*)
+module ConsoleLogger : LOGGER = struct
+  let info message = Printf.printf "[INFO] %s\n" message
+  let error message = Printf.printf "[ERROR] %s\n" message
+  let warning message = Printf.printf "[WARNING] %s\n" message
+
+end
+
+(*
+  Aşağıdaki FileLogger modülü de LOGGER sözleşmesini uygulayan bir başka modül
+  ve bu sefer log mesajlarını bir dosyaya yazacak şekilde tasarlanmış durumda.
+*)
+module FileLogger : LOGGER = struct
+  let log_file = "log.txt"
+
+  let log message =
+    let oc = open_out_gen [Open_append; Open_creat] 0o666 log_file in
+    output_string oc (message ^ "\n");
+    close_out oc
+
+  let info message = log ("[INFO] " ^ message)
+  let error message = log ("[ERROR] " ^ message)
+  let warning message = log ("[WARNING] " ^ message)
+end
+
+(*
+  Elimizde bir soyutlama modülü ve bunu uygulayan iki farklı modül var.
+  Öyleyse başka bir modüle bu bağımlılığı enjekte edelim.
+
+  AppTracer, FUNCTOR (Fabrika) modülüdür. Bir Logger modülünü 
+  parametre olarak alır ve bir servis verir.
+*)
+module AppTracer (L : LOGGER) = struct
+  let log_data message =
+    L.info ("Processing data: " ^ message);
+    (* Veri işleme kodları burada olabilir *)
+    L.info "Data processed successfully."
+end
+
+(*
+  Şimdi bu servisi ConsoleLogger ve FileLogger ile çalıştırabiliriz.
+  Burada modül bazında gerekli birleştirmeler yapılır ama çalışma zamanında değil
+  derleme zamanında gerçekleşir.
+*)
+module ConsoleAppTracer = AppTracer(ConsoleLogger)
+module FileAppTracer = AppTracer(FileLogger)
+
+let () =
+  ConsoleAppTracer.log_data "This is a console log message.";
+  FileAppTracer.log_data "This is a file log message."
+```
+
+Örnekte terminal ekranına ve **log.txt** dosyasına basit log mesajları bırakan bir kod akışına yer veriliyor. Bir önceki örnektekine benzer şekilde bir sözleşme tanımlayarak işe başlıyoruz. Bu sözleşme gerçekten de bir imza *(signature)* tanımlıyor. **ConsoleLogger** ve **FileLogger** modülleri bu sözleşmeyi uygulayan iki farklı modül olarak ortaya çıkıyor. Daha sonra **AppTracer** adında bir **functor** tanımlanıyor. Fabrika görevi üstlenen bu modül, bir **LOGGER** modülünü parametre olarak alıyor ve bu loglayıcıyı kullanarak veri işleme sürecini izleyen bir servis sağlıyor. Yani bağımlılıkları enjekte ettiğimiz yer olarak düşünebiliriz. Son olarak, bu servisi hem **ConsoleLogger** hem de **FileLogger** ile çalıştırmak için gerekli modül bazında birleştirmeler yapılır. Tüm bu işlemler derleme zamanında gerçekleşir. Ayrıca yeni bir loglama yönetimi mi gerekti. Mevcut kodu bozmadan **SOLID**' in **Open/Closed** prensibine uygun olarak yeni bir modül tanımlayıp onu da **AppTracer**'a enjekte edebiliriz. Bu esneklik ve genişletilebilirlik, modüllerin birinci sınıf vatandaş olarak ele alınmasının önemli avantajlarından biridir.
+
+![ocaml_65.png](./images/ocaml_65.png)
+
+Bağımlılıkların derleme zamanında çözülmesi, çalışma zamanındaki maliyetten kurtulmamızı sağlar *(Zero Cost Dependency Injection)*. Yani derleyici **AppTracer(ConsoleLogger)** ifadesini gördüğünde, **ConsoleLogger** modülünün içeriğini **AppTracer**'ın içine yerleştirerek makine kodu üretir ve böylece çalışma zamanında herhangi bir soyutlama ya da arayüz çağrısına gerek kalmaz. **Rust** dilinde benzer şekilde trait'ler aracılığıyla bağımlılıkların derleme zamanında çözülmesi sağlanır. Dolayısıyla **Rust**'ın **OCaml** dilindeki **signature** ve modül sisteminden genetik izler taşıdığını söyleyebiliriz. Diğer yandan C# veya Java dillerindeki generic yapıların ve interface'lerin OCaml'daki functor' ların daha zayıf bir versiyonu olduğu ifade edilir. Bunu şöyle açıklamak mümkün; **OCaml** functor'ları kullanarak davranışlar bütününü soyutlarken C# daha çok parametreleri soyutlar. Örneğin **C#** dilinde **generic** bir sınıf tanımlarken bu sınıfın hangi türde çalışacağını belirtiriz *(`<T>` kullanımı)* ancak bu türün hangi davranışlara sahip olması gerektiği konusunda daha az kontrolümüz olur. **OCaml**'da ise functor'lar aracılığıyla sadece türleri değil aynı zamanda bu türlerin sahip olması gereken fonksiyonları da tanımlarız. Dolayısıyla daha güçlü bir soyutlama ve daha sıkı bir tip güvenliği sağlamış oluruz.
+
+## Sonuç
+
+Bir merakla başladığım **OCaml** yolculuğumdaki hedefim bir programlama dili geliştirmek için gerekli becerileri öğrenmekti. Henüz bu noktanın çok uzağında olmakla birlikte severek kullandığım **Rust**'ın genlerini aldığı bu dille uğraşmak bir başka meydan okumaydı ama değdi. Öğrenmeye devam, umarım sizlere de yeni bir şeyler öğrenmek için ilham veren bir çalışma olmuştur. Bir başka çalışmada görüşmek üzere, hoşça kalın.
 
 [Bu çalışmadaki örneklere ve biraz daha fazlasına github reposundan ulaşabilirsiniz](https://github.com/buraksenyurt/learning-ocaml)
