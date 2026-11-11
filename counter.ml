@@ -66,11 +66,11 @@ Printf.printf "My Counter: %d\n" (get my_counter);;
   ref türü iterasyonlarda state'in değişmesi gereken durumlarda da ele alınabilir.
   Örneğin bir listedeki elemanların ortalamasını hesaplayacak bir fonksiyon geliştirelim.
 *)
-let avrage lst =
+let average lst =
   let sum = ref 0 in
   let count = ref 0 in
   List.iter (fun x -> sum := !sum + x; count := !count + 1) lst;
   if !count = 0 then None else Some (!sum / !count)
 
 let numbers = [1; 2; 3; 4; 5; 10;];;
-Printf.printf "Average: %d\n" (match avrage numbers with Some avg -> avg | None -> 0);;
+Printf.printf "Average: %d\n" (match average numbers with Some avg -> avg | None -> 0);;

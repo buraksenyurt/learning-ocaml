@@ -57,8 +57,9 @@ end
 
 (*
   Şimdi bu servisi ConsoleLogger ve FileLogger ile çalıştırabiliriz.
-  Burada modül bazında gerekli birleştirmeler yapılır ama çalışma zamanında değil
-  derleme zamanında gerçekleşir.
+  AppTracer(ConsoleLogger) uygulamasının tip uyumu derleme zamanında kontrol edilir.
+  Uygulamanın kendisi ise (flambda gibi agresif bir optimizasyon yoksa) program başlarken,
+  modüller ilklendirilirken bir kez yapılır; L.info çağrıları da dolaylı (indirect) çağrılardır.
 *)
 module ConsoleAppTracer = AppTracer(ConsoleLogger)
 module FileAppTracer = AppTracer(FileLogger)
@@ -66,3 +67,22 @@ module FileAppTracer = AppTracer(FileLogger)
 let () =
   ConsoleAppTracer.log_data "This is a console log message.";
   FileAppTracer.log_data "This is a file log message."
+
+(*
+  First-class modules (birinci sınıf modüller)
+
+  Functor'lar modülden modül üretir ve hangi modülün kullanılacağı kodu yazarken bellidir.
+  First-class modules ise bir modülü (module M : SIG) söz dizimiyle sıradan bir DEĞER olarak
+  paketlememizi sağlar. Böylece modül bir fonksiyondan döndürülebilir, parametre olarak geçilebilir,
+  bir listede tutulabilir ve hangisinin kullanılacağına çalışma zamanında karar verilebilir.
+*)
+let pick_logger use_file : (module LOGGER) =
+  if use_file then (module FileLogger) else (module ConsoleLogger)
+
+(* Parametredeki (module L : LOGGER) deseni, gelen değeri tekrar bir modüle açar *)
+let log_with (module L : LOGGER) message = L.warning message
+
+let () =
+  (* Programa herhangi bir argüman verilirse dosyaya, verilmezse konsola loglanır *)
+  let logger = pick_logger (Array.length Sys.argv > 1) in
+  log_with logger "Logger was chosen at runtime."

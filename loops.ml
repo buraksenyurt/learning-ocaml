@@ -79,8 +79,19 @@ let average arr =
   done;
   float_of_int !sum /. float_of_int (Array.length arr)
 
+(* Aynı fonksiyonun while döngüsü ile yazılmış hali *)
+let average_while arr =
+  let sum = ref 0 in
+  let i = ref 0 in
+  while !i < Array.length arr do
+    sum := !sum + arr.(!i);
+    i := !i + 1
+  done;
+  float_of_int !sum /. float_of_int (Array.length arr)
+
 let arr = generate_random_list 10 |> Array.of_list;;
 Printf.printf "Average: %f\n" (average arr);;
+Printf.printf "Average (while): %f\n" (average_while arr);;
 
 (* 
   let himm = "Bu örneklerde for ve while döngülerini kullanarak listeler ve diziler üzerinde işlemler yaptık.";;
