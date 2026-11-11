@@ -36,9 +36,7 @@ let ( let* ) = Result.bind
 *)
 
 (* Şimdilik == ve != operatörlerini destekliyor *)
-type operator =
-  | Eq
-  | Neq
+type operator = Eq | Neq
 
 (*
   condition yapısı, bir sütun adı, bir operatör ve bir hedef değer içerir.
@@ -46,11 +44,7 @@ type operator =
 
   { column = "CategoryId"; op = Eq; target = Db.VInt 1 }
 *)
-type condition = {
-  column: string;
-  op:operator;
-  target: Db.value;
-}
+type condition = { column : string; op : operator; target : Db.value }
 
 (*
   Bu kısımda sorgunun tamamını temsil eder. 
@@ -63,8 +57,9 @@ type condition = {
   İleride 'get 'Name', 'Id'' gibi belirli sütunları seçme desteği gelirse buraya bir alan eklenebilir.
 *)
 type query = {
-  table_name:string;
-  condition: condition option; (* Opsiyonel bir condition tanımı. Zira where ifadesi her zaman gerekli olmayabilir.*)
+  table_name : string;
+  condition : condition option;
+      (* Opsiyonel bir condition tanımı. Zira where ifadesi her zaman gerekli olmayabilir.*)
 }
 
 (*
@@ -81,8 +76,10 @@ type token =
   | TInt of int (* Integer değerleri temsil eder *)
   | TEq (* '==' operatörünü temsil eder *)
   | TNeq (* '!=' operatörünü temsil eder *)
-  | TSemicolon (* ; karakterini temsil eder ki bununla ifadenin sonunu belirtiyoruz *)
-  | TIdentifier of string (* Tırnaksız yazılan ve keyword olmayan kelimeleri temsil eder. Parser bunları anlamlı bir hata mesajı vermek için kullanır *)
+  | TSemicolon
+    (* ; karakterini temsil eder ki bununla ifadenin sonunu belirtiyoruz *)
+  | TIdentifier of string
+(* Tırnaksız yazılan ve keyword olmayan kelimeleri temsil eder. Parser bunları anlamlı bir hata mesajı vermek için kullanır *)
 
 (*
   Lexer için bazı yardımcı fonksiyonlar lazım. Örneğin karakterin harf olup olmadığını kontrol eden bir fonksiyon gibi.
@@ -103,45 +100,47 @@ let tokenize str : (token list, string) result =
   let length = String.length str in
 
   let rec aux index acc =
-    if index>= length then Ok (List.rev acc)
-    else match str.[index] with
-      | ' ' | '\t' | '\n' | '\r' -> aux(index +1) acc
-      | ';' -> aux (index +1) (TSemicolon :: acc)
+    if index >= length then Ok (List.rev acc)
+    else
+      match str.[index] with
+      | ' ' | '\t' | '\n' | '\r' -> aux (index + 1) acc
+      | ';' -> aux (index + 1) (TSemicolon :: acc)
       | '!' ->
-        if index + 1 < length && str.[index+1] = '=' then
-          aux (index + 2) (TNeq :: acc)
-        else
-          Error (Printf.sprintf "Unexpected character '!' at index %d" index)
+          if index + 1 < length && str.[index + 1] = '=' then
+            aux (index + 2) (TNeq :: acc)
+          else
+            Error (Printf.sprintf "Unexpected character '!' at index %d" index)
       | '=' ->
-        if index + 1 < length && str.[index+1] = '=' then
-          aux (index +2) (TEq :: acc)
-        else
-          aux (index +1) (TAssign :: acc)
+          if index + 1 < length && str.[index + 1] = '=' then
+            aux (index + 2) (TEq :: acc)
+          else aux (index + 1) (TAssign :: acc)
       | '\'' ->
+          let rec read_string j =
+            if j < length && str.[j] <> '\'' then read_string (j + 1) else j
+          in
 
-        let rec read_string j = 
-          if j< length && str.[j] <> '\'' then read_string (j+1)
-          else j
-        in
-
-        let end_index = read_string (index + 1) in
-        (* Kapanış tırnağını bulamadan metnin sonuna geldiysek string kapatılmamış demektir *)
-        if end_index >= length then
-          Error (Printf.sprintf "Unterminated string starting at index %d" index)
-        else
-          let content = String.sub str (index + 1) (end_index - index - 1) in
-          aux (end_index+1) (TString content :: acc)
+          let end_index = read_string (index + 1) in
+          (* Kapanış tırnağını bulamadan metnin sonuna geldiysek string kapatılmamış demektir *)
+          if end_index >= length then
+            Error
+              (Printf.sprintf "Unterminated string starting at index %d" index)
+          else
+            let content = String.sub str (index + 1) (end_index - index - 1) in
+            aux (end_index + 1) (TString content :: acc)
       | c when is_letter c ->
-
           let rec read_word j =
-            if j < length && (is_letter str.[j] || is_digit str.[j] || str.[j] = '_') then read_word (j + 1)
+            if
+              j < length
+              && (is_letter str.[j] || is_digit str.[j] || str.[j] = '_')
+            then read_word (j + 1)
             else j
           in
 
           let end_index = read_word index in
           let word = String.sub str index (end_index - index) in
-        
-          let token = match String.lowercase_ascii word with
+
+          let token =
+            match String.lowercase_ascii word with
             | "table" -> TTable
             | "get" -> TGet
             | "all" -> TAll
@@ -149,18 +148,16 @@ let tokenize str : (token list, string) result =
             | _ -> TIdentifier word
           in
           aux end_index (token :: acc)
-       | c when is_digit c ->
-
+      | c when is_digit c ->
           let rec read_num j =
-            if j < length && is_digit str.[j] then read_num (j + 1)
-            else j
+            if j < length && is_digit str.[j] then read_num (j + 1) else j
           in
 
           let end_index = read_num index in
-          let num = int_of_string (String.sub str index ( end_index - index)) in
+          let num = int_of_string (String.sub str index (end_index - index)) in
 
-          aux end_index (TInt  num :: acc)
-      | c-> Error (Printf.sprintf "Invalid character %c" c)
+          aux end_index (TInt num :: acc)
+      | c -> Error (Printf.sprintf "Invalid character %c" c)
   in
   aux 0 []
 
@@ -178,10 +175,7 @@ let tokenize str : (token list, string) result =
   Değer olarak hem TInt hem de TString kabul edildiği için where 'Name' == 'Phone' gibi
   metinsel karşılaştırmalar da yapılabiliyor.
 *)
-let operator_of_token = function
-  | TEq -> Some Eq
-  | TNeq -> Some Neq
-  | _ -> None
+let operator_of_token = function TEq -> Some Eq | TNeq -> Some Neq | _ -> None
 
 let value_of_token = function
   | TInt n -> Some (Db.VInt n)
@@ -197,10 +191,18 @@ let parse_where tokens : (condition option, string) result =
       match (operator_of_token op_token, value_of_token value_token) with
       | Some op, Some target -> Ok (Some { column; op; target })
       | None, _ -> Error "Syntax error in WHERE clause: Expected '==' or '!='!"
-      | _, None -> Error "Syntax error in WHERE clause: Expected a number or a quoted string!")
-  | [ TWhere; TString _; _; _ ] -> Error "Syntax error: Missing ';' at the end of the query!"
+      | _, None ->
+          Error
+            "Syntax error in WHERE clause: Expected a number or a quoted \
+             string!")
+  | [ TWhere; TString _; _; _ ] ->
+      Error "Syntax error: Missing ';' at the end of the query!"
   | TWhere :: TIdentifier name :: _ ->
-      Error (Printf.sprintf "Syntax error in WHERE clause: Column names must be quoted, e.g. '%s'" name)
+      Error
+        (Printf.sprintf
+           "Syntax error in WHERE clause: Column names must be quoted, e.g. \
+            '%s'"
+           name)
   | _ -> Error "Syntax error in WHERE clause!"
 
 let parse token_list : (query, string) result =
@@ -208,7 +210,10 @@ let parse token_list : (query, string) result =
   | TTable :: TAssign :: TString table_name :: TGet :: TAll :: rest ->
       let* condition = parse_where rest in
       Ok { table_name; condition }
-  | _ -> Error "Syntax error: Expected 'table=...' followed by 'get all' and optional 'where' clause!"
+  | _ ->
+      Error
+        "Syntax error: Expected 'table=...' followed by 'get all' and optional \
+         'where' clause!"
 
 (*
   Bir satırın koşulu sağlayıp sağlamadığını kontrol eder.
@@ -217,7 +222,7 @@ let parse token_list : (query, string) result =
   her tür için ayrı bir dal yazmamıza gerek kalmıyor.
   Satırda ilgili sütun hiç yoksa satır koşulu sağlamıyor kabul edilir.
 *)
-let check_condition (r:Db.row) (cond:condition) : (bool, string) result =
+let check_condition (r : Db.row) (cond : condition) : (bool, string) result =
   match List.assoc_opt cond.column r with
   | None -> Ok false
   | Some v -> (
@@ -226,7 +231,10 @@ let check_condition (r:Db.row) (cond:condition) : (bool, string) result =
           match cond.op with
           | Eq -> Ok (v = cond.target)
           | Neq -> Ok (v <> cond.target))
-      | _ -> Error (Printf.sprintf "Type mismatch in condition for column '%s'" cond.column))
+      | _ ->
+          Error
+            (Printf.sprintf "Type mismatch in condition for column '%s'"
+               cond.column))
 
 (*
   Satırları koşula göre süzer. check_condition hata döndürebildiği için List.filter yerine
@@ -243,9 +251,10 @@ let filter_rows cond rows : (Db.row list, string) result =
   in
   Ok (List.rev kept)
 
-let execute (q:query) (db:Db.database) : (Db.row list, string) result =
+let execute (q : query) (db : Db.database) : (Db.row list, string) result =
   match List.assoc_opt q.table_name db with
-  | None -> Error (Printf.sprintf "Table '%s' not found in database!" q.table_name)
+  | None ->
+      Error (Printf.sprintf "Table '%s' not found in database!" q.table_name)
   | Some rows -> (
       match q.condition with
       | Some cond -> filter_rows cond rows
@@ -256,7 +265,7 @@ let execute (q:query) (db:Db.database) : (Db.row list, string) result =
   let* sayesinde tokenize -> parse -> execute adımları sırayla çalışır,
   herhangi biri Error döndürürse sonraki adımlar hiç çalışmaz.
 *)
-let run (db:Db.database) (input:string) : (Db.row list, string) result =
+let run (db : Db.database) (input : string) : (Db.row list, string) result =
   let* tokens = tokenize input in
   let* query = parse tokens in
   execute query db
@@ -266,5 +275,7 @@ let string_of_value = function
   | Db.VInt n -> string_of_int n
   | Db.VString s -> "'" ^ s ^ "'"
 
-let string_of_row (r:Db.row) =
-  r |> List.map (fun (column, v) -> column ^ "=" ^ string_of_value v) |> String.concat ", "
+let string_of_row (r : Db.row) =
+  r
+  |> List.map (fun (column, v) -> column ^ "=" ^ string_of_value v)
+  |> String.concat ", "

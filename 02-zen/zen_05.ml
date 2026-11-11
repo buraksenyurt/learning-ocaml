@@ -4,7 +4,8 @@
   Sözleşme üç fonksiyonu içeriyor: info, error ve warning.
   Ve üretilen diğer modüllerin bu fonksiyonları yazması gerekiyor.
 *)
-module type LOGGER = sig (* sig kelimesi signature' ın kısaltması *)
+module type LOGGER = sig
+  (* sig kelimesi signature' ın kısaltması *)
   val info : string -> unit
   val error : string -> unit
   val warning : string -> unit
@@ -21,7 +22,6 @@ module ConsoleLogger : LOGGER = struct
   let info message = Printf.printf "[INFO] %s\n" message
   let error message = Printf.printf "[ERROR] %s\n" message
   let warning message = Printf.printf "[WARNING] %s\n" message
-
 end
 
 (*
@@ -32,7 +32,7 @@ module FileLogger : LOGGER = struct
   let log_file = "log.txt"
 
   let log message =
-    let oc = open_out_gen [Open_append; Open_creat] 0o666 log_file in
+    let oc = open_out_gen [ Open_append; Open_creat ] 0o666 log_file in
     output_string oc (message ^ "\n");
     close_out oc
 
@@ -61,8 +61,8 @@ end
   Uygulamanın kendisi ise (flambda gibi agresif bir optimizasyon yoksa) program başlarken,
   modüller ilklendirilirken bir kez yapılır; L.info çağrıları da dolaylı (indirect) çağrılardır.
 *)
-module ConsoleAppTracer = AppTracer(ConsoleLogger)
-module FileAppTracer = AppTracer(FileLogger)
+module ConsoleAppTracer = AppTracer (ConsoleLogger)
+module FileAppTracer = AppTracer (FileLogger)
 
 let () =
   ConsoleAppTracer.log_data "This is a console log message.";

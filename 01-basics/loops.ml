@@ -16,7 +16,6 @@ let count_for n =
     Printf.printf "%d," i
   done;
   Printf.printf "\n"
-;;
 
 let count_while n =
   let i = ref 1 in
@@ -39,7 +38,8 @@ Kaç elemanlı bir liste istediğimizi parametre olarak alalım ve geriye o kada
 *)
 
 let generate_random_list n =
-  Random.self_init (); (* Rastgele sayı üreteciyi başlat *)
+  Random.self_init ();
+  (* Rastgele sayı üreteciyi başlat *)
   let numbers = ref [] in
   for _ = 1 to n do
     let random_number = Random.int 100 in
@@ -49,7 +49,9 @@ let generate_random_list n =
 
 let random_numbers = generate_random_list 10;;
 
-Printf.printf "Random numbers: %s\n" (String.concat "; " (List.map string_of_int random_numbers));;
+Printf.printf "Random numbers: %s\n"
+  (String.concat "; " (List.map string_of_int random_numbers))
+;;
 
 (* Aynı fonksiyonu birde while döngüsü ile yazmaya çalışalım *)
 let generate_random_list_while n =
@@ -65,14 +67,16 @@ let generate_random_list_while n =
 
 let random_numbers_while = generate_random_list_while 10;;
 
-Printf.printf "Random numbers (while): %s\n" (String.concat "; " (List.map string_of_int random_numbers_while));;
+Printf.printf "Random numbers (while): %s\n"
+  (String.concat "; " (List.map string_of_int random_numbers_while))
+;;
 
 (*
   Bir fonksiyona parametre olarak gelen Array içerisindeki sayıların ortalamasını bulan bir fonksiyon yazalım.
   Sayı dizisini for döngüsü ile dönerek toplamını bulalım ve ardından ortalamayı hesaplayalım.
 *)
 
-let average arr = 
+let average arr =
   let sum = ref 0 in
   for i = 0 to Array.length arr - 1 do
     sum := !sum + arr.(i)
@@ -90,6 +94,7 @@ let average_while arr =
   float_of_int !sum /. float_of_int (Array.length arr)
 
 let arr = generate_random_list 10 |> Array.of_list;;
+
 Printf.printf "Average: %f\n" (average arr);;
 Printf.printf "Average (while): %f\n" (average_while arr);;
 
@@ -109,13 +114,15 @@ let generate_matrix row_count col_count =
   for i = 0 to row_count - 1 do
     for j = 0 to col_count - 1 do
       matrix.(i).(j) <- Random.int 2
-    done;
+    done
   done;
   matrix
 
 let matrix = generate_matrix 5 8;;
+
 Printf.printf "Generated Matrix:\n";
-Array.iter (fun row ->
-  Array.iter (fun value -> Printf.printf "%d " value) row;
-  Printf.printf "\n"
-) matrix;;
+Array.iter
+  (fun row ->
+    Array.iter (fun value -> Printf.printf "%d " value) row;
+    Printf.printf "\n")
+  matrix

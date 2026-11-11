@@ -38,8 +38,11 @@ let rec repl () =
     try
       match String.trim (read_line ()) with
       | "exit" | "quit" -> Stop
-      | "cls" | "clear" -> clear_screen (); Continue
-      | "" -> Continue (* Boş giriş yapıldığında tekrar prompt göstermesi için *)
+      | "cls" | "clear" ->
+          clear_screen ();
+          Continue
+      | "" ->
+          Continue (* Boş giriş yapıldığında tekrar prompt göstermesi için *)
       | input ->
           Printf.printf "Result: %d\n" (Evaluator.evaluate input);
           Continue
@@ -50,21 +53,24 @@ let rec repl () =
       Böyle bir durumda programın çökmesi yerine hatayı yakalayıp kullanıcıya bir mesaj gösteriyor
       ve REPL döngüsüne devam ediyoruz.
     *)
-    | Failure msg -> Printf.printf "Error: %s\n" msg; Continue
+    | Failure msg ->
+        Printf.printf "Error: %s\n" msg;
+        Continue
     (*
       Ctrl+D (Unix) veya Ctrl+Z (Windows) ile girdi akışı kapatıldığında read_line
       End_of_file istisnası fırlatır. Bunu yakalamazsak program çöker.
     *)
-    | End_of_file -> print_newline (); Stop
+    | End_of_file ->
+        print_newline ();
+        Stop
   in
-  match next with
-  | Continue -> repl ()
-  | Stop -> print_endline "Goodbye!"
+  match next with Continue -> repl () | Stop -> print_endline "Goodbye!"
 
 (*
   Ana program kodu repl fonksiyonunu çağırarak
   kullanıcıdan girdi almaya başlar.
 *)
 let () =
-  print_endline "Welcome to the simple OCaml calculator! Type 'exit' or 'quit' to leave.";
+  print_endline
+    "Welcome to the simple OCaml calculator! Type 'exit' or 'quit' to leave.";
   repl ()

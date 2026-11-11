@@ -17,15 +17,19 @@ let test_power () =
 
 let test_factorial_negative () =
   let value = -1 in
-  Alcotest.check_raises "factorial of negative number" (Failure "Negative input not allowed for factorial")
-    (fun () -> ignore (Math.factorial value))
+  Alcotest.check_raises "factorial of negative number"
+    (Failure "Negative input not allowed for factorial") (fun () ->
+      ignore (Math.factorial value))
 
 let () =
   let open Alcotest in
-  run "Math Tests" [
-    "Math Tests", [
-       test_case "factorial of 5" `Quick test_factorial;
-       test_case "power of 2^3" `Quick test_power;
-       test_case "factorial of negative number" `Quick test_factorial_negative;   
-    ];
-  ];
+  run "Math Tests"
+    [
+      ( "Math Tests",
+        [
+          test_case "factorial of 5" `Quick test_factorial;
+          test_case "power of 2^3" `Quick test_power;
+          test_case "factorial of negative number" `Quick
+            test_factorial_negative;
+        ] );
+    ]

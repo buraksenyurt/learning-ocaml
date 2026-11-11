@@ -12,13 +12,31 @@
 
 (* Örnek bir veritabanı. Gerçek bir veri kaynağı yerine bellekte duran listeler kullanıyoruz. *)
 let sample_db : Db.database =
-  [ ( "Products",
-      [ [ ("Id", Db.VInt 1); ("Name", Db.VString "Laptop"); ("CategoryId", Db.VInt 1) ];
-        [ ("Id", Db.VInt 2); ("Name", Db.VString "Phone"); ("CategoryId", Db.VInt 1) ];
-        [ ("Id", Db.VInt 3); ("Name", Db.VString "Table"); ("CategoryId", Db.VInt 2) ] ] );
+  [
+    ( "Products",
+      [
+        [
+          ("Id", Db.VInt 1);
+          ("Name", Db.VString "Laptop");
+          ("CategoryId", Db.VInt 1);
+        ];
+        [
+          ("Id", Db.VInt 2);
+          ("Name", Db.VString "Phone");
+          ("CategoryId", Db.VInt 1);
+        ];
+        [
+          ("Id", Db.VInt 3);
+          ("Name", Db.VString "Table");
+          ("CategoryId", Db.VInt 2);
+        ];
+      ] );
     ( "Categories",
-      [ [ ("Id", Db.VInt 1); ("Name", Db.VString "Electronics") ];
-        [ ("Id", Db.VInt 2); ("Name", Db.VString "Furniture") ] ] ) ]
+      [
+        [ ("Id", Db.VInt 1); ("Name", Db.VString "Electronics") ];
+        [ ("Id", Db.VInt 2); ("Name", Db.VString "Furniture") ];
+      ] );
+  ]
 
 let print_rows rows =
   match rows with
@@ -48,5 +66,7 @@ let rec repl () =
           repl ())
 
 let () =
-  print_endline "Welcome to OQL! Tables: Products, Categories. Type 'exit' or 'quit' to leave.";
+  print_endline
+    "Welcome to OQL! Tables: Products, Categories. Type 'exit' or 'quit' to \
+     leave.";
   repl ()

@@ -2,21 +2,19 @@
 
 (* A recursive function to sum all elements in a list *)
 let rec sum_of list =
-  match list with
-  | [] -> 0
-  | head :: tail -> head + sum_of tail;;
+  match list with [] -> 0 | head :: tail -> head + sum_of tail
 
 (* Test data *)
-let test_list_1 = [1; 4; 4; 2; 6; 7];;
-let test_list_2 = [0; 2; 4; 9; -4; -5];;
+let test_list_1 = [ 1; 4; 4; 2; 6; 7 ]
+let test_list_2 = [ 0; 2; 4; 9; -4; -5 ]
 
 (* Calculate sums *)
-let sum1 = sum_of test_list_1;;
-let sum2 = sum_of test_list_2;;
+let sum1 = sum_of test_list_1
+let sum2 = sum_of test_list_2
 
 (* Print results *)
-let () = Printf.printf "Sum of [1;4;4;2;6;7] = %d\n" sum1;;
-let () = Printf.printf "Sum of [0;2;4;9;-4;-5] = %d\n" sum2;;
+let () = Printf.printf "Sum of [1;4;4;2;6;7] = %d\n" sum1
+let () = Printf.printf "Sum of [0;2;4;9;-4;-5] = %d\n" sum2
 
 (* Explanation of how the recursive function works:
    For list [1;4;4;2;6;7]:

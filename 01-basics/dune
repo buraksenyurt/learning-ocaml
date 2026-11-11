@@ -1,7 +1,21 @@
 ;; Bu klasördeki dosyalar utop/ocaml ile adım adım denenmek üzere yazılmış öğrenme
 ;; örnekleri. Bilerek kullanılmayan değer, değişken ve constructor içerdikleri için
 ;; "unused" uyarılarını kapatıyoruz. Diğer uyarılar ve hatalar aynen geçerli.
+
 (executables
- (names arrays basic_arithmetic counter functions_examples hello_world hello_world2 hello_world3 loops mut_records options_example records_and_variants recursive_sum tuple_and_lists)
+ (names
+  arrays
+  basic_arithmetic
+  counter
+  functions_examples
+  hello_world
+  hello_world2
+  hello_world3
+  loops
+  mut_records
+  options_example
+  records_and_variants
+  recursive_sum
+  tuple_and_lists)
  (flags
   (:standard -w -26-27-32-35-37)))

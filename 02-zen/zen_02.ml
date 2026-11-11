@@ -1,4 +1,4 @@
-let big_data = [|10.4; 20.5; 30.6; 1.0; 3.14 |]
+let big_data = [| 10.4; 20.5; 30.6; 1.0; 3.14 |]
 
 let scale_data factor data =
   for i = 0 to Array.length data - 1 do

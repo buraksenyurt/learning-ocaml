@@ -7,6 +7,7 @@ let generate_random_list n =
   done;
   !numbers
 
-let () = 
+let () =
   let random_numbers = generate_random_list 10 in
-  Printf.printf "Random numbers: %s\n" (String.concat "; " (List.map string_of_int random_numbers))
+  Printf.printf "Random numbers: %s\n"
+    (String.concat "; " (List.map string_of_int random_numbers))

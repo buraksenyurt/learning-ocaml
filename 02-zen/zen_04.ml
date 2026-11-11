@@ -10,6 +10,7 @@
 *)
 module type CURRENCY = sig
   type t
+
   val create : float -> t
   val value : t -> float
   val add : t -> t -> t
@@ -21,6 +22,7 @@ end
 *)
 module Euro : CURRENCY = struct
   type t = float
+
   let create x = x
   let value x = x
   let add x y = x +. y
@@ -28,6 +30,7 @@ end
 
 module Dollar : CURRENCY = struct
   type t = float
+
   let create x = x
   let value x = x
   let add x y = x +. y
@@ -35,6 +38,7 @@ end
 
 module Sterlin : CURRENCY = struct
   type t = float
+
   let create x = x
   let value x = x
   let add x y = x +. y
@@ -45,7 +49,7 @@ end
   birbirleriyle toplama işlemi yapmaya çalışalım.
 *)
 let payment_limit = Euro.create 1000.0
-let payment_limit2 = Dollar.create 750.0 
+let payment_limit2 = Dollar.create 750.0
 let payment_limit3 = Sterlin.create 650.0
 
 let () =
@@ -53,8 +57,8 @@ let () =
   (* let total_payment = Euro.add payment_limit payment_limit2 *)
 
   (* Ancak aşağıdaki kodlar sorunsuz bir şekilde çalışacaktır *)
-
   let total_payment_euro = Euro.add payment_limit (Euro.create 200.0) in
   Printf.printf "Total payment in Euro: %.2f\n" (Euro.value total_payment_euro);
   let total_payment_dollar = Dollar.add payment_limit2 (Dollar.create 150.0) in
-  Printf.printf "Total payment in Dollar: %.2f\n" (Dollar.value total_payment_dollar)
+  Printf.printf "Total payment in Dollar: %.2f\n"
+    (Dollar.value total_payment_dollar)
