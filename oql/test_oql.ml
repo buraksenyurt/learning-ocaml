@@ -32,14 +32,20 @@ let pp_token fmt t =
   | Oql.TInt n        -> Format.fprintf fmt "TInt(%d)" n
   | Oql.TEq           -> Format.fprintf fmt "TEq"
   | Oql.TNeq          -> Format.fprintf fmt "TNeq"
-  | Oql.TEOF          -> Format.fprintf fmt "TEOF"
+  | Oql.TSemicolon    -> Format.fprintf fmt "TSemicolon"
   | Oql.TIdentifier s -> Format.fprintf fmt "TIdentifier(%s)" s
 
 let token       = Alcotest.testable pp_token ( = )
 let token_list  = Alcotest.list token
 
+(* tokenize artık (token list, string) result döndürüyor *)
+let tokenize_result = Alcotest.result token_list Alcotest.string
+
 let check_tokens label input expected =
-  Alcotest.check token_list label expected (Oql.tokenize input)
+  Alcotest.check tokenize_result label (Ok expected) (Oql.tokenize input)
+
+let check_tokenize_error label input message =
+  Alcotest.check tokenize_result label (Error message) (Oql.tokenize input)
 
 let test_empty_string () =
   check_tokens "empty string produces no tokens" "" []
@@ -48,7 +54,7 @@ let test_whitespace_only () =
   check_tokens "whitespace-only produces no tokens" "   \t\n" []
 
 let test_semicolon () =
-  check_tokens "semicolon becomes TEOF" ";" [ Oql.TEOF ]
+  check_tokens "semicolon becomes TSemicolon" ";" [ Oql.TSemicolon ]
 
 let test_assign_operator () =
   check_tokens "single = becomes TAssign" "=" [ Oql.TAssign ]
@@ -102,7 +108,7 @@ let test_full_query_with_eq () =
     [ Oql.TTable; Oql.TAssign; Oql.TString "Products";
       Oql.TGet; Oql.TAll;
       Oql.TWhere; Oql.TString "CategoryId"; Oql.TEq; Oql.TInt 1;
-      Oql.TEOF ]
+      Oql.TSemicolon ]
 
 let test_full_query_with_neq () =
   check_tokens "full query with != tokenises correctly"
@@ -110,28 +116,27 @@ let test_full_query_with_neq () =
     [ Oql.TTable; Oql.TAssign; Oql.TString "Orders";
       Oql.TGet; Oql.TAll;
       Oql.TWhere; Oql.TString "Status"; Oql.TNeq; Oql.TInt 0;
-      Oql.TEOF ]
+      Oql.TSemicolon ]
 
 let test_query_no_where () =
   check_tokens "query without WHERE clause"
     "table='Users' get all;"
     [ Oql.TTable; Oql.TAssign; Oql.TString "Users";
       Oql.TGet; Oql.TAll;
-      Oql.TEOF ]
+      Oql.TSemicolon ]
 
-let test_invalid_char_raises () =
-  let f () = ignore (Oql.tokenize "@invalid") in
-  Alcotest.check_raises
-    "invalid character raises Failure"
-    (Failure "Invalid character @")
-    f
+let test_invalid_char_error () =
+  check_tokenize_error "invalid character returns Error" "@invalid" "Invalid character @"
 
-let test_invalid_exclamation_raises () =
-  let f () = ignore (Oql.tokenize "!x") in
-  Alcotest.check_raises
-    "lone '!' raises Failure"
-    (Failure "Unexpected character '!' at index 0")
-    f
+let test_invalid_exclamation_error () =
+  check_tokenize_error "lone '!' returns Error" "!x" "Unexpected character '!' at index 0"
+
+let test_unterminated_string_error () =
+  check_tokenize_error "unterminated string returns Error" "'abc"
+    "Unterminated string starting at index 0"
+
+let test_empty_string_literal () =
+  check_tokens "empty quoted string" "''" [ Oql.TString "" ]
 
 let test_multiple_integers () =
   check_tokens "multiple integers separated by spaces"
@@ -158,21 +163,93 @@ let test_is_digit_true () =
 let test_is_digit_letter_false () =
   Alcotest.(check bool) "letter is not a digit" false (Oql.is_digit 'a')
 
+let laptop = [("Id", Db.VInt 1); ("Name", Db.VString "Laptop"); ("CategoryId", Db.VInt 1)]
+let phone  = [("Id", Db.VInt 2); ("Name", Db.VString "Phone"); ("CategoryId", Db.VInt 1)]
+let table  = [("Id", Db.VInt 3); ("Name", Db.VString "Table"); ("CategoryId", Db.VInt 2)]
+
+let rows = Alcotest.(list (list (pair string value)))
+let run_result = Alcotest.result rows Alcotest.string
+
+let check_run label input expected =
+  Alcotest.check run_result label expected (Oql.run mock_db input)
+
 let test_evaluator () =
-  let sql = "table='Products' get all where 'CategoryId' == 1;" in
-  let tokens = Oql.tokenize sql in
-  let query = Oql.parse tokens in
-  let results = Oql.execute query mock_db in
-  let expected = [
-    [("Id", Db.VInt 1); ("Name", Db.VString "Laptop"); ("CategoryId", Db.VInt 1)];
-    [("Id", Db.VInt 2); ("Name", Db.VString "Phone"); ("CategoryId", Db.VInt 1)];
-  ] in
-  Alcotest.(check (list (list (pair string value)))) "evaluator returns correct rows" expected results
+  check_run "int equality" "table='Products' get all where 'CategoryId' == 1;"
+    (Ok [ laptop; phone ])
+
+let test_neq_int () =
+  check_run "int inequality" "table='Products' get all where 'CategoryId' != 1;"
+    (Ok [ table ])
+
+let test_string_eq () =
+  check_run "string equality" "table='Products' get all where 'Name' == 'Phone';"
+    (Ok [ phone ])
+
+let test_string_neq () =
+  check_run "string inequality" "table='Products' get all where 'Name' != 'Phone';"
+    (Ok [ laptop; table ])
+
+let test_no_where () =
+  check_run "query without WHERE returns all rows" "table='Categories' get all;"
+    (Ok [ [("Id", Db.VInt 1); ("Name", Db.VString "Electronics")];
+          [("Id", Db.VInt 2); ("Name", Db.VString "Furniture")] ])
+
+let test_no_match () =
+  check_run "no matching rows" "table='Products' get all where 'CategoryId' == 99;" (Ok [])
+
+let test_unknown_column () =
+  check_run "unknown column matches nothing" "table='Products' get all where 'Price' == 10;" (Ok [])
+
+let test_unknown_table () =
+  check_run "unknown table" "table='Orders' get all;"
+    (Error "Table 'Orders' not found in database!")
+
+let test_type_mismatch () =
+  check_run "type mismatch" "table='Products' get all where 'Name' == 1;"
+    (Error "Type mismatch in condition for column 'Name'")
+
+(* Parser hata dalları *)
+let test_missing_semicolon () =
+  check_run "missing ';'" "table='Products' get all"
+    (Error "Syntax error: Missing ';' at the end of the query!")
+
+let test_missing_semicolon_after_where () =
+  check_run "missing ';' after WHERE" "table='Products' get all where 'Id' == 1"
+    (Error "Syntax error: Missing ';' at the end of the query!")
+
+let test_wrong_operator () =
+  check_run "single '=' in WHERE" "table='Products' get all where 'Id' = 1;"
+    (Error "Syntax error in WHERE clause: Expected '==' or '!='!")
+
+let test_wrong_value () =
+  check_run "keyword as value" "table='Products' get all where 'Id' == all;"
+    (Error "Syntax error in WHERE clause: Expected a number or a quoted string!")
+
+let test_unquoted_column () =
+  check_run "unquoted column" "table='Products' get all where Id == 1;"
+    (Error "Syntax error in WHERE clause: Column names must be quoted, e.g. 'Id'")
+
+let test_bad_prefix () =
+  check_run "missing 'get all'" "table='Products' where 'Id' == 1;"
+    (Error "Syntax error: Expected 'table=...' followed by 'get all' and optional 'where' clause!")
+
+let test_tokenizer_error_propagates () =
+  check_run "tokenizer error stops the pipeline" "table='Products get all;"
+    (Error "Unterminated string starting at index 6")
+
+let test_parse_query () =
+  match Oql.parse [ Oql.TTable; Oql.TAssign; Oql.TString "Products"; Oql.TGet; Oql.TAll;
+                    Oql.TWhere; Oql.TString "Name"; Oql.TEq; Oql.TString "Pen"; Oql.TSemicolon ] with
+  | Ok q ->
+      Alcotest.(check string) "table name" "Products" q.Oql.table_name;
+      Alcotest.(check bool) "condition" true
+        (q.Oql.condition = Some { Oql.column = "Name"; op = Oql.Eq; target = Db.VString "Pen" })
+  | Error msg -> Alcotest.fail msg
 
 let tokenizer_tests = [
   Alcotest.test_case "empty string"                    `Quick test_empty_string;
   Alcotest.test_case "whitespace only"                 `Quick test_whitespace_only;
-  Alcotest.test_case "semicolon → TEOF"               `Quick test_semicolon;
+  Alcotest.test_case "semicolon → TSemicolon"         `Quick test_semicolon;
   Alcotest.test_case "single = → TAssign"             `Quick test_assign_operator;
   Alcotest.test_case "== → TEq"                       `Quick test_eq_operator;
   Alcotest.test_case "!= → TNeq"                      `Quick test_neq_operator;
@@ -188,14 +265,35 @@ let tokenizer_tests = [
   Alcotest.test_case "full query with =="              `Quick test_full_query_with_eq;
   Alcotest.test_case "full query with !="              `Quick test_full_query_with_neq;
   Alcotest.test_case "query without WHERE"             `Quick test_query_no_where;
-  Alcotest.test_case "invalid character raises"        `Quick test_invalid_char_raises;
-  Alcotest.test_case "lone ! raises"                   `Quick test_invalid_exclamation_raises;
+  Alcotest.test_case "invalid character → Error"       `Quick test_invalid_char_error;
+  Alcotest.test_case "lone ! → Error"                  `Quick test_invalid_exclamation_error;
+  Alcotest.test_case "unterminated string → Error"     `Quick test_unterminated_string_error;
+  Alcotest.test_case "empty quoted string"             `Quick test_empty_string_literal;
   Alcotest.test_case "multiple integers"               `Quick test_multiple_integers;
   Alcotest.test_case "mixed tokens"                    `Quick test_mixed_tokens;
 ]
 
+let parser_tests = [
+  Alcotest.test_case "parse builds query"              `Quick test_parse_query;
+  Alcotest.test_case "missing ;"                       `Quick test_missing_semicolon;
+  Alcotest.test_case "missing ; after WHERE"           `Quick test_missing_semicolon_after_where;
+  Alcotest.test_case "single = in WHERE"               `Quick test_wrong_operator;
+  Alcotest.test_case "keyword as value"                `Quick test_wrong_value;
+  Alcotest.test_case "unquoted column"                 `Quick test_unquoted_column;
+  Alcotest.test_case "missing get all"                 `Quick test_bad_prefix;
+  Alcotest.test_case "tokenizer error propagates"      `Quick test_tokenizer_error_propagates;
+]
+
 let evaluator_tests = [
   Alcotest.test_case "evaluator returns correct rows" `Quick test_evaluator;
+  Alcotest.test_case "int inequality"                 `Quick test_neq_int;
+  Alcotest.test_case "string equality"                `Quick test_string_eq;
+  Alcotest.test_case "string inequality"              `Quick test_string_neq;
+  Alcotest.test_case "no WHERE"                       `Quick test_no_where;
+  Alcotest.test_case "no matching rows"               `Quick test_no_match;
+  Alcotest.test_case "unknown column"                 `Quick test_unknown_column;
+  Alcotest.test_case "unknown table"                  `Quick test_unknown_table;
+  Alcotest.test_case "type mismatch"                  `Quick test_type_mismatch;
 ]
 
 let helper_tests = [
@@ -210,5 +308,6 @@ let () =
   Alcotest.run "OQL Tests"
     [ ("Tokenizer", tokenizer_tests)
     ; ("Helpers", helper_tests)
+    ; ("Parser", parser_tests)
     ; ("Evaluator", evaluator_tests)
     ]

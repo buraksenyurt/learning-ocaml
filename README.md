@@ -14,7 +14,7 @@ Sözün özü bu tamamen kendi zihinsel yatırımım ve itiraf etmeliyim ki bu y
   - [Giriş Seviyesi](#giriş-seviyesi)
     - [Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler](#basit-aritmetik-işlemler-değişken-atamaları-ve-isimlendirmeler)
     - [let'in Gücü ve Fonksiyon Tanımlamaları](#letin-gücü-ve-fonksiyon-tanımlamaları)
-    - [Yine de Float.0 ile Çalışmak Gerekirse](#yine-de-float0-ile-çalışmak-gerekirse)
+    - [Yine de Float.O ile Çalışmak Gerekirse](#yine-de-floato-ile-çalışmak-gerekirse)
     - [Zihin Yakan Bir Fonksiyon Kullanımı](#zihin-yakan-bir-fonksiyon-kullanımı)
     - [Fonksiyonlarda Generic Parametre Kullanımı](#fonksiyonlarda-generic-parametre-kullanımı)
     - [Tuple, List ve Options veri türleri](#tuple-list-ve-options-veri-türleri)
@@ -200,7 +200,7 @@ let screen-width = 1024;;
 
 ### let'in Gücü ve Fonksiyon Tanımlamaları
 
-Başka işlemlerle devam edelim. **let** çok güçlü bir operatör. Değişkenleri değerlere bağlayabildiğimiz gibi, fonksiyonları da iş yapan kod bloklarına bağlayabiliriz.
+Başka işlemlerle devam edelim. **let** çok güçlü bir anahtar kelime *(keyword)*. Değişkenleri değerlere bağlayabildiğimiz gibi, fonksiyonları da iş yapan kod bloklarına bağlayabiliriz.
 
 ```ocaml
 let total x y = x + y;;
@@ -281,7 +281,7 @@ div 1 5;;
 
 ![Float of int](./images/ocaml_21.png)
 
-#### Yine de Float.0 ile Çalışmak Gerekirse
+#### Yine de Float.O ile Çalışmak Gerekirse
 
 Bir noktada **Float.O** ile çalışmak gerekirse şöyle ilerlemek gerekiyor. Öncelikle komut satırından **utop** başlatılır. Ardından, **toplevel**, **Base** modülünü destekleyecek şekilde başlatılır. Bu işlemin ardından ilgili fonksiyon yazılabilir. Aşağıdaki ekran görüntüsünü geleceğe not olarak bırakalım.
 
@@ -295,7 +295,7 @@ Gelecekten geldim :D **WSL - Ubuntu** tarafından da bir bakalım.
 
 ### Zihin Yakan Bir Fonksiyon Kullanımı
 
-Şimdi, **int** türünden değer dönen bir fonksiyonu parametre olarak alan ve diğer parametreden gelen **int** değer ile toplayan bir fonksiyon tanımlayıp çalıştıralım.
+Şimdi, **int** türünden değer dönen bir fonksiyonu parametre olarak alan ve diğer parametreden gelen **int** değer ile toplayan bir fonksiyon tanımlamaya çalışalım. İlk denememde fonksiyonu şöyle yazmıştım.
 
 ```ocaml
 let more_add f x y = f * x + y;;
@@ -306,7 +306,16 @@ more_add (square 2) 3 5;;
 
 ![ocaml_23.png](./images/ocaml_23.png)
 
-İlk olarak **more_add** fonksiyonuna bir bakalım. **f** harfinin bir fonksiyonu işaret ettiğini nereden anladı? Yorumlama kısmına baktığımızda **int -> int -> int -> int** şeklinde bir tanım var. `<fun\>` tabii ki bunun bir fonksiyon olduğunu ifade etmekte. **f** çıktısını x ile çarpıp y ile toplatıyoruz. Saçma bir fonksiyon ancak dinamiğini öğrenmek açısından kayda değer. Sonrasında **square** isimli bir fonksiyon daha tanımlıyoruz. Bu fonksiyon tek parametre alıyor ve karesini döndürüyor. Şimdi **more_add** fonksiyonunu çağırırken ilk parametre olarak **square 2** ifadesini veriyoruz. Bu ifade **4** değerini döndürecek ve bu değer **f** parametresine bağlanacak. Sonrasında ise 3 ve 5 değerleri sırasıyla x ve y parametrelerine bağlanacak. Yani fonksiyonun işleyişi şu şekilde olacak, 4 * 3 + 5 = 12 + 5 = 17. Ancak asıl zihin yakıcı örnek kitaptaki örnekten esinlenilerek geliyor;
+Kod çalışıyor ve 4 * 3 + 5 = 17 sonucunu veriyor ama burada bir yanılgı var. Yorumlayıcının **more_add** için çıkardığı tür **int -> int -> int -> int**. Yani **f** bir fonksiyon değil, düz bir **int**! `<fun>` ifadesi **f**'i değil **more_add**'in kendisini anlatıyor. **f \* x** çarpımı **f**'in sayı olmasını zorunlu kılıyor. **more_add (square 2) 3 5** çağrısında da **square 2** ifadesi fonksiyon çağrılmadan önce **4** değerine indirgeniyor ve **f**'e bu sayı bağlanıyor. Fonksiyonu gerçekten parametre olarak almak istiyorsak **f**'i bir değere uygulamamız *(apply)* gerekiyor.
+
+```ocaml
+let more_add f x y = f x + y;;
+let square n = n * n;;
+more_add square 3 5;;
+(* - : int = 14 *)
+```
+
+Bu kez yorumlayıcı **more_add** için **(int -> int) -> int -> int -> int** türünü çıkarıyor. Parantez içindeki **int -> int**, ilk parametrenin **int** alıp **int** döndüren bir fonksiyon olduğunu söylüyor. **f x** ifadesi **f**'in fonksiyon olmasını, **+ y** ise sonucunun **int** olmasını gerektirdiği için tür tahmini böyle sonuçlanıyor. Çağrıda **square** fonksiyonunun kendisini veriyoruz *(square 3 değil)* ve işleyiş square 3 + 5 = 9 + 5 = 14 oluyor. Fonksiyonları parametre olarak alan bu tür fonksiyonlara **yüksek mertebeden fonksiyon** *(higher-order function)* denir. Ancak asıl zihin yakıcı örnek kitaptaki örnekten esinlenilerek geliyor;
 
 ```ocaml
 let condition f first_arg second_arg =
@@ -317,7 +326,7 @@ let check_point value = value > 50;;
 condition check_point 28 76;;
 ```
 
-**condition** isimli fonksiyonun kullandığı **f** parametresi bir fonksiyonu işaret etmekte ve bu fonksiyonun türü **int -> bool**. Yani bir **int** alıp **bool** döndüren bir fonksiyon. Peki yorumlayıcı buna nasıl karar verdi ya da bu tür tahminini *(type inference)* neye göre yaptı? Bunu anlamak için **if** koşuluna odaklanmakta fayda var. Nitekim **else** kısımlarında 0 değeri kullanılmakta ki bu bir **int** türü. Buna göre **then** kısımlarında da **int** türü döndüren ifadeler olmalı. Sonuç olarak **f** fonksiyonu **int -> bool** türünde bir fonksiyon olmalı.
+**condition** isimli fonksiyonun kullandığı **f** parametresi bir fonksiyonu işaret etmekte ve bu fonksiyonun türü **int -> bool**. Yani bir **int** alıp **bool** döndüren bir fonksiyon. Peki yorumlayıcı buna nasıl karar verdi ya da bu tür tahminini *(type inference)* neye göre yaptı? Bunu anlamak için **if** koşuluna odaklanmakta fayda var. **f first_arg** ifadesi bir **if** koşulunda kullanıldığı için sonucu **bool** olmalı. **else** kısımlarında 0 değeri kullanılmakta ki bu bir **int** türü. **then** ve **else** dalları aynı türü döndürmek zorunda olduğundan **first_arg** ve **second_arg** da **int** olmalı. Sonuç olarak **f**, **int** alıp **bool** döndüren yani **int -> bool** türünde bir fonksiyon olmalı.
 
 ![ocaml_24.png](./images/ocaml_24.png)
 
@@ -351,14 +360,14 @@ swap (4,"four");;
 **identity** ve **swap** isimli fonksiyonlar tanımlandıktan sonra yorumlayıcının verdiği çıktılara dikkat edelim. *(Açıkçası Rust'ı öğrenmeye başladığımda hem kavramsal olarak hem de sentaks olarak zorlandığım 'a - lifetime annotations konusu geldi aklıma)* Her neyse, **'a** ve **'b** şeklinde yazılan ifadeler **generic** türler. Generic kavramına aşina olmayanlar için *a ve b yerine herhangi bir tür gelebilir ve bunun için her bir türe özel olacak şekilde bu fonksiyonun farklı versiyonlarını yazmanıza gerek yoktur* diyelim. Şimdi biraz daha kafa karıştırabilecek bir örnek.
 
 ```ocaml
-let compare f arg_1 arg_2 = if f arg_1 then arg_1 else arg_2;;
+let choose f arg_1 arg_2 = if f arg_1 then arg_1 else arg_2;;
 let str_len string = String.length string > 8;;
-compare str_len "Some..." "Something happens";;
+choose str_len "Some..." "Something happens";;
 let is_pass score = score > 70;;
-compare is_pass 68 50;;
-compare is_pass "Black" "And White";;
-(*)
-  1 | compare is_pass "Black" "And White";;
+choose is_pass 68 50;;
+choose is_pass "Black" "And White";;
+(*
+  1 | choose is_pass "Black" "And White";;
                       ^^^^^^^
   Error: This constant has type string but an expression was expected of type
           int
@@ -367,7 +376,9 @@ compare is_pass "Black" "And White";;
 
 ![ocaml_27.png](./images/ocaml_27.png)
 
-**compare** isimli fonksiyonumuz bir fonksiyon alıp diğer iki argümanı da hesaba katarak bir **if** koşulu işletmekte. **compare** fonksiyonundaki parametrelerin generic **'a** türü olarak yorumlandığına dikkat edelim. Sonraki adımlarda **str_len** ve **is_pass** isimli iki farklı fonksiyon daha tanımlanıyor. İlki, **String** modülünden **length** fonksiyonunu kullanarak bir değer döndürdüğü için **string** veri türü ile çalışacağı aşikar. Diğer fonksiyon ise sayısal bir karşılaştırma kullanıyor ve buna göre de **int** değerlerle çalışacağı anlaşılıyor. **compare** fonksiyonuna bu iki fonksiyonu parametre olarak verebiliriz ama devam eden argümanların da uygun tipler olması beklenir. Yani **str_len** kullanıyorsak diğer iki argümanın da **string** türünden olması gerekiyor.
+> Ekran görüntüsünde fonksiyonun ilk adı olan **compare** görünüyor. Bu ad, standart kütüphanedeki **Stdlib.compare** fonksiyonunu gölgelediği *(shadowing)* için örnekte **choose** olarak değiştirildi. Gölgeleme hata değildir ama sonrasında **compare** ile standart karşılaştırmayı kullanmak isteyen kodu şaşırtabilir.
+
+**choose** isimli fonksiyonumuz bir fonksiyon alıp diğer iki argümanı da hesaba katarak bir **if** koşulu işletmekte. **choose** fonksiyonundaki parametrelerin generic **'a** türü olarak yorumlandığına dikkat edelim. Sonraki adımlarda **str_len** ve **is_pass** isimli iki farklı fonksiyon daha tanımlanıyor. İlki, **String** modülünden **length** fonksiyonunu kullanarak bir değer döndürdüğü için **string** veri türü ile çalışacağı aşikar. Diğer fonksiyon ise sayısal bir karşılaştırma kullanıyor ve buna göre de **int** değerlerle çalışacağı anlaşılıyor. **choose** fonksiyonuna bu iki fonksiyonu parametre olarak verebiliriz ama devam eden argümanların da uygun tipler olması beklenir. Yani **str_len** kullanıyorsak diğer iki argümanın da **string** türünden olması gerekiyor.
 
 ### Tuple, List ve Options veri türleri
 
@@ -418,7 +429,7 @@ let combine = left_side @ right_side;;
 
 **colors**, **numbers** ve **points** kendi veri türlerinde elemanlar taşıyan birer liste. **illegal** isimli liste ise farklı türden elemanlardan oluşan bir liste yapısı oluşturmak istediğimizde alacağımız hatayı üretiyor. OCaml'ın **List** modülünde bazı yardımcı fonksiyonlar da bulunuyor. Örnek kodlarda listenin uzunluğunu bulmak için **List.length**, liste başına eleman eklemek için **::** operatörü *(constructor operator)* kullanılmakta. Dikkat edelim, orijinal liste değişmiyor! İlaveler sonrası yeni bir liste oluşuyor.
 
-Çalışırken yaptığım hatalardan birisi de liste elemanlarını tanımlarken arada virgül kullanmaktı. Bunu yapınca bir liste yerine tek elemanlı bir tuple listesi oluşmakta. Dolayısıyla **;** ile *,* kullanımına dikkat etmeli. Hatta bir **tuple** tanımlanırken parantez kullanmazsak, virgül ile ayrılmış değerler bir tuple olarak algılanıyor. **@**, yani add operatörünü kullanarak listeleri birleştirmek de mümkün.
+Çalışırken yaptığım hatalardan birisi de liste elemanlarını tanımlarken arada virgül kullanmaktı. Bunu yapınca bir liste yerine tek elemanlı bir tuple listesi oluşmakta. Dolayısıyla **;** ile *,* kullanımına dikkat etmeli. Hatta bir **tuple** tanımlanırken parantez kullanmazsak, virgül ile ayrılmış değerler bir tuple olarak algılanıyor. **@**, yani append *(ekleme/uç uca birleştirme)* operatörünü kullanarak listeleri birleştirmek de mümkün. **::** tek bir elemanı listenin başına eklerken **@** iki listeyi uç uca ekler. **@** soldaki listenin tamamını kopyaladığı için maliyeti soldaki listenin uzunluğuyla orantılıdır.
 
 Peki bir liste veri yapısında *pattern matching* kullanabilir miyiz? Basit bir örnek üstünden ele alalım.
 
@@ -491,7 +502,7 @@ div 10 2;;
 
 ![ocaml_33.png](./images/ocaml_33.png)
 
-Eğer **y** sıfır ise **None** dönüyor değilse bölme işlemi gerçekleştiriliyor. Dikkat edileceği üzere yorumlayıcı fonksiyonun dönüş türünü **int option** olarak belirledi. Bu son derece normal zira 7 değerinin 0 olup olmadığı kontrol ediliyor. Sıfırın varsayılan olarak **int** olarak kabul edildiği düşünülürse *int option* olarak yorumlanması son derece doğal. Bu arada **None** ve **Some** ifadeleri rastgele isimlendirmeler değil birer **constructor** olarak kabul ediliyor.
+Eğer **y** sıfır ise **None** dönüyor değilse bölme işlemi gerçekleştiriliyor. Dikkat edileceği üzere yorumlayıcı fonksiyonun dönüş türünü **int option** olarak belirledi. Bu son derece normal zira **y** değerinin 0 olup olmadığı kontrol ediliyor ve **x/y** tamsayı bölmesi yapılıyor. Sıfırın varsayılan olarak **int** olarak kabul edildiği düşünülürse *int option* olarak yorumlanması son derece doğal. Bu arada **None** ve **Some** ifadeleri rastgele isimlendirmeler değil birer **constructor** olarak kabul ediliyor.
 
 ### Record Veri Yapısı ve Variant Tipler
 
@@ -575,7 +586,7 @@ Fonksiyonumuz parametre olarak **component** isimli **variant** türünden bir n
 
 > Varsayılan olarak immutable ama gerekirse mutable. Rust'ın açık bir şekilde benimsediği bir yaklaşım. Varsayılan olarak immutable olmak aslında bir şeylerin yanlışlıkla değiştirilmesini engellemek açısından anlamlı. Diğer yandan imperative yaklaşımın ele alındığı sayaçlar *(counters)* ve durum otomatı *(state machine)* gibi kodlar yazmanın önü de açık.
 
-OCaml'ın **safkan bir fonksiyonel dil** olduğu belirtiliyor. Yani, kodun çalışmasının bir parçası olarak değişkenlerin değerlerini değiştirmek normalde mümkün değil. Programın durumu **immutable** veri yapılarıyla temsil ediliyor. Buna karşın **imperative** programlama paradigmasını da destekliyor. Bir başka deyişle **mutable** veri yapıları da mevcut. Örneğin **Array** veri yapısı bunlardan birisi. Bunun haricinde **record** türünün kendisi **immutable** olsa dahi üyeleri **mutable** olarak tanımlanabilir. Şimdi yine beni zorlayacak yazım stilleriyle bir **array** tanımlayalım ve kullanalım. Hatta sonrasında **mutable** üyeler içeren bir **record** yazalım.
+OCaml **saf** *(pure)* bir fonksiyonel dil değildir; fonksiyonel yaklaşımı öne çıkaran ama **imperative** ve nesne yönelimli programlamayı da destekleyen çok paradigmalı bir dildir. Varsayılan olarak **let** ile yapılan bağlamalar *(binding)* değiştirilemez ve programın durumu genellikle **immutable** veri yapılarıyla temsil edilir. Buna karşın gerektiğinde **imperative** programlama paradigmasından da yararlanabiliriz. Bir başka deyişle **mutable** veri yapıları da mevcut. Örneğin **Array** veri yapısı bunlardan birisi. Bunun haricinde **record** türünün kendisi **immutable** olsa dahi üyeleri **mutable** olarak tanımlanabilir. Şimdi yine beni zorlayacak yazım stilleriyle bir **array** tanımlayalım ve kullanalım. Hatta sonrasında **mutable** üyeler içeren bir **record** yazalım.
 
 ```ocaml
 (* float sayılardan oluşan bir array tanımı*)
@@ -663,7 +674,7 @@ let she_ra = { name = "She-Ra"; health = 100; position = (0, 0) };;
   Tabii bu durumda var olan player record' unun bir kopyasını oluşturmuş oluruz.
 
   Örnekte update_player oluşturulurken health bilgisi güncelleniyor,
-  burada with keyword kullandığımıza dikkat edelim. in ise yeni record'ün oluşturulacağı scope'u belirtiyor.
+  burada with keyword kullandığımıza dikkat edelim. let ... in ifadesindeki in ise updated_player bağlamasının geçerli olduğu kapsamı (scope) belirtiyor.
 *)
 let take_damage player amount = 
   let updated_player = { player with health = player.health - amount } in
@@ -718,11 +729,11 @@ Printf.printf "Current count: %d\n" tick_counter.count;;
 
 ### Refs
 
-Tekil bir mutable değişken oluşturmak için **ref** enstrümanı da kullanılabilir. **ref** esasında standart kütüphanede tanımlanmış bir tip ve hatta bir **record** türü. İçinde **contents** isimli bir alan içeriyor. Hatta stdlib.ml dosyasına bakarsak aşağıdaki gibi tanımlandığını görürüz.
+Tekil bir mutable değişken oluşturmak için **ref** enstrümanı da kullanılabilir. **ref** bir anahtar kelime değil, standart kütüphanede tanımlanmış bir tip ve aynı adı taşıyan bir fonksiyon. **ref** tipi esasında bir **record** türü. İçinde **contents** isimli bir alan içeriyor. Hatta stdlib.ml dosyasına bakarsak aşağıdaki gibi tanımlandığını görürüz.
 
 ![ocaml_07.png](./images/ocaml_07.png)
 
-**!** ve **:=** şeklinde tanımlanmış fonksiyonlar dikkatinizi çekmiştir. **!** operatörü bir ref'in içindeki değere erişmek için kullanılırken, **:=** operatörü ise bir ref'in içindeki değeri değiştirmek için kullanılır. Yine **incr** ve **decr** fonksiyonları yardımıyla değer artırma ve azaltma işlemleri de yapılabilir. **OCaml** komut satırından bir deneme yapabiliriz.
+**!** ve **:=** şeklinde tanımlanmış fonksiyonlar dikkatinizi çekmiştir *(OCaml'da operatörler de aslında birer fonksiyondur)*. **!** operatörü bir ref'in içindeki değere erişmek için kullanılırken, **:=** operatörü ise bir ref'in içindeki değeri değiştirmek için kullanılır. Yine **incr** ve **decr** fonksiyonları yardımıyla değer artırma ve azaltma işlemleri de yapılabilir. **OCaml** komut satırından bir deneme yapabiliriz.
 
 ```ocaml
 let counter = ref 0;;
@@ -773,19 +784,19 @@ Printf.printf "My Counter: %d\n" (get my_counter);;
 **ref** türü iterasyonlarda değiştirilebilir *(mutable)* state tutarken de kullanışlı olabilir. Örneğin bir listedeki elemanların ortalamasını hesaplamak için aşağıdaki gibi bir fonksiyon geliştirelim.
 
 ```ocaml
-let avrage lst =
+let average lst =
   let sum = ref 0 in
   let count = ref 0 in
   List.iter (fun x -> sum := !sum + x; count := !count + 1) lst;
   if !count = 0 then None else Some (!sum / !count)
 
 let numbers = [1; 2; 3; 4; 5; 10;];;
-Printf.printf "Average: %d\n" (match avrage numbers with Some avg -> avg | None -> 0);;
+Printf.printf "Average: %d\n" (match average numbers with Some avg -> avg | None -> 0);;
 ```
 
 ![ocaml_43.png](./images/ocaml_43.png)
 
-**average** isimli fonksiyon içerisinde yer alan **sum** ve **count** değişkenleri **mutable** olarak tanımlanmıştır ve **List.iter** fonksiyonu kullanılarak listenin her bir elemanı üzerinde işlem yaparken bu değişkenlerin değerleri güncellenmektedir. Tabii **iter** fonksiyonuna verilen anonim fonksiyon içerisinde **!** operatörünü kullanarak ref'lerin içindeki değerlere erişiyoruz ve **:=** operatörünü kullanarak bu değerleri güncelliyoruz. Bir de **in** operatörü ile karşılaştık tabii ki. Bu operatör **sum** ve **count** değişkenlerinin bulundukları fonksiyon bloğunda geçerli olduğunu belirtmek için kullanılmakta. Yani **scope** belirlemek için kullanılır. **in** kullanımının farkını anlamak için özellikle Utop ekranında aşağıdaki gibi bir deneme yapalım.
+**average** isimli fonksiyon içerisinde yer alan **sum** ve **count** değişkenleri **mutable** olarak tanımlanmıştır ve **List.iter** fonksiyonu kullanılarak listenin her bir elemanı üzerinde işlem yaparken bu değişkenlerin değerleri güncellenmektedir. Tabii **iter** fonksiyonuna verilen anonim fonksiyon içerisinde **!** operatörünü kullanarak ref'lerin içindeki değerlere erişiyoruz ve **:=** operatörünü kullanarak bu değerleri güncelliyoruz. Bir de **in** ile karşılaştık tabii ki. **in** tek başına bir operatör değil, **let ... in ...** ifadesinin bir parçası. **let x = e1 in e2** ifadesi **x**'i yalnızca **e2** içinde geçerli olacak şekilde bağlar. Yani **sum** ve **count** değişkenlerinin sadece fonksiyon gövdesinde geçerli olmasını sağlar ve **scope** belirler. **in** kullanımının farkını anlamak için özellikle Utop ekranında aşağıdaki gibi bir deneme yapalım.
 
 ```ocaml
 let value = 12;;
@@ -802,7 +813,7 @@ point;;
 
 ![ocaml_44.png](./images/ocaml_44.png)
 
-**value** isimli değişken global scope'ta tanımlanmış ve bu nedenle herhangi bir yerden erişilebilir durumda. Ancak **point** isimli değişken **in** operatörünün kullanıldığı fonksiyon bloğu içerisinde tanımlanmış ve bu nedenle sadece o blok içerisinde geçerli. Dolayısıyla **point** değişkenine global scope'tan erişmeye çalıştığımızda **Unbound value** hatası alıyoruz.
+**value** isimli değişken global scope'ta tanımlanmış ve bu nedenle herhangi bir yerden erişilebilir durumda. Ancak **point** isimli değişken **let ... in** ifadesiyle tanımlanmış ve bu nedenle sadece **in**'den sonra gelen ifade *(point + 10)* içinde geçerli. Dolayısıyla **point** değişkenine global scope'tan erişmeye çalıştığımızda **Unbound value** hatası alıyoruz.
 
 ### Döngüsüz Olmaz Tabii *(for, while loops)*
 
@@ -833,18 +844,18 @@ count_while 10;;
 Şimdi örneklerimizi biraz daha eğlenceli hale getirelim. Örneğin, tamsayılardan oluşan bir listeyi **Random** modülünden de yararlanarak belli aralıktaki rastgele sayılarla dolduralım.
 
 ```ocaml
-let average arr = 
-  let sum = ref 0 in
-  for i = 0 to Array.length arr - 1 do
-    sum := !sum + arr.(i)
+let generate_random_list n =
+  Random.self_init (); (* Rastgele sayı üreteciyi başlat *)
+  let numbers = ref [] in
+  for i = 1 to n do
+    let random_number = Random.int 100 in
+    numbers := random_number :: !numbers
   done;
-  float_of_int !sum /. float_of_int (Array.length arr)
+  !numbers
 
-let arr = generate_random_list 10 |> Array.of_list;;
+let random_numbers = generate_random_list 10;;
 
-Printf.printf "Random numbers (while): %s\nAverage: %f\n" 
-  (String.concat "; " (List.map string_of_int (Array.to_list arr))) 
-  (average arr);;
+Printf.printf "Random numbers: %s\n" (String.concat "; " (List.map string_of_int random_numbers));;
 ```
 
 ![ocaml_46.png](./images/ocaml_46.png)
@@ -882,13 +893,24 @@ let average arr =
   done;
   float_of_int !sum /. float_of_int (Array.length arr)
 
+(* Aynı fonksiyonun while döngüsü ile yazılmış hali *)
+let average_while arr =
+  let sum = ref 0 in
+  let i = ref 0 in
+  while !i < Array.length arr do
+    sum := !sum + arr.(!i);
+    i := !i + 1
+  done;
+  float_of_int !sum /. float_of_int (Array.length arr)
+
 let arr = generate_random_list 10 |> Array.of_list;;
 Printf.printf "Average: %f\n" (average arr);;
+Printf.printf "Average (while): %f\n" (average_while arr);;
 ```
 
 ![ocaml_48.png](./images/ocaml_48.png)
 
-**average** isimli fonksiyon, **arr** isimli bir parametre almakta. Tabii bunun bir **Array** olduğunu varsayıyoruz. **sum** isimli değişkeni **mutable** olarak tanımladık zira bir toplam değerine ihtiyacımız var. Sonrasında bir **for** döngüsü yardımıyla dizi elemanlarını arka arkaya toplatıyoruz. **!** operatörü ile sum dizisi içindeki değere erişiyoruz ve **:=** operatörünü kullanarak bu değeri güncelliyoruz. Döngü tamamlandıktan sonra toplam değeri dizi uzunluğuna bölerek ortalamayı hesaplıyoruz. Dikkat edelim, bölme işlemi sırasında tam sayı bölmesi yapmamak için hem toplamı hem de dizi uzunluğunu **float_of_int** fonksiyonu ile **float** türüne dönüştürüyoruz. Sonrasında bu fonksiyonu kullanarak bir dizi oluşturup ortalamasını ekrana yazdırıyoruz.
+**average** isimli fonksiyon, **arr** isimli bir parametre almakta. Tabii bunun bir **Array** olduğunu varsayıyoruz. **sum** isimli değişkeni **mutable** olarak tanımladık zira bir toplam değerine ihtiyacımız var. Sonrasında bir **for** döngüsü yardımıyla dizi elemanlarını arka arkaya toplatıyoruz. **!** operatörü ile **sum** ref'inin içindeki değere erişiyoruz ve **:=** operatörünü kullanarak bu değeri güncelliyoruz. Döngü tamamlandıktan sonra toplam değeri dizi uzunluğuna bölerek ortalamayı hesaplıyoruz. Dikkat edelim, bölme işlemi sırasında tam sayı bölmesi yapmamak için hem toplamı hem de dizi uzunluğunu **float_of_int** fonksiyonu ile **float** türüne dönüştürüyoruz. **average_while** fonksiyonu da aynı işi **while** döngüsü ile yapıyor. Bu kez indeksi kendimiz tutmamız gerektiği için **i** isimli bir ref daha kullanıyoruz ve her iterasyonda onu da artırıyoruz. Sonrasında bu fonksiyonları kullanarak bir dizi oluşturup ortalamasını ekrana yazdırıyoruz.
 
 Peki bu fonksiyona alakasız bir veri türü göndersek ne olur, örneğin metinsel bir ifade...
 
@@ -1117,10 +1139,12 @@ Bir başka deyişle derleyici tasarımımızın bir ortağı gibi hareket eder. 
 OCaml mümkün olduğunca fonksiyonel olmayı hedefler. Yani her şeyi immutable yazmayı önerir. Lakin performans veya mantık gerektiren şeyler söz konusuysa imperative araçları da emrimize amade eder. Bu noktada **Haskell** gibi dillerden önemli ölçüde ayrıldığı söylenir ki tartışmaya açıktır *(Neden, çünkü Haskell ile hiç tecrübem yok)* Örnek kodlarda ele aldık ama sayaç artırıcı meselesini tekrar masaya yatırabiliriz. Aşağıdaki kod parçasını ele alalım.
 
 ```ocaml
-(*Saf fonksiyonel yaklaşım*)
-let rec sum list = function 
-  | [] -> list 
-  | x :: xs -> sum (list + x) xs
+(* Saf fonksiyonel yaklaşım.
+   acc (accumulator) o ana kadarki toplamı taşır. Recursive çağrı son işlem
+   olduğu için bu fonksiyon tail-recursive'dir. *)
+let rec sum acc = function
+  | [] -> acc
+  | x :: xs -> sum (acc + x) xs
 
 (* Pragmatik yaklaşım *)
 let incrementer () =
@@ -1130,17 +1154,20 @@ let incrementer () =
     !count
 
 let () =
+  print_endline (string_of_int (sum 0 [1; 2; 3; 4; 5]));
   let inc = incrementer () in
   print_endline (string_of_int (inc ()));
   print_endline (string_of_int (inc ()));
-  print_endline (string_of_int (inc ()));
+  print_endline (string_of_int (inc ()))
 ```
 
 İlk önce çalışma zamanını bir değerlendirelim.
 
 ![ocaml_56.png](./images/ocaml_56.png)
 
-**sum** için tam bir fonksiyonel yaklaşımın söz konusu olduğunu söyleyebiliriz. Hatta tam anlamıyla matematiksel bir zarafet sunar. Zira **mutable** bir state yoktur, recursive çalışan fonksiyon her çağrıda yeni bir değer döndürür ve bunlar arka arkaya toplanır. **incrementer** fonksiyonunda kullanılan **ref** keyword bir referans kutusu oluşturur ve **:=** operatörü ile bu kutunun içindeki değeri değiştirebiliriz. Bir başka deyişle bu fonksiyon state değiştiren bir fonksiyondur ve bu nedenle fonksiyonel değil, pragmatik bir yaklaşım sergiler.
+> Ekran görüntüsü sadece **incrementer** çıktısını gösteriyor. Güncel kodda önce **sum 0 [1; 2; 3; 4; 5]** sonucu olan 15 de yazdırılıyor.
+
+**sum** için tam bir fonksiyonel yaklaşımın söz konusu olduğunu söyleyebiliriz. Hatta tam anlamıyla matematiksel bir zarafet sunar. Zira **mutable** bir state yoktur, **acc** parametresi o ana kadarki toplamı bir sonraki çağrıya taşır ve liste bittiğinde bu toplam döndürülür. **function** anahtar kelimesi tek parametre alan ve doğrudan pattern matching yapan bir fonksiyon tanımladığı için **sum**'ın ikinci parametresi *(liste)* isimsizdir. **incrementer** fonksiyonunda kullanılan **ref** fonksiyonu bir referans kutusu oluşturur ve **:=** operatörü ile bu kutunun içindeki değeri değiştirebiliriz. Bir başka deyişle bu fonksiyon state değiştiren bir fonksiyondur ve bu nedenle fonksiyonel değil, pragmatik bir yaklaşım sergiler.
 
 Aslında buradaki felsefeyi şöyle düşünebiliriz. Bazı senaryolarda her şeyin saf bir fonksiyon ile yazılması mümkün değildir. Örneğin, milyonlarca finansal işlemin yapıldığı gerçek zamanlı bir uygulamada *(Bence tam bu noktada [Jane Street'in hikayesine](https://ocaml.org/success-stories/large-scale-trading-system) bakılabilir)* veya çok oyunculu bir oyunda mutable state'lere ihtiyaç duyar ve hatta performans ararız. **OCaml** böyle durumlara da hazırlıklıdır ve sağladığı mutable araçları kullanarak pragmatik bir şekilde ilerleyebiliriz. Ancak mümkün olduğunca fonksiyonel bir yaklaşım benimsemek kodun daha temiz, anlaşılır ve hatasız olmasına da yardımcı olabilir. Bu nedenle OCaml, fonksiyonel programlama paradigmalarını teşvik ederken aynı zamanda pragmatik ihtiyaçlara da cevap verebilecek esneklikte tasarlanmıştır. **Rust** açısından bakarsak gerçekten de benzer bir felsefeye sahiptir. Her şey varsayılan olarak immutable'dır ve mutable olması gerekiyorsa bu açıkça belirtilmelidir. Ancak Rust'ın sahip olduğu ownership ve borrowing mekanizmaları sayesinde mutable state'ler üzerinde daha sıkı kontrol sağlanır ve bu da güvenli bir şekilde mutable state'ler kullanmamıza olanak tanır ki bu Rust'ı çekici kılan bir başka şeydir.
 
@@ -1247,7 +1274,7 @@ Görüldüğü üzere kaçma şansımız yok. **None** olasılığını da mutla
 
 Programlama dillerini birçok açıdan ayrıştırabiliriz. Performans ve hıza odaklanıp bazı güvenli alanları kenara bırakanlar, iş modellerini gerçeğe yakın organize edip performanstan ödün verenler gibi. Ancak bir de akademik ve endüstriyel olanlar şeklinde iki ana kategoriye de ayrılabilirler. Söz gelimi öğrenmesi görece daha zor olan **Haskell**, **Lisp** gibi diller matematiksel açıdan kusursuza yakındır ancak gerçek dünya problemlerini modellemeye çalıştığımızda bizi daha da zorlayabilir. Diğer yandan **C++**, **Java**, **Go** gibi iş bitirici türden yani endüstriyel çözümlere daha yatkın olan diller de vardır ancak bunlarda kritik hataların oluşmasına müsait dillerdir. Kaynaklar **OCaml** programlama dilinin akademik titizliğe sahip ve endüstriyel olarak da güçlü olduğuna vurgu yaparlar.
 
-Konuyu biraz daha açmaya çalışalım. **OCaml** derleyicisi **[Hindley-Milner](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)** olarak bilinen bir tip sistemini kullanır. Bu aslında bazı matematiksel enstrümanları ve ispatları barındıran bir yapıdır. Evet evet yanlış duymadınız, matematiksel ispatları dedim :D **Hindley-Milner** tip sistemini baz alan derleyici kodları okuduktan sonra bunları hemen makine diline çevirmez. Öncesinde sembolik mantık ve küme teorisine göre bazı denklemler çözer. Bu çözümler yazılan kodun mantıksal olarak tutarlı olduğunun matematiksel ispatı için işletilir. Dolayısıyla kod derleniyorsa matematiksel olarak doğrudur *(Akademik anlamda güvenilirdir)*. Bununla birlikte derleyici optimize edilmiş endüstriyel makine kodu üretir. *(Şu an için ne sizi ne de kendimi bu formüllerle boğmak istemiyorum ama bir ara bu konuyu derinlemesine ele alacağım)*
+Konuyu biraz daha açmaya çalışalım. **OCaml** derleyicisi **[Hindley-Milner](https://en.wikipedia.org/wiki/Hindley%E2%80%93Milner_type_system)** olarak bilinen bir tip sistemini kullanır. Bu aslında matematiksel olarak tanımlanmış ve özellikleri ispatlanmış bir yapıdır. Evet evet yanlış duymadınız, matematiksel ispatları dedim :D **Hindley-Milner** tip sistemini baz alan derleyici kodları okuduktan sonra bunları hemen makine diline çevirmez. Öncesinde her ifade için bilinmeyen tür değişkenleri *('a, 'b gibi)* atar ve ifadelerin nasıl kullanıldığından tür denklemleri *(kısıtlar)* çıkarır. Ardından bu denklemleri **unification** *(birleştirme)* adı verilen bir algoritmayla çözerek her ifadenin en genel *(principal)* türünü bulur. Bu sayede tür bildirimi yazmadan da her şeyin türü kesin olarak bilinir. Sistemin ispatlanmış özelliği şudur: Tip denetiminden geçen bir program çalışma zamanında tip hatası vermez *("Well-typed programs don't go wrong" - Robin Milner)*. Dikkat edelim, bu garanti **tip tutarlılığı** ile ilgilidir; kod derleniyorsa mantığı da doğrudur demek değildir. Toplama yerine çıkarma yazdıysanız derleyici bunu yakalamaz. Ancak hatalarımızın büyük bir kısmını derleme zamanına taşıdığı için *(akademik anlamda)* güvenilirdir. Bununla birlikte derleyici optimize edilmiş endüstriyel makine kodu üretir. *(Şu an için ne sizi ne de kendimi bu formüllerle boğmak istemiyorum ama bir ara bu konuyu derinlemesine ele alacağım)*
 
 Bu tip sistemi aklımızın bir köşesinde dursun ve gelin bir örnekle konuyu pekiştirmeye çalışalım. Finansal operasyonların her adımı son derece kritiktir. Büyük bir finans sisteminde farklı türden para birimlerinin olması da kesindir. Örneğin Dolar, Sterlin, Euro gibi para birimlerini göz önüne alalım. Tümü **float** türünden olsalar da bunları birbiriyle yanlışlıkla toplamak faciaya neden olabilir. 1000 Dolar ile 1000 Euro'nun toplanabildiğini düşünün, korkunç... **OCaml** ile bu sorunu nasıl aşabiliriz gelin örnek kod parçası ile bakalım.
 
@@ -1326,11 +1353,11 @@ struct Dollar(f64);
 
 C# tarafından olaya baktığımızda sanıyorum en yakın çözüm **record struct** gibi bir türden yararlanmak olacaktır. Nitekim **C#** ve **Java** gibi dillerde bu tür bir korumayı sağlamak için sınıflara başvurduğumuzda bellekte ekstra nesneler oluşmasına neden olup gereksiz **GC** döngülerine sebebiyet verebiliriz. Ancak bu söylediklerimi ispat edebilir miyim, ımmmm, hayır :D
 
-### Modüller Birinci Sınıfı Vatandaştır *(First Class Citizen)*
+### Modüller, Functor'lar ve Birinci Sınıf Modüller *(First-Class Modules)*
 
 Rahmetli babam çok uzun yıllar Almanya'da çalışmıştı. Savaş sonrası kalkınmaya çalışan Almanya'ya erken dönem gidenler arasındaydı. Orada edindiği dostluklar yurda temelli döndükten sonra da devam etmişti. Öyle ki beni çok seven birçok arkadaşı ne zaman onu ziyaret için ülkeye gelse küçük ya da büyük lego setleri getirirdi. Taa o zamanlarda kalma bir Lego sevgisi vardır içimde. Halen daha yapıyorum demek isterdim ama malum fiyatlar :|
 
-**OCaml** açısından olaya bakacak olursak dilin en güçlü özelliklerinden birisi lego parçalarına benzettiğim modülleri birinci sınıf vatandaş olarak ele almasıdır. Bu, bazı dillerde kullandığımız paket *(package)*, isim alanı *(namespace)* gibi kavramlardan çok farklı bir anlayıştır. Dahası var; modüller birbirlerine birer değişken gibi bağlanabilir, iç içe geçebilir ve **functor** adı verilen yapılarla bir modülden başka bir modül üretilebilir. Bir başka deyişle modül deyip geçmemek lazım :D
+**OCaml** açısından olaya bakacak olursak dilin en güçlü özelliklerinden birisi lego parçalarına benzettiğim modül sistemidir. Bu, bazı dillerde kullandığımız paket *(package)*, isim alanı *(namespace)* gibi kavramlardan çok farklı bir anlayıştır. Modüller iç içe geçebilir, **functor** adı verilen yapılarla bir modülden başka bir modül üretilebilir ve hatta **first-class modules** özelliği sayesinde birer değer gibi paketlenip fonksiyonlara geçirilebilir. Bir başka deyişle modül deyip geçmemek lazım :D
 
 Şimdi konuyu koda döküp felsefesine gelmeye çalışalım. **C#** ve **Java** gibi dillerde bileşenler arasındaki bağımlılıklar hep başa dert olmuştur. Bunları yönetmek için **Dependency Injection** gibi desenler ortaya çıkmıştır. Bağımlılıklar genellikle soyutlamalar üzerinden *(interface, abstract class)* yönetilir ve diğer bileşenlere yapıcı metotlar, özellikler veya servis sağlayıcılar aracılığıyla enjekte edilir. Ne var ki bu işlem çalışma zamanında gerçekleşir ve doğal olarak bir ısınma maliyeti *(Warm-up cost)* vardır. Tahmin edin, **OCaml**'da bu nerede çözülür ;)
 
@@ -1396,8 +1423,9 @@ end
 
 (*
   Şimdi bu servisi ConsoleLogger ve FileLogger ile çalıştırabiliriz.
-  Burada modül bazında gerekli birleştirmeler yapılır ama çalışma zamanında değil
-  derleme zamanında gerçekleşir.
+  AppTracer(ConsoleLogger) uygulamasının tip uyumu derleme zamanında kontrol edilir.
+  Uygulamanın kendisi ise (flambda gibi agresif bir optimizasyon yoksa) program başlarken,
+  modüller ilklendirilirken bir kez yapılır; L.info çağrıları da dolaylı (indirect) çağrılardır.
 *)
 module ConsoleAppTracer = AppTracer(ConsoleLogger)
 module FileAppTracer = AppTracer(FileLogger)
@@ -1407,11 +1435,29 @@ let () =
   FileAppTracer.log_data "This is a file log message."
 ```
 
-Örnekte terminal ekranına ve **log.txt** dosyasına basit log mesajları bırakan bir kod akışına yer veriliyor. Bir önceki örnektekine benzer şekilde bir sözleşme tanımlayarak işe başlıyoruz. Bu sözleşme gerçekten de bir imza *(signature)* tanımlıyor. **ConsoleLogger** ve **FileLogger** modülleri bu sözleşmeyi uygulayan iki farklı modül olarak ortaya çıkıyor. Daha sonra **AppTracer** adında bir **functor** tanımlanıyor. Fabrika görevi üstlenen bu modül, bir **LOGGER** modülünü parametre olarak alıyor ve bu loglayıcıyı kullanarak veri işleme sürecini izleyen bir servis sağlıyor. Yani bağımlılıkları enjekte ettiğimiz yer olarak düşünebiliriz. Son olarak, bu servisi hem **ConsoleLogger** hem de **FileLogger** ile çalıştırmak için gerekli modül bazında birleştirmeler yapılır. Tüm bu işlemler derleme zamanında gerçekleşir. Ayrıca yeni bir loglama yönetimi gerekirse, mevcut kodu bozmadan **SOLID**'in **Open/Closed** prensibine uygun olarak yeni bir modül tanımlayıp onu da **AppTracer**'a enjekte edebiliriz. Bu esneklik ve genişletilebilirlik, modüllerin birinci sınıf vatandaş olarak ele alınmasının önemli avantajlarından biridir.
+Örnekte terminal ekranına ve **log.txt** dosyasına basit log mesajları bırakan bir kod akışına yer veriliyor. Bir önceki örnektekine benzer şekilde bir sözleşme tanımlayarak işe başlıyoruz. Bu sözleşme gerçekten de bir imza *(signature)* tanımlıyor. **ConsoleLogger** ve **FileLogger** modülleri bu sözleşmeyi uygulayan iki farklı modül olarak ortaya çıkıyor. Daha sonra **AppTracer** adında bir **functor** tanımlanıyor. Fabrika görevi üstlenen bu modül, bir **LOGGER** modülünü parametre olarak alıyor ve bu loglayıcıyı kullanarak veri işleme sürecini izleyen bir servis sağlıyor. Yani bağımlılıkları enjekte ettiğimiz yer olarak düşünebiliriz. Son olarak, bu servisi hem **ConsoleLogger** hem de **FileLogger** ile çalıştırmak için gerekli modül bazında birleştirmeler yapılır. Bu birleştirmelerin tip uyumu derleme zamanında denetlenir; **LOGGER** sözleşmesine uymayan bir modülü **AppTracer**'a veremeyiz. Ayrıca yeni bir loglama yönetimi gerekirse, mevcut kodu bozmadan **SOLID**'in **Open/Closed** prensibine uygun olarak yeni bir modül tanımlayıp onu da **AppTracer**'a enjekte edebiliriz. Bu esneklik ve genişletilebilirlik, modüllerin birinci sınıf vatandaş olarak ele alınmasının önemli avantajlarından biridir.
 
 ![ocaml_65.png](./images/ocaml_65.png)
 
-Bağımlılıkların derleme zamanında çözülmesi, çalışma zamanındaki maliyetten kurtulmamızı sağlar *(Zero Cost Dependency Injection)*. Yani derleyici **AppTracer(ConsoleLogger)** ifadesini gördüğünde, **ConsoleLogger** modülünün içeriğini **AppTracer**'ın içine yerleştirerek makine kodu üretir ve böylece çalışma zamanında herhangi bir soyutlama ya da arayüz çağrısına gerek kalmaz. **Rust** dilinde benzer şekilde trait'ler aracılığıyla bağımlılıkların derleme zamanında çözülmesi sağlanır. Dolayısıyla **Rust**'ın **OCaml** dilindeki **signature** ve modül sisteminden genetik izler taşıdığını söyleyebiliriz. Diğer yandan C# veya Java dillerindeki generic yapıların ve interface'lerin OCaml'daki functor'ların daha zayıf bir versiyonu olduğu ifade edilir. Bunu şöyle açıklamak mümkün; **OCaml** functor'ları kullanarak davranışlar bütününü soyutlarken C# daha çok parametreleri soyutlar. Örneğin **C#** dilinde **generic** bir sınıf tanımlarken bu sınıfın hangi türde çalışacağını belirtiriz *(`<T>` kullanımı)* ancak bu türün hangi davranışlara sahip olması gerektiği konusunda daha az kontrolümüz olur. **OCaml**'da ise functor'lar aracılığıyla sadece türleri değil aynı zamanda bu türlerin sahip olması gereken fonksiyonları da tanımlarız. Dolayısıyla daha güçlü bir soyutlama ve daha sıkı bir tip güvenliği sağlamış oluruz.
+Burada sık yapılan bir abartıya da dikkat etmek lazım. Functor ile yapılan bağımlılık enjeksiyonunun asıl kazancı, bağlamanın **derleme zamanında tip kontrolünden geçmesi**dir. Yanlış ya da eksik bir bağımlılık programı çalıştırmadan yakalanır, DI konteynerlerindeki gibi çalışma zamanında *"servis bulunamadı"* hatası alınmaz. Ancak bu, maliyetin sıfır olduğu anlamına gelmez. Standart **OCaml** derleyicisi *(flambda olmadan)* functor'ları **Rust**'taki generic'ler gibi her tür için ayrı kopyalara özelleştirmez *(monomorphization)*. **AppTracer(ConsoleLogger)** uygulaması program başlarken modüller ilklendirilirken bir kez çalıştırılır ve functor gövdesindeki **L.info** çağrıları parametre modül üzerinden yapılan dolaylı *(indirect)* çağrılardır. Bu maliyet bir sanal metot çağrısına benzer ve çoğu senaryoda önemsizdir; **flambda** etkin bir derleyiciyle *(-O3)* bu çağrılar çoğunlukla inline edilebilir. **Rust** dilinde ise trait'ler ve generic'ler kullanıldığında monomorphization ile gerçekten her tür için özelleşmiş kod üretilir ve çağrılar statik hale gelir. Dolayısıyla **Rust**'ın **OCaml** dilindeki **signature** ve modül sisteminden genetik izler taşıdığını söyleyebiliriz. Diğer yandan C# veya Java dillerindeki generic yapıların ve interface'lerin OCaml'daki functor'ların daha zayıf bir versiyonu olduğu ifade edilir. Bunu şöyle açıklamak mümkün; **OCaml** functor'ları kullanarak davranışlar bütününü soyutlarken C# daha çok parametreleri soyutlar. Örneğin **C#** dilinde **generic** bir sınıf tanımlarken bu sınıfın hangi türde çalışacağını belirtiriz *(`<T>` kullanımı)* ancak bu türün hangi davranışlara sahip olması gerektiği konusunda daha az kontrolümüz olur. **OCaml**'da ise functor'lar aracılığıyla sadece türleri değil aynı zamanda bu türlerin sahip olması gereken fonksiyonları da tanımlarız. Dolayısıyla daha güçlü bir soyutlama ve daha sıkı bir tip güvenliği sağlamış oluruz.
+
+Functor'larda hangi loglayıcının kullanılacağını kodu yazarken belirledik. Peki bu kararı çalışma zamanında vermek istersek? Örneğin bir komut satırı argümanına göre konsola ya da dosyaya loglamak gibi. İşte burada **first-class modules** devreye giriyor. **(module M : SIG)** söz dizimiyle bir modülü sıradan bir değer olarak paketleyebilir, fonksiyondan döndürebilir, parametre olarak geçebilir veya bir listede tutabiliriz.
+
+```ocaml
+(* Modülü bir değer olarak döndüren fonksiyon. Dönüş türü (module LOGGER) *)
+let pick_logger use_file : (module LOGGER) =
+  if use_file then (module FileLogger) else (module ConsoleLogger)
+
+(* Parametredeki (module L : LOGGER) deseni, gelen değeri tekrar bir modüle açar *)
+let log_with (module L : LOGGER) message = L.warning message
+
+let () =
+  (* Programa herhangi bir argüman verilirse dosyaya, verilmezse konsola loglanır *)
+  let logger = pick_logger (Array.length Sys.argv > 1) in
+  log_with logger "Logger was chosen at runtime."
+```
+
+**pick_logger** fonksiyonu bir **bool** değere göre iki modülden birini değer olarak döndürüyor. **log_with** fonksiyonu ise parametre olarak gelen paketlenmiş modülü **L** adıyla tekrar açıp **L.warning** fonksiyonunu çağırıyor. Functor'larla karşılaştırırsak; functor'lar modülden modül üreten derleme zamanı yapılarıdır, first-class modules ise modülleri çalışma zamanında dolaştırabildiğimiz değerlere dönüştürür. Her iki durumda da **LOGGER** sözleşmesine uyum derleyici tarafından denetlenir. *(Bu örnek de zen_05.ml dosyasının sonunda yer alıyor)*
 
 ## Sonuç
 
