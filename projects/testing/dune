@@ -1,0 +1,8 @@
+(library
+ (name math)
+ (modules math))
+
+(test
+ (name test_math)
+ (modules test_math)
+ (libraries math alcotest))

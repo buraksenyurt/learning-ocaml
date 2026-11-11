@@ -1,0 +1,8 @@
+;; Bu klasördeki dosyalar utop/ocaml ile adım adım denenmek üzere yazılmış öğrenme
+;; örnekleri. Bilerek kullanılmayan değer, değişken ve constructor içerdikleri için
+;; "unused" uyarılarını kapatıyoruz. Diğer uyarılar ve hatalar aynen geçerli.
+
+(executables
+ (names zen_00 zen_01 zen_02 zen_03 zen_04 zen_05)
+ (flags
+  (:standard -w -26-27-32-35-37)))

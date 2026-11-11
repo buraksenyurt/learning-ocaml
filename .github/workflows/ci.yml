@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  OPAMROOT: /home/opam/.opam
+  OPAMROOTISOK: "1"
+  OPAMYES: "1"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    container:
+      image: ocaml/opam:ubuntu-24.04-ocaml-5.4
+      options: --user root
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trust opam repository
+        run: git config --global --add safe.directory '*'
+
+      - name: Install dependencies
+        run: opam install dune alcotest
+
+      - name: Build
+        run: opam exec -- dune build
+
+      - name: Run unit tests
+        run: opam exec -- dune runtest
+
+      - name: Run example scripts with the ocaml toplevel
+        run: |
+          for f in 01-basics/*.ml 02-zen/*.ml; do
+            echo "::group::$f"
+            opam exec -- ocaml "$f" < /dev/null
+            echo "::endgroup::"
+          done
+
+  fmt:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    container:
+      image: ocaml/opam:ubuntu-24.04-ocaml-5.4
+      options: --user root
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trust opam repository
+        run: git config --global --add safe.directory '*'
+
+      - name: Install ocamlformat
+        run: opam install dune ocamlformat.0.28.1
+
+      - name: Check formatting
+        run: opam exec -- dune build @fmt

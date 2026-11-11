@@ -11,22 +11,33 @@ Sözün özü bu tamamen kendi zihinsel yatırımım ve itiraf etmeliyim ki bu y
 - [Giriş](#learning-ocaml)
   - [Merak Ettiklerim](#merak-ettiklerim)
   - [Kurulumlar](#kurulumlar)
+    - [Windows 11 Tarafında Sorun](#windows-11-tarafında-sorun)
+    - [WSL Tarafında Ubuntu Üzerinden Çalışmak](#wsl-tarafında-ubuntu-üzerinden-çalışmak)
+  - [Repo Yapısı ve Örnekleri Çalıştırmak](#repo-yapısı-ve-örnekleri-çalıştırmak)
   - [Giriş Seviyesi](#giriş-seviyesi)
+    - [Bazı Yararlı Utop Komutları](#bazı-yararlı-utop-komutları)
     - [Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler](#basit-aritmetik-işlemler-değişken-atamaları-ve-isimlendirmeler)
     - [let'in Gücü ve Fonksiyon Tanımlamaları](#letin-gücü-ve-fonksiyon-tanımlamaları)
-    - [Yine de Float.O ile Çalışmak Gerekirse](#yine-de-floato-ile-çalışmak-gerekirse)
+      - [Yine de Float.O ile Çalışmak Gerekirse](#yine-de-floato-ile-çalışmak-gerekirse)
     - [Zihin Yakan Bir Fonksiyon Kullanımı](#zihin-yakan-bir-fonksiyon-kullanımı)
     - [Fonksiyonlarda Generic Parametre Kullanımı](#fonksiyonlarda-generic-parametre-kullanımı)
     - [Tuple, List ve Options veri türleri](#tuple-list-ve-options-veri-türleri)
     - [Record Veri Yapısı ve Variant Tipler](#record-veri-yapısı-ve-variant-tipler)
-    - [Döngüsüz Olmaz Tabii *(for, while loops)*](#döngüsüz-olmaz-tabii-for-while-loops)
+    - [Mutable Olma Hali](#mutable-olma-hali)
+    - [Refs](#refs)
+    - [Döngüsüz Olmaz Tabii (for, while loops)](#döngüsüz-olmaz-tabii-for-while-loops)
     - [Derleyerek Çalıştırmak](#derleyerek-çalıştırmak)
     - [Alcotest ile Birim Test Yazmak](#alcotest-ile-birim-test-yazmak)
   - [Biraz da Felsefe](#biraz-da-felsefe)
-    - [Hata Yapmayı İmkansız Kılan Tip Desteği(Type Safety Değil Type Expressiveness)](#hata-yapmayı-i̇mkansız-kılan-tip-desteği-type-safety-değil-type-expressiveness)
+    - [Hata Yapmayı İmkansız Kılan Tip Desteği (Type Safety değil Type Expressiveness)](#hata-yapmayı-i̇mkansız-kılan-tip-desteği-type-safety-değil-type-expressiveness)
     - [Olabildiğince Fonksiyonel](#olabildiğince-fonksiyonel)
     - [Tony Hoare Anısına](#tony-hoare-anısına)
     - [Yüksek Matematik Lisanslı Derleyici](#yüksek-matematik-lisanslı-derleyici)
+    - [Modüller, Functor'lar ve Birinci Sınıf Modüller (First-Class Modules)](#modüller-functorlar-ve-birinci-sınıf-modüller-first-class-modules)
+  - [Mini Projeler: Yorumlayıcı Yazmak](#mini-projeler-yorumlayıcı-yazmak)
+    - [Dört İşlem Yorumlayıcısı (eval)](#dört-i̇şlem-yorumlayıcısı-eval)
+    - [Mini Sorgu Dili (oql)](#mini-sorgu-dili-oql)
+  - [Sonuç](#sonuç)
 
 ## Merak Ettiklerim
 
@@ -47,15 +58,15 @@ Sözün özü bu tamamen kendi zihinsel yatırımım ve itiraf etmeliyim ki bu y
 
 Windows 11 işletim sisteminde gerekli kurulumları yapmış olmama rağmen komut satırından **ocaml** ile kod çalıştırmakta sorun yaşadım. Bunun kalıcı çözümü içinse aşağıdaki komutu işlettim.
 
-```bash
+```powershell
 Add-Content $PROFILE "`n# Initialize opam environment`n(& opam env) -split '\r?\n' | ForEach-Object { Invoke-Expression `$_ }"
 
 #Sonrasında PowerShell'i yeniden başlattım
 #Kısa bir versiyon kontrolü yaptım
 ocaml -version
 
-#ve örneğin hello-world.ml dosyasını doğrudan aşağıdaki komutla çalıştırabildim
-ocaml hello-world.ml
+#ve örneğin hello_world.ml dosyasını doğrudan aşağıdaki komutla çalıştırabildim
+ocaml 01-basics/hello_world.ml
 
 #OCaml'ı interaktif modda kullanmak için ise aşağıdaki komutu kullanmak yeterli
 ocaml
@@ -90,14 +101,15 @@ opam init --bare -a -y
 opam update
 
 # Güncel bir OCaml sürümü ile çalışmak için aşağıdaki komutu kullanarak bir switch oluşturabiliriz
-opam switch create ocaml-5.3 ocaml-base-compiler.5.3.0
+# (Bu notları yazarken 5.3.0 ile başlamıştım, güncel sürüm 5.4.0. Örnekler 5.x serisinin tamamında çalışır)
+opam switch create ocaml-5.4 ocaml-base-compiler.5.4.0
 # Terminalimizin yeni switch'i tanıması için aşağıdaki komutu çalıştırmakta fayda var
 eval $(opam env)
 # switch listesini görmek için
 opam switch list
 
 # Şimdi opam için gerekli paketleri yükleyelim
-opam install -y utop odoc ounit2 qcheck bisect_ppx menhir ocaml-lsp-server ocamlformat
+opam install -y dune utop odoc ounit2 qcheck bisect_ppx menhir ocaml-lsp-server ocamlformat alcotest
 
 # Şu noktada ocaml universal TopLevel aracı olan utop'u kullanarak interaktif bir şekilde OCaml kodu yazabiliriz
 utop
@@ -112,6 +124,67 @@ Eğer her şey yolunda giderse ubuntu ortamında **utop** ile doğrudan **ocaml*
 ```
 
 ![WSL Hello World](./images/ocaml_16.png)
+
+## Repo Yapısı ve Örnekleri Çalıştırmak
+
+Bu dokümandaki kod örneklerinin tamamı repoda da yer alıyor. Klasörler dokümanın akışını takip ediyor.
+
+```text
+learning-ocaml/
+├── dune-project          # Tüm repo tek bir dune projesi
+├── 01-basics/            # Giriş Seviyesi bölümündeki örnekler
+├── 02-zen/               # Biraz da Felsefe bölümündeki örnekler
+└── projects/
+    ├── standalone/       # Derleyerek Çalıştırmak
+    ├── testing/          # Alcotest ile Birim Test Yazmak
+    ├── eval/             # Dört işlem yorumlayıcısı (REPL + testler)
+    └── oql/              # Mini sorgu dili (REPL + testler)
+```
+
+Örnekleri birkaç farklı şekilde çalıştırabiliriz.
+
+```bash
+# Tek bir dosyayı yorumlayıcı ile doğrudan çalıştırmak
+ocaml 01-basics/loops.ml
+
+# Tüm repoyu derlemek ve tüm birim testlerini çalıştırmak (kök klasörden)
+dune build
+dune runtest
+
+# Derlenmiş bir örneği çalıştırmak
+dune exec ./01-basics/loops.exe
+dune exec ./projects/eval/main.exe
+```
+
+Kodlar **ocamlformat** ile biçimlendiriliyor. Sürüm kökteki **.ocamlformat** dosyasında sabitlendi *(0.28.1)*, çünkü farklı sürümler aynı kodu farklı biçimlendirebiliyor. Her **push** ve **pull request** sonrasında GitHub Actions üzerinde derleme, birim testleri, örnek dosyaların **ocaml** ile çalıştırılması ve biçim kontrolü yapılıyor.
+
+```bash
+# Aynı ocamlformat sürümünü kurmak için
+opam install ocamlformat.0.28.1
+# Tüm dosyaları biçimlendirmek için
+dune fmt
+```
+
+Hangi bölümün hangi dosyalarda olduğunu aşağıdaki tablodan da takip edebilirsiniz. Ayrıca her bölümün başında ilgili dosyalara bağlantı bulunuyor.
+
+| Bölüm | Dosyalar |
+|---|---|
+| Kurulumlar | [hello_world.ml](01-basics/hello_world.ml), [hello_world2.ml](01-basics/hello_world2.ml), [hello_world3.ml](01-basics/hello_world3.ml) |
+| Basit aritmetik işlemler | [basic_arithmetic.ml](01-basics/basic_arithmetic.ml) |
+| let'in Gücü, Zihin Yakan Bir Fonksiyon, Generic Parametreler | [functions_examples.ml](01-basics/functions_examples.ml) |
+| Tuple, List ve Options | [tuple_and_lists.ml](01-basics/tuple_and_lists.ml), [recursive_sum.ml](01-basics/recursive_sum.ml), [options_example.ml](01-basics/options_example.ml) |
+| Record ve Variant Tipler | [records_and_variants.ml](01-basics/records_and_variants.ml) |
+| Mutable Olma Hali | [arrays.ml](01-basics/arrays.ml), [mut_records.ml](01-basics/mut_records.ml) |
+| Refs | [counter.ml](01-basics/counter.ml) |
+| Döngüler | [loops.ml](01-basics/loops.ml) |
+| Derleyerek Çalıştırmak | [projects/standalone](projects/standalone) |
+| Alcotest ile Birim Test | [projects/testing](projects/testing) |
+| Type Expressiveness | [zen_00.ml](02-zen/zen_00.ml) |
+| Olabildiğince Fonksiyonel | [zen_01.ml](02-zen/zen_01.ml), [zen_02.ml](02-zen/zen_02.ml) |
+| Tony Hoare Anısına | [zen_03.ml](02-zen/zen_03.ml) |
+| Yüksek Matematik Lisanslı Derleyici | [zen_04.ml](02-zen/zen_04.ml) |
+| Modüller, Functor'lar ve Birinci Sınıf Modüller | [zen_05.ml](02-zen/zen_05.ml) |
+| Mini Projeler | [projects/eval](projects/eval), [projects/oql](projects/oql) |
 
 ## Giriş Seviyesi
 
@@ -134,6 +207,8 @@ print_string "Hello, world!\n";;
 ![Use Command with Utop](./images/ocaml_17.png)
 
 ### Basit aritmetik işlemler, değişken atamaları ve isimlendirmeler
+
+> Kaynak kod: [01-basics/basic_arithmetic.ml](01-basics/basic_arithmetic.ml)
 
 Öyleyse ders notlarımıza başlayalım. İlk olarak **float** değerler ile ilgili aritmetik birkaç işleme bakalım. Deneyeceğim ifadeleri aşağıdaki kod bloğuna ekliyorum. Bunları **utop** aracından denersek çok faydalı olacaktır.
 
@@ -199,6 +274,8 @@ let screen-width = 1024;;
 - Hatta değişken isimlendirmelerinde **-** operatörü de kullanılamaz.
 
 ### let'in Gücü ve Fonksiyon Tanımlamaları
+
+> Kaynak kod: [01-basics/functions_examples.ml](01-basics/functions_examples.ml)
 
 Başka işlemlerle devam edelim. **let** çok güçlü bir anahtar kelime *(keyword)*. Değişkenleri değerlere bağlayabildiğimiz gibi, fonksiyonları da iş yapan kod bloklarına bağlayabiliriz.
 
@@ -295,6 +372,8 @@ Gelecekten geldim :D **WSL - Ubuntu** tarafından da bir bakalım.
 
 ### Zihin Yakan Bir Fonksiyon Kullanımı
 
+> Kaynak kod: [01-basics/functions_examples.ml](01-basics/functions_examples.ml)
+
 Şimdi, **int** türünden değer dönen bir fonksiyonu parametre olarak alan ve diğer parametreden gelen **int** değer ile toplayan bir fonksiyon tanımlamaya çalışalım. İlk denememde fonksiyonu şöyle yazmıştım.
 
 ```ocaml
@@ -345,6 +424,8 @@ condition check_point 28 76;;
 
 ### Fonksiyonlarda Generic Parametre Kullanımı
 
+> Kaynak kod: [01-basics/functions_examples.ml](01-basics/functions_examples.ml)
+
 **OCaml** tür tahmini yapma konusundaki hünerini **generic** türler için de gösterir. Aşağıdaki ifadeleri deneyerek devam edelim.
 
 ```ocaml
@@ -381,6 +462,8 @@ choose is_pass "Black" "And White";;
 **choose** isimli fonksiyonumuz bir fonksiyon alıp diğer iki argümanı da hesaba katarak bir **if** koşulu işletmekte. **choose** fonksiyonundaki parametrelerin generic **'a** türü olarak yorumlandığına dikkat edelim. Sonraki adımlarda **str_len** ve **is_pass** isimli iki farklı fonksiyon daha tanımlanıyor. İlki, **String** modülünden **length** fonksiyonunu kullanarak bir değer döndürdüğü için **string** veri türü ile çalışacağı aşikar. Diğer fonksiyon ise sayısal bir karşılaştırma kullanıyor ve buna göre de **int** değerlerle çalışacağı anlaşılıyor. **choose** fonksiyonuna bu iki fonksiyonu parametre olarak verebiliriz ama devam eden argümanların da uygun tipler olması beklenir. Yani **str_len** kullanıyorsak diğer iki argümanın da **string** türünden olması gerekiyor.
 
 ### Tuple, List ve Options veri türleri
+
+> Kaynak kod: [01-basics/tuple_and_lists.ml](01-basics/tuple_and_lists.ml), [01-basics/recursive_sum.ml](01-basics/recursive_sum.ml), [01-basics/options_example.ml](01-basics/options_example.ml)
 
 İlk olarak **tuple** veri türü ile ilgili basit örneklerle ilerleyelim. Aşağıdaki ifadeleri deneyebiliriz.
 
@@ -506,6 +589,8 @@ Eğer **y** sıfır ise **None** dönüyor değilse bölme işlemi gerçekleşti
 
 ### Record Veri Yapısı ve Variant Tipler
 
+> Kaynak kod: [01-basics/records_and_variants.ml](01-basics/records_and_variants.ml)
+
 Pek tabii var olan türler dışında karma türler de tanımlayabiliriz. Kendi veri yapılarımızı tasarlarken kullanabileceğimiz enstrümanlardan birisi **record** türüdür.
 
 ```ocaml
@@ -583,6 +668,8 @@ Fonksiyonumuz parametre olarak **component** isimli **variant** türünden bir n
 ![ocaml_36.png](./images/ocaml_36.png)
 
 ### Mutable Olma Hali
+
+> Kaynak kod: [01-basics/arrays.ml](01-basics/arrays.ml), [01-basics/mut_records.ml](01-basics/mut_records.ml)
 
 > Varsayılan olarak immutable ama gerekirse mutable. Rust'ın açık bir şekilde benimsediği bir yaklaşım. Varsayılan olarak immutable olmak aslında bir şeylerin yanlışlıkla değiştirilmesini engellemek açısından anlamlı. Diğer yandan imperative yaklaşımın ele alındığı sayaçlar *(counters)* ve durum otomatı *(state machine)* gibi kodlar yazmanın önü de açık.
 
@@ -729,6 +816,8 @@ Printf.printf "Current count: %d\n" tick_counter.count;;
 
 ### Refs
 
+> Kaynak kod: [01-basics/counter.ml](01-basics/counter.ml)
+
 Tekil bir mutable değişken oluşturmak için **ref** enstrümanı da kullanılabilir. **ref** bir anahtar kelime değil, standart kütüphanede tanımlanmış bir tip ve aynı adı taşıyan bir fonksiyon. **ref** tipi esasında bir **record** türü. İçinde **contents** isimli bir alan içeriyor. Hatta stdlib.ml dosyasına bakarsak aşağıdaki gibi tanımlandığını görürüz.
 
 ![ocaml_07.png](./images/ocaml_07.png)
@@ -817,6 +906,8 @@ point;;
 
 ### Döngüsüz Olmaz Tabii *(for, while loops)*
 
+> Kaynak kod: [01-basics/loops.ml](01-basics/loops.ml)
+
 En basit örneklerle başlayalım. Bir sayaç fonksiyonunu hem **for** hem de **while** döngüsü kullanarak yazalım.
 
 ```ocaml
@@ -847,7 +938,7 @@ count_while 10;;
 let generate_random_list n =
   Random.self_init (); (* Rastgele sayı üreteciyi başlat *)
   let numbers = ref [] in
-  for i = 1 to n do
+  for _ = 1 to n do
     let random_number = Random.int 100 in
     numbers := random_number :: !numbers
   done;
@@ -950,7 +1041,9 @@ Burada yardımcı birkaç fonksiyon da kullandık. Örneğin iki boyutlu bir mat
 
 ### Derleyerek Çalıştırmak
 
-**Real World OCaml** kitabı bir sonraki bölüme geçmeden önce **A Complete Program** başlığında basit bir program örneği anlatıyor. Bu örnekte **ocaml** kodunun derlenerek çalıştırılması söz konusu. Derleme işlemi için **dune** *(Gezegen olan değil :D)* aracını kullanıyor. Burada temel amaç tek başına çalıştırılabilir *(standalone)* bir program oluşturmak. Öncelikle kodlarımızı oluşturalım. Bu amaçla **standalone** isimli bir klasör oluşturdum ve içerisine **rand_10.ml** isimli bir dosya ekledim. Kolaya kaçarak daha önceden ele aldığımız bir fonksiyonu değerlendirebiliriz. Rastgele sayılardan oluşan 10 elemanlı bir liste oluşturuyoruz.
+> Kaynak kod: [projects/standalone](projects/standalone)
+
+**Real World OCaml** kitabı bir sonraki bölüme geçmeden önce **A Complete Program** başlığında basit bir program örneği anlatıyor. Bu örnekte **ocaml** kodunun derlenerek çalıştırılması söz konusu. Derleme işlemi için **dune** *(Gezegen olan değil :D)* aracını kullanıyor. Burada temel amaç tek başına çalıştırılabilir *(standalone)* bir program oluşturmak. Öncelikle kodlarımızı oluşturalım. Bu amaçla **standalone** isimli bir klasör oluşturdum *(repoda projects/standalone)* ve içerisine **rand_10.ml** isimli bir dosya ekledim. Kolaya kaçarak daha önceden ele aldığımız bir fonksiyonu değerlendirebiliriz. Rastgele sayılardan oluşan 10 elemanlı bir liste oluşturuyoruz.
 
 ```ocaml
 let generate_random_list n =
@@ -982,13 +1075,15 @@ Kod dosyasının adı **rand_10.ml** olduğu için name kısmına da rand_10 yaz
 (lang dune 3.0)
 ```
 
-Bu dosya ile dune aracının hangi sürümünün kullanılacağını belirtiyoruz. Bu adımlardan sonra kodu derleyip çalıştırabiliriz. Normalde sadece **dune build** komutu yeterli olur ancak derleme sırasındaki detayları da görmek istersek **verbose** argümanını kullanabiliriz. Programı çalıştırmak için yine **dune** aracından yararlanıyoruz.
+Bu dosya ile dune aracının hangi sürümünün kullanılacağını belirtiyoruz. *(Tek başına bir proje oluştururken bu dosya proje klasöründe yer alır. Bu repoda ise tüm örnekler kök klasördeki tek bir **dune-project** dosyası altında toplandı. dune, kök klasörden başlayarak alt klasörlerdeki tüm **dune** dosyalarını bulur. Bu nedenle projects/standalone klasöründe ayrıca bir dune-project yok.)* Bu adımlardan sonra kodu derleyip çalıştırabiliriz. Normalde sadece **dune build** komutu yeterli olur ancak derleme sırasındaki detayları da görmek istersek **verbose** argümanını kullanabiliriz. Programı çalıştırmak için yine **dune** aracından yararlanıyoruz.
 
 ```bash
 # Derleme işlemi ve detaylar
 dune build --display=verbose
 # Programın çalıştırılması
 dune exec ./rand_10.exe
+# Repodaki yapıda kök klasörden çalıştırmak için
+dune exec ./projects/standalone/rand_10.exe
 ```
 
 ve işte çalışma zamanı çıktılarımız.
@@ -1000,6 +1095,8 @@ ve işte çalışma zamanı çıktılarımız.
 ![ocaml_51.png](./images/ocaml_51.png)
 
 ### Alcotest ile Birim Test Yazmak
+
+> Kaynak kod: [projects/testing](projects/testing)
 
 **OCaml** kodlarını test etmek için birkaç yöntem var. Bunlardan birisi () ile oluşturulan program giriş noktasında klasik terminal çıktıları ile ilerlemek. Ancak birim test *(unit test)* yazmak elbette ki daha profesyonel bir yaklaşım ama daha da önemlisi bir standart. Bu amaçla **dune** ile entegre çalışabilen **Alcotest** isimli bir kütüphane bulunuyor. Öncelikle bu aracı **opam** ile sisteme yüklemek gerekiyor *(Windows veya Linux fark etmez)*.
 
@@ -1100,6 +1197,8 @@ En zor kısım burası. Şöyle bir soru soralım. Neden bazı diller Method Ove
 
 ### Hata Yapmayı İmkansız Kılan Tip Desteği *(Type Safety değil Type Expressiveness)*
 
+> Kaynak kod: [02-zen/zen_00.ml](02-zen/zen_00.ml)
+
 Verinin alabileceği tüm durumlar ilişkili olduğu tip tarafından tanımlanır. Çok klasik bir örnek üzerinden ilerleyelim *(Rust tarafında da kullandığım bir teori ki OCaml'dan geliyormuş :D )*
 
 ```ocaml
@@ -1135,6 +1234,8 @@ let () =
 Bir başka deyişle derleyici tasarımımızın bir ortağı gibi hareket eder. Bir varyantı unutmamıza izin vermez. **Rust** dili açısından bakarsak bu yapının bence çok daha şık bir şekli olan **enum** yapısı var. Üstelik Options/Result gibi türler de bu felsefeyi *(anlatabildim mi veya anlayabildim mi işte bütün mesele bu :D)* çok güzel bir şekilde ortaya koyuyor. O zaman mottomuzu söylüyoruz; Tip güvenliği değil tip ifade gücü *(type expressiveness)*.
 
 ### Olabildiğince Fonksiyonel
+
+> Kaynak kod: [02-zen/zen_01.ml](02-zen/zen_01.ml), [02-zen/zen_02.ml](02-zen/zen_02.ml)
 
 OCaml mümkün olduğunca fonksiyonel olmayı hedefler. Yani her şeyi immutable yazmayı önerir. Lakin performans veya mantık gerektiren şeyler söz konusuysa imperative araçları da emrimize amade eder. Bu noktada **Haskell** gibi dillerden önemli ölçüde ayrıldığı söylenir ki tartışmaya açıktır *(Neden, çünkü Haskell ile hiç tecrübem yok)* Örnek kodlarda ele aldık ama sayaç artırıcı meselesini tekrar masaya yatırabiliriz. Aşağıdaki kod parçasını ele alalım.
 
@@ -1198,6 +1299,8 @@ Tabii bu çok küçük bir veri kümesini ele alıyor. Elimizde milyon elemanlı
 Buradan şu sonuca varabiliriz; belki de yazacağımız algoritma imperative yaklaşım gerekleri ile daha hızlı çalışıyordur. **OCaml** buna destek verir. Dolayısıyla elimizde yüksek seviyeli dillerin zarifliğine sahip *(her ne kadar sentaksı zorlayıcı olsa da kavramsal olarak öyle)* ama gerektiğinde düşük seviyeli dillerin sunduğu bellek performansına yakın destek veren bir programlama dili var ve **Rust** bence bu özellikleri bir üst noktaya taşıyıp bellek tarafında gerçekten güvenli kalabilmenin yolunu da açmış durumda.
 
 ### Tony Hoare Anısına
+
+> Kaynak kod: [02-zen/zen_03.ml](02-zen/zen_03.ml)
 
 Yazı yazmamdan kısa bir süre önce aramızdan ayrılan, bilgisayar bilimlerinin efsane ismi **Tony Hoare**'ın milyar dolarlık hata olarak da isimlendirdiği **Null Pointer Exception**, programlama dillerinde sıkça karşılaşılan ve ciddi sorunlara yol açabilen bir durumu anlatır. Uğraştığımız pek çok programlama dilinde **null** diye bir kavram var. Kısaca, bir değişkenin değeri yoksa ona null atayabiliriz şeklinde ifade etsek yeridir. Diğer yandan bu durum kodu yazarken bir null kontrolü yapmamızı da gerektirir. *(null değer taşıyabilen bir referansın kullanıldığı her yerde null olup olmadığını kontrol ederek hareket etmek)*. **OCaml** bu konuya şöyle bir felsefe ile yaklaşıyor; **"Eğer bir hata oluşacaksa çalışma zamanında değil derleme zamanında olmalıdır"**. Hımmm... Yani... O zaman null değer yoktur diyebiliriz. Evet, gerçekten de null diye bir kavram **OCaml** dilinde yok. Bunun yerine programcıya sunulan bir seçenek var; **Option**...
 
@@ -1271,6 +1374,8 @@ Görüldüğü üzere kaçma şansımız yok. **None** olasılığını da mutla
 **Rust** programlama dilindeki `Option<T>` ve hata yönetimi için kullanılan `Result<T,E>` kavramları bu felsefeden gelir. Diğer yandan örneğin **C#** programlama dili çok sonradan **Nullable Type** yeteneği kazanmıştır fakat dilin temel felsefesinde halen **null** diye bir kavram olduğu için bu sonradan eklenmiş bir özellik olarak kabul edilir, bir başka deyişle dilin genlerine işlenmiş matematiksel bir güvence yoktur. Burada genel olarak ifade edilen bir sorunun cevabı da bulunabilir; *Neden modern diller gün geçtikçe OCaml'a benzemeye çalışıyor?*
 
 ### Yüksek Matematik Lisanslı Derleyici
+
+> Kaynak kod: [02-zen/zen_04.ml](02-zen/zen_04.ml)
 
 Programlama dillerini birçok açıdan ayrıştırabiliriz. Performans ve hıza odaklanıp bazı güvenli alanları kenara bırakanlar, iş modellerini gerçeğe yakın organize edip performanstan ödün verenler gibi. Ancak bir de akademik ve endüstriyel olanlar şeklinde iki ana kategoriye de ayrılabilirler. Söz gelimi öğrenmesi görece daha zor olan **Haskell**, **Lisp** gibi diller matematiksel açıdan kusursuza yakındır ancak gerçek dünya problemlerini modellemeye çalıştığımızda bizi daha da zorlayabilir. Diğer yandan **C++**, **Java**, **Go** gibi iş bitirici türden yani endüstriyel çözümlere daha yatkın olan diller de vardır ancak bunlarda kritik hataların oluşmasına müsait dillerdir. Kaynaklar **OCaml** programlama dilinin akademik titizliğe sahip ve endüstriyel olarak da güçlü olduğuna vurgu yaparlar.
 
@@ -1354,6 +1459,8 @@ struct Dollar(f64);
 C# tarafından olaya baktığımızda sanıyorum en yakın çözüm **record struct** gibi bir türden yararlanmak olacaktır. Nitekim **C#** ve **Java** gibi dillerde bu tür bir korumayı sağlamak için sınıflara başvurduğumuzda bellekte ekstra nesneler oluşmasına neden olup gereksiz **GC** döngülerine sebebiyet verebiliriz. Ancak bu söylediklerimi ispat edebilir miyim, ımmmm, hayır :D
 
 ### Modüller, Functor'lar ve Birinci Sınıf Modüller *(First-Class Modules)*
+
+> Kaynak kod: [02-zen/zen_05.ml](02-zen/zen_05.ml)
 
 Rahmetli babam çok uzun yıllar Almanya'da çalışmıştı. Savaş sonrası kalkınmaya çalışan Almanya'ya erken dönem gidenler arasındaydı. Orada edindiği dostluklar yurda temelli döndükten sonra da devam etmişti. Öyle ki beni çok seven birçok arkadaşı ne zaman onu ziyaret için ülkeye gelse küçük ya da büyük lego setleri getirirdi. Taa o zamanlarda kalma bir Lego sevgisi vardır içimde. Halen daha yapıyorum demek isterdim ama malum fiyatlar :|
 
@@ -1459,8 +1566,142 @@ let () =
 
 **pick_logger** fonksiyonu bir **bool** değere göre iki modülden birini değer olarak döndürüyor. **log_with** fonksiyonu ise parametre olarak gelen paketlenmiş modülü **L** adıyla tekrar açıp **L.warning** fonksiyonunu çağırıyor. Functor'larla karşılaştırırsak; functor'lar modülden modül üreten derleme zamanı yapılarıdır, first-class modules ise modülleri çalışma zamanında dolaştırabildiğimiz değerlere dönüştürür. Her iki durumda da **LOGGER** sözleşmesine uyum derleyici tarafından denetlenir. *(Bu örnek de zen_05.ml dosyasının sonunda yer alıyor)*
 
+## Mini Projeler: Yorumlayıcı Yazmak
+
+Girişte **OCaml**'ı çalışma sebeplerimden birinin, bir derleyicinin ya da yorumlayıcının nasıl yazıldığını temelden öğrenmek olduğunu söylemiştim. Bu bölümdeki iki küçük proje o yolun ilk adımları. Her ikisi de aynı üç aşamalı akışı izliyor.
+
+1. **Lexer *(Tokenizer)*:** Metni anlamlı en küçük parçalara, yani token'lara böler. Örneğin **"3 + 4"** ifadesi **[TNumber 3; TPlus; TNumber 4]** listesine dönüşür.
+2. **Parser:** Token listesini dilin gramer kurallarına göre bir ağaç yapısına, yani **AST** *(Abstract Syntax Tree)* nesnesine dönüştürür.
+3. **Evaluator *(veya Executor)*:** Ağacı dolaşarak sonucu üretir.
+
+Token'lar da AST düğümleri de birer **variant** tip ve her aşama bu variant'lar üzerinde çalışan bir **pattern matching** bloğundan ibaret. **OCaml**'ın *(ve genlerini taşıyan **Rust**'ın)* derleyici yazımında neden bu kadar sevildiği burada çok daha net anlaşılıyor.
+
+### Dört İşlem Yorumlayıcısı *(eval)*
+
+> Kaynak kod: [projects/eval](projects/eval)
+
+İlk proje dört işlem yapabilen basit bir hesap makinesi. Önce ifade ağacını tanımlıyoruz.
+
+```ocaml
+type expression =
+  | Value of int
+  | Neg of expression
+  | Add of expression * expression
+  | Sub of expression * expression
+  | Mul of expression * expression
+  | Div of expression * expression
+```
+
+Bu recursive bir tip. **Add** düğümünün her iki tarafı da birer **expression** olabildiği için **3 + 4 \* (2 - 1)** gibi iç içe ifadeler **Add (Value 3, Mul (Value 4, Sub (Value 2, Value 1)))** şeklinde bir ağaçla temsil edilebiliyor. **eval** fonksiyonu da bu ağacı yine recursive olarak dolaşıyor.
+
+```ocaml
+let rec eval expr =
+  match expr with
+  | Value n -> n
+  | Neg e -> - (eval e)
+  | Add (e1, e2) -> eval e1 + eval e2
+  | Sub (e1, e2) -> eval e1 - eval e2
+  | Mul (e1, e2) -> eval e1 * eval e2
+  | Div (e1, e2) ->
+      let denominator = eval e2 in
+      if denominator = 0 then failwith "Division by zero" else eval e1 / denominator
+```
+
+İşin asıl zor kısmı parser. İşlem önceliğini doğru kurabilmek için **recursive descent parsing** tekniğini kullandık. Gramer kuralları kabaca şöyle;
+
+```text
+expr   ::= term   (('+' | '-') term)*
+term   ::= factor (('*' | '/') factor)*
+factor ::= number | '-' factor | '(' expr ')'
+```
+
+Her kural için bir fonksiyon var *(parser, parse_term, parse_factor)* ve bu fonksiyonlar **let rec ... and ...** söz dizimiyle birbirlerini karşılıklı çağırıyor *(mutually recursive)*. Çarpma ve bölme, toplama ve çıkarmaya göre daha derinde çözümlendiği için önceliği de daha yüksek. Tekli eksi ise en derindeki **factor** seviyesinde ele alındığından **-2 \* 3** ifadesi **(-2) \* 3** olarak yorumlanıyor.
+
+Parse fonksiyonlarının her biri **(ağaç, kalan token'lar)** şeklinde bir tuple döndürüyor. Parantez içini çözen kısım kalan token'ların başında **)** bekliyor. En dış seviyede ise kalan listenin boş olması gerekiyor, aksi halde **3 4** gibi bir girdi sessizce 3 olarak hesaplanırdı. Bu kontrolü **parse** fonksiyonu yapıyor.
+
+Kod üç dosyaya bölünmüş durumda. **evaluator.ml** bir kütüphane olarak tokenizer, parser ve eval fonksiyonlarını içeriyor. **main.ml** kullanıcıyla etkileşen REPL döngüsü, **test_evaluator.ml** ise Alcotest ile yazılmış birim testleri. REPL'i ayrı bir dosyaya almak, mantığı test edilebilir hale getirmenin en kolay yolu. Hatalar bu projede **failwith** ile fırlatılan istisnalar *(exceptions)* ile yönetiliyor ve REPL bunları **try ... with** bloğunda yakalıyor.
+
+```bash
+dune exec ./projects/eval/main.exe
+```
+
+```text
+Calculator> 3 + 4 * (2 - 1)
+Result: 7
+Calculator> -(2 + 3) * 2
+Result: -10
+Calculator> 3 4
+Error: Syntax error: Unexpected token '4'
+Calculator> 1 / 0
+Error: Division by zero
+```
+
+### Mini Sorgu Dili *(oql)*
+
+> Kaynak kod: [projects/oql](projects/oql)
+
+İkinci proje bellekteki listelerden oluşan minik bir veritabanını sorgulayabilen bir dil.
+
+```text
+table='Products' get all where 'CategoryId' == 1;
+```
+
+Bu kez token'lar **table**, **get**, **all**, **where** gibi anahtar kelimeler, **=**, **==**, **!=** operatörleri, tırnak içindeki metinler, sayılar ve ifadeyi sonlandıran **;** karakteri. Gramer basit olduğu için parser'da recursive descent yerine doğrudan liste desenleriyle eşleştirme yapıyoruz.
+
+```ocaml
+| TTable :: TAssign :: TString table_name :: TGet :: TAll :: rest -> ...
+```
+
+Sorgunun kendisi ise bir record ile temsil ediliyor. **where** kısmı opsiyonel olduğu için koşul bir **option**.
+
+```ocaml
+type query = { table_name : string; condition : condition option }
+```
+
+Bu projede hata yönetiminde de bir adım ileri gidiyoruz. **eval** projesinde hatalar istisna olarak fırlatılıyordu. Burada ise **Tony Hoare Anısına** bölümündeki felsefeyi **result** tipiyle sürdürüyoruz. Her aşama ya **Ok değer** ya da **Error mesaj** döndürüyor ve bu durum fonksiyonların imzasından da anlaşılıyor.
+
+```ocaml
+val tokenize : string -> (token list, string) result
+val parse : token list -> (query, string) result
+val execute : query -> Db.database -> (Db.row list, string) result
+```
+
+**option** *bir değer var mı yok mu* sorusuna cevap verirken **result** *ya sonuç ya da neden olmadığının açıklaması* der. **Rust**'taki `Result<T, E>` türünün atası diyebiliriz. Aşamaları birbirine bağlamak için de **let\*** operatöründen yararlanıyoruz.
+
+```ocaml
+let ( let* ) = Result.bind
+
+let run db input =
+  let* tokens = tokenize input in
+  let* query = parse tokens in
+  execute query db
+```
+
+**let\*** ile bağlanan adımlardan herhangi biri **Error** döndürürse zincir orada kesiliyor ve sonraki adımlar hiç çalışmıyor. Böylece iç içe **match** blokları yazmadan hata kontrollerini arka arkaya sıralayabiliyoruz. REPL tarafında da **try ... with** bloğuna gerek kalmıyor, **Ok** ve **Error** dallarını eşleştirmek yeterli.
+
+```bash
+dune exec ./projects/oql/main.exe
+```
+
+```text
+oql> table='Products' get all where 'CategoryId' == 1;
+Id=1, Name='Laptop', CategoryId=1
+Id=2, Name='Phone', CategoryId=1
+(2 row(s))
+oql> table='Products' get all where 'Name' != 'Phone';
+Id=1, Name='Laptop', CategoryId=1
+Id=3, Name='Table', CategoryId=2
+(2 row(s))
+oql> table='Products' get all where 'Name' == 1;
+Error: Type mismatch in condition for column 'Name'
+oql> table='Orders' get all;
+Error: Table 'Orders' not found in database!
+```
+
 ## Sonuç
 
 Bir merakla başladığım **OCaml** yolculuğumdaki hedefim bir programlama dili geliştirmek için gerekli becerileri öğrenmekti. Henüz bu noktanın çok uzağında olmakla birlikte, severek kullandığım **Rust**'ın genlerini aldığı bu dille uğraşmak bir başka meydan okumaydı ama değdi. Öğrenmeye devam; umarım sizlere de yeni bir şeyler öğrenmek için ilham veren bir çalışma olmuştur. Bir başka çalışmada görüşmek üzere, hoşça kalın.
 
 [Bu çalışmadaki örneklere ve biraz daha fazlasına github reposundan ulaşabilirsiniz](https://github.com/buraksenyurt/learning-ocaml)
+
+Bu repodaki kodlar [MIT lisansı](LICENSE) ile paylaşılmaktadır.
