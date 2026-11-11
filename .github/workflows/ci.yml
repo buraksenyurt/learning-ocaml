@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up OCaml
+        uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: "5.4"
+
+      - name: Install dependencies
+        run: opam install -y dune alcotest ocamlformat.0.28.1
+
+      - name: Build
+        run: opam exec -- dune build
+
+      - name: Run unit tests
+        run: opam exec -- dune runtest
+
+      - name: Run example scripts with the ocaml toplevel
+        run: |
+          for f in 01-basics/*.ml 02-zen/*.ml; do
+            echo "::group::$f"
+            opam exec -- ocaml "$f" < /dev/null
+            echo "::endgroup::"
+          done
+
+      - name: Check formatting
+        run: opam exec -- dune build @fmt

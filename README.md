@@ -156,6 +156,15 @@ dune exec ./01-basics/loops.exe
 dune exec ./projects/eval/main.exe
 ```
 
+Kodlar **ocamlformat** ile biçimlendiriliyor. Sürüm kökteki **.ocamlformat** dosyasında sabitlendi *(0.28.1)*, çünkü farklı sürümler aynı kodu farklı biçimlendirebiliyor. Her **push** ve **pull request** sonrasında GitHub Actions üzerinde derleme, birim testleri, örnek dosyaların **ocaml** ile çalıştırılması ve biçim kontrolü yapılıyor.
+
+```bash
+# Aynı ocamlformat sürümünü kurmak için
+opam install ocamlformat.0.28.1
+# Tüm dosyaları biçimlendirmek için
+dune fmt
+```
+
 Hangi bölümün hangi dosyalarda olduğunu aşağıdaki tablodan da takip edebilirsiniz. Ayrıca her bölümün başında ilgili dosyalara bağlantı bulunuyor.
 
 | Bölüm | Dosyalar |
@@ -1694,3 +1703,5 @@ Error: Table 'Orders' not found in database!
 Bir merakla başladığım **OCaml** yolculuğumdaki hedefim bir programlama dili geliştirmek için gerekli becerileri öğrenmekti. Henüz bu noktanın çok uzağında olmakla birlikte, severek kullandığım **Rust**'ın genlerini aldığı bu dille uğraşmak bir başka meydan okumaydı ama değdi. Öğrenmeye devam; umarım sizlere de yeni bir şeyler öğrenmek için ilham veren bir çalışma olmuştur. Bir başka çalışmada görüşmek üzere, hoşça kalın.
 
 [Bu çalışmadaki örneklere ve biraz daha fazlasına github reposundan ulaşabilirsiniz](https://github.com/buraksenyurt/learning-ocaml)
+
+Bu repodaki kodlar [MIT lisansı](LICENSE) ile paylaşılmaktadır.

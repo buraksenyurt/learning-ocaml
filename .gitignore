@@ -34,3 +34,6 @@ setup.log
 
 # Local OPAM switch
 _opam/
+
+# zen_05.ml çalıştığında oluşan log dosyası
+log.txt
