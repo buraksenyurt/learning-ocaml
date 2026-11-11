@@ -9,21 +9,25 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  OPAMROOT: /home/opam/.opam
+  OPAMROOTISOK: "1"
+  OPAMYES: "1"
+
 jobs:
   build-and-test:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    container:
+      image: ocaml/opam:ubuntu-24.04-ocaml-5.4
+      options: --user root
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up OCaml
-        uses: ocaml/setup-ocaml@v3
-        with:
-          ocaml-compiler: "5.4"
-          dune-cache: true
-
       - name: Install dependencies
-        run: opam install -y dune alcotest
+        run: |
+          opam update
+          opam install dune alcotest
 
       - name: Build
         run: opam exec -- dune build
@@ -42,13 +46,16 @@ jobs:
   fmt:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    container:
+      image: ocaml/opam:ubuntu-24.04-ocaml-5.4
+      options: --user root
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up OCaml
-        uses: ocaml/setup-ocaml@v3
-        with:
-          ocaml-compiler: "5.4"
+      - name: Install ocamlformat
+        run: |
+          opam update
+          opam install dune ocamlformat.0.28.1
 
       - name: Check formatting
-        uses: ocaml/setup-ocaml/lint-fmt@v3
+        run: opam exec -- dune build @fmt
