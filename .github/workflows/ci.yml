@@ -24,10 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Trust opam repository
+        run: git config --global --add safe.directory '*'
+
       - name: Install dependencies
-        run: |
-          opam update
-          opam install dune alcotest
+        run: opam install dune alcotest
 
       - name: Build
         run: opam exec -- dune build
@@ -52,10 +53,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Trust opam repository
+        run: git config --global --add safe.directory '*'
+
       - name: Install ocamlformat
-        run: |
-          opam update
-          opam install dune ocamlformat.0.28.1
+        run: opam install dune ocamlformat.0.28.1
 
       - name: Check formatting
         run: opam exec -- dune build @fmt
