@@ -1,2 +1,13 @@
+(library
+ (name evaluator)
+ (modules evaluator))
+
 (executable
- (name evaluator))
+ (name main)
+ (modules main)
+ (libraries evaluator))
+
+(test
+ (name test_evaluator)
+ (modules test_evaluator)
+ (libraries evaluator alcotest))

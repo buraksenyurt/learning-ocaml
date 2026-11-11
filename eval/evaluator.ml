@@ -1,6 +1,10 @@
 (*
   Örneğimizde çok basit bir yorumlayıcı(Interpretter) yazmaya çalışıyoruz.
   Klasik örnek olarak dört işlemi ele alabiliriz.
+
+  Bu dosya bir kütüphane (library) olarak derlenir. Böylece tokenizer, parser ve eval
+  fonksiyonları test_evaluator.ml içinden birim testlerle doğrulanabilir.
+  Kullanıcıyla etkileşen REPL döngüsü ise main.ml dosyasındadır.
 *)
 
 (*
@@ -10,6 +14,7 @@
 *)
 type expression = 
   | Value of int
+  | Neg of expression (* Tekli eksi (unary minus). Örneğin -5 veya -(2+3) *)
   | Add of expression * expression
   | Sub of expression * expression
   | Mul of expression * expression
@@ -33,11 +38,15 @@ type expression =
   dune build
   
   Çalıştırmak için;
-  dune exec ./evaluator.exe
+  dune exec ./main.exe
+
+  Testleri çalıştırmak için;
+  dune test
 *)
 let rec eval expr =
   match expr with
   | Value n -> n
+  | Neg e -> - (eval e)
   | Add (e1, e2) -> eval e1 + eval e2
   | Sub (e1, e2) -> eval e1 - eval e2
   | Mul (e1, e2) -> eval e1 * eval e2
@@ -64,6 +73,16 @@ type token =
   |TSlash
   |TLParen
   |TRParen
+
+(* Hata mesajlarında token'ları okunabilir göstermek için yardımcı fonksiyon *)
+let string_of_token = function
+  | TNumber n -> string_of_int n
+  | TPlus -> "+"
+  | TMinus -> "-"
+  | TStar -> "*"
+  | TSlash -> "/"
+  | TLParen -> "("
+  | TRParen -> ")"
 
 (*
   Tokenizer fonksiyonu str ile gelen String veri türünü alır ve bir token listesine dönüştürür.
@@ -126,10 +145,18 @@ let rec parser tokens =
   let (left_node, rest) = parse_term tokens in
   parse_expr_tail left_node rest
 
-(* parse_factor sayı ve parantez gibi faktörleri ele alıyor. Bunu #1 seviye olarak düşünelim *)
+(* parse_factor sayı, parantez ve tekli eksi gibi faktörleri ele alıyor. Bunu #1 seviye olarak düşünelim *)
 and parse_factor tokens =
   match tokens with
   | TNumber n :: rest -> (Value n, rest)
+  (*
+    Tekli eksi: Bir faktörün başında gelen '-' işareti, ardından gelen faktörün negatifini alır.
+    parse_factor'ı tekrar çağırdığımız için -5, -(2+3) ve hatta --5 gibi ifadeler de çözümlenir.
+    Faktör seviyesinde olduğu için önceliği çarpma/bölmeden yüksektir: -2*3 = (-2)*3
+  *)
+  | TMinus :: rest ->
+      let (expr_node, rest_after_expr) = parse_factor rest in
+      (Neg expr_node, rest_after_expr)
   | TLParen :: rest ->
       let (expr_node, rest_after_expr) = parser rest in
       (match rest_after_expr with
@@ -163,56 +190,18 @@ and parse_expr_tail left_node tokens =
       parse_expr_tail (Sub (left_node, right_node)) rest_after_right
   | _ -> (left_node, tokens)
 
-
 (*
-    repl fonksiyonu bildiğimiz Read-Eval-Print Loop (REPL) döngüsünü sağlar.
-    Böylece komut satırından sürekli hesaplama için girdi alınabilir.
-    Fonksiyon recursive olarak tanımlanmıştır.
-
+  parser fonksiyonu ifadenin başından itibaren okuyabildiği kadarını okur ve kalan token'ları da döndürür.
+  Bu kalan token'lar parantez içi gibi alt ifadeler için gereklidir. Ancak en dış seviyede tüm girdinin
+  tüketilmiş olması gerekir. Aksi halde "3 4" ifadesi 3, "(1+2))" ifadesi de 3 olarak hesaplanır ve
+  fazladan yazılanlar sessizce yutulurdu. parse fonksiyonu bu kontrolü yapan giriş noktasıdır.
 *)
-let rec repl() =
-  print_string "Calculator> ";
-  flush stdout;
+let parse tokens =
+  match parser tokens with
+  | (ast, []) -> ast
+  | (_, unexpected :: _) ->
+      failwith (Printf.sprintf "Syntax error: Unexpected token '%s'" (string_of_token unexpected))
 
-  try
-  (* Hesaplama sırasında olası hatalar olabilir.
-    Örneğin sıfıra bölme veya sözdizimi hatası gibi- diyelim ki eksik parantez var veya geçersiz bir karakter.
-    Böyle bir durumda programın çökmesi yerine try-with bloğu içinde 
-    hatayı yakalayarak kullanıcıya bir hata mesajı göstermek ve
-    REPL döngüsüne devam ettirmek daha anlamlı olacaktır.
-  *)
-    let input = read_line () in
-    if input = "exit" || input = "quit" then
-      print_endline "Goodbye!"
-    else if input = "cls" || input = "clear" then
-      (* 
-        Windows için cls, Unix tabanlı sistemler için clear komutu kullanılabilir. 
-        Programın hangi işletim sisteminde çalıştığını kontrol etmek için
-        Sys kütüphanesindeki os_type fonksiyonunu kullandık.
-        Sys modülü için -> https://ocaml.org/manual/5.4/api/Sys.html      
-      *)
-      if Sys.os_type = "Win32" || Sys.os_type="Cygwin" then
-         let _ = Sys.command "cls" in repl()
-      else
-        let _ = Sys.command "clear" in repl()
-    else if input = "" then
-      repl() (* Boş giriş yapıldığında tekrar prompt göstermesi için *)
-    else
-      let tokens = tokenizer input in
-      let (ast, _) = parser tokens in
-      let result = eval ast in
-      Printf.printf "Result: %d\n" result;
-      repl()
-  with 
-  (* Tüm hata mesajlarını kapsar*)
-  | Failure msg -> Printf.printf "Error: %s\n" msg; repl()
-
-
-
-(*
-  Ana program kkodu repl fonksiyonunu çağırarak 
-  kullanıcıdan girdi almaya başlar.
-*)
-let () = 
-  print_endline "Welcome to the simple OCaml calculator! Type 'exit' or 'quit' to leave.";
-  repl()
+(* Metinsel bir ifadeyi tek adımda hesaplayan yardımcı fonksiyon. REPL ve testler bunu kullanır. *)
+let evaluate input =
+  input |> tokenizer |> parse |> eval
