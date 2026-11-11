@@ -5,9 +5,14 @@ on:
     branches: [main]
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -15,9 +20,10 @@ jobs:
         uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: "5.4"
+          dune-cache: true
 
       - name: Install dependencies
-        run: opam install -y dune alcotest ocamlformat.0.28.1
+        run: opam install -y dune alcotest
 
       - name: Build
         run: opam exec -- dune build
@@ -33,5 +39,16 @@ jobs:
             echo "::endgroup::"
           done
 
+  fmt:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up OCaml
+        uses: ocaml/setup-ocaml@v3
+        with:
+          ocaml-compiler: "5.4"
+
       - name: Check formatting
-        run: opam exec -- dune build @fmt
+        uses: ocaml/setup-ocaml/lint-fmt@v3
