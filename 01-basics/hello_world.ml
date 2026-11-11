@@ -3,7 +3,7 @@
     Bazı dillerdeki gibi tek satırlık yorumlar için // kullanımı söz konusu değil.
     Bu kodu doğrudan çalıştırmak için komut satırından;
     
-    ocaml hello-world.ml
+    ocaml hello_world.ml
 
     yazmak yeterli.
 *)

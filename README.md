@@ -847,7 +847,7 @@ count_while 10;;
 let generate_random_list n =
   Random.self_init (); (* Rastgele sayı üreteciyi başlat *)
   let numbers = ref [] in
-  for i = 1 to n do
+  for _ = 1 to n do
     let random_number = Random.int 100 in
     numbers := random_number :: !numbers
   done;

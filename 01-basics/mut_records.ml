@@ -31,8 +31,12 @@ move_player she_ra (5, 10);;
 (* 
   OCaml'ın immutable felsefesini anlamak için bu örneği varsayılan durumda ele alalım
   Aşağıda görüldüğü gibi normal bir record tanımı yaptık.
+
+  Not: utop içinde aynı isimle (player) ikinci bir tip tanımlamak mümkündür, yeni tanım eskisini gölgeler.
+  Ancak derlenen bir dosyada (modülde) aynı tip adı iki kez tanımlanamaz
+  (Error: Multiple definition of the type name player). Bu yüzden burada immutable_player adını kullanıyoruz.
 *)
-type player = {
+type immutable_player = {
   name: string;
   health: int;
   position: (int * int);
@@ -45,7 +49,7 @@ let she_ra = { name = "She-Ra"; health = 100; position = (0, 0) };;
   Tabii bu durumda var olan player record' unun bir kopyasını oluşturmuş oluruz.
 
   Örnekte update_player oluşturulurken health bilgisi güncelleniyor,
-  burada with keyword kullandığımıza dikkat edelim. in ise yeni record'ün oluşturulacağı scope'u belirtiyor.
+  burada with keyword kullandığımıza dikkat edelim. let ... in ifadesindeki in ise updated_player bağlamasının geçerli olduğu kapsamı (scope) belirtiyor.
 *)
 let take_damage player amount = 
   let updated_player = { player with health = player.health - amount } in
