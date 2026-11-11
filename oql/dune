@@ -3,6 +3,11 @@
  (wrapped false)
  (modules oql db))
 
+(executable
+ (name main)
+ (modules main)
+ (libraries oql))
+
 (test
  (name test_oql)
  (modules test_oql)
